@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/textfield.png</file>
+        <file>mainwindow.qml</file>
+        <file>MyTextField.qml</file>
+    </qresource>
+</RCC>

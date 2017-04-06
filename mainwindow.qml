@@ -1,9 +1,10 @@
-import QtQuick 2.2
+import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.2
 import QtQuick.Particles 2.0
+import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     id: window
@@ -14,10 +15,11 @@ ApplicationWindow {
 
     toolBar: ToolBar {
         RowLayout{
+            anchors.fill: parent
             Button {
                 id: startButton
                 enabled: MainClass.startPermit
-                text: "Start"
+                text: "Старт"
                 implicitWidth: window.width / columnFactor
                 anchors.left: parent.left
                 onClicked: MainClass.connectToServer()
@@ -25,27 +27,41 @@ ApplicationWindow {
             Button {
                 id: stopButton
                 enabled: MainClass.stopPermit
-                text: "Stop"
+                text: "Стоп"
                 implicitWidth: window.width / columnFactor
                 onClicked: MainClass.stopScan()
             }
+            Button {
+                id: saveButton
+                enabled: MainClass.savePermit
+                text: "Сохранить"
+                tooltip: "Сохранение карты IP-адресов в реестре"
+                implicitWidth: window.width / columnFactor
+                onClicked: MainClass.saveConfig()
+            }
+
+            Item { Layout.fillWidth: true }
+            ToolButton {
+                height: startButton.height
+                //width: window.width / columnFactor
+                //anchors.right: parent.right
+                anchors.right: parent.right
+                enabled: MainClass.savePermit
+                //iconSource: Qt.resolvedUrl("qrc:/images/settings_applications.svg")
+                Image {
+                    source: Qt.resolvedUrl("qrc:/images/settings_applications.svg")
+                    anchors.fill: parent
+                    anchors.margins: 4
+                }
+                onClicked: settingsDialog.open()
+            }
         }
-        MyTextField {
-            id: applicationStatus
-            readOnly: true
-
-            placeholderText: "Текущее состояние..."
-            Layout.fillWidth: true
-            //inputMethodHints: Qt.ImhNoPredictiveText
-
-            width: window.width / 5 * 2
-            anchors.right: parent.right
-            //anchors.verticalCenter: parent.verticalCenter
-
-        }
-
     }
     property int columnFactor: 5
+
+    SettingsDialog {
+        id: settingsDialog
+    }
 
     TableView {
         id: tableView
@@ -123,11 +139,11 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     elide: styleData.elideMode
                     text: styleData.value !== undefined ? styleData.value : ""
-                    color : styleData.textColor
+                    color : "black"
                     visible: !styleData.selected
                     onTextChanged: {
-                       console.log("Changing text")
-                       this.color = setColor(styleData.value,styleData.textColor)
+                       //console.log("Changing text")
+                       this.color = setColor(styleData.value,color)
                     }
 
                 }
@@ -139,18 +155,20 @@ ApplicationWindow {
                         target: loaderEditor.item
                         onEditingFinished: {
                             AppAddressTable.ipChange(styleData.row,styleData.column, loaderEditor.item.text)
+                            //historianName.forceActiveFocus();
                         }
                     }
-                    sourceComponent: styleData.selected ? editor : null
+                    sourceComponent: (styleData.selected) ? editor : null
                     Component {
                         id: editor
                         TextInput {
                             id: textinput
                             color: styleData.textColor
                             text: styleData.value
+                            enabled: styleData.column === 0
                             MouseArea {
                                 id: mouseArea
-                                enabled: styleData.column == 0
+                                //enabled: styleData.column === 0
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 onClicked: textinput.forceActiveFocus()
@@ -160,6 +178,60 @@ ApplicationWindow {
                 }
             }
         }
+    }
+    statusBar: StatusBar {
+        id: statusBar
+        visible: statusData.text.length > 0
+        width: parent.width
+        property var error: MainClass.currentError.secondItem
+
+        RowLayout {
+            anchors.fill: parent
+            Label {
+                id: statusData
+                text: MainClass.currentError.secondItem
+                onTextChanged: {
+                    settingsDialog.textColor = (MainClass.currentError.firstItem === 3) ? "red" : "black";
+                }
+            }
+        }
+        onErrorChanged: {
+            console.log("QML:: error changed " + MainClass.currentError.firstItem)
+            if(MainClass.currentError.firstItem !== 10) warningLoad.active = true
+        }
+
+    }
+    Loader {
+        id: warningLoad
+        visible: status == Loader.Ready
+        active: false
+        sourceComponent: warningWindow
+    }
+
+    Component {
+        id: warningWindow
+       Dialog {
+            standardButtons: StandardButton.Ok
+            //informativeText:
+            //text:
+            //detailedText:
+            Text {
+                id: warningText
+                anchors.fill: parent
+                visible: parent.visible
+            }
+
+            onAccepted: warningLoad.active = false
+            Component.onCompleted: {
+                var states = ['','Ошибка','Ошибка конфигурирования','Ошибка подключения к БД'];
+                console.log("Warning window!");
+                warningText.text = MainClass.currentError.secondItem;
+                title = states[MainClass.currentError.firstItem];
+                visible = true;
+            }
+        }
+
+
     }
 
     /*

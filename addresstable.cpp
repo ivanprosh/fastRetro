@@ -25,6 +25,11 @@ void AddressTable::initialize()
     //добавим строки
     items.push_back(QPair<QString,QString>("172.16.3.121:10000","Не активен"));
 
+    int row(1);
+    while(row < MAX_CONNECTIONS_COUNT){
+        items.push_back(QPair<QString,QString>("",""));
+        row++;
+    }
 }
 
 void AddressTable::clear()
@@ -94,7 +99,7 @@ QVariant AddressTable::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid()) return QVariant();
 
-    qDebug() << index.row() << items.size();
+    //qDebug() << index.row() << items.size();
     Q_ASSERT(index.row()<=items.size());
     switch (role) {
     case ipRole:

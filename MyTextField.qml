@@ -13,26 +13,26 @@ TextField {
         }
     }
     //implicitWidth: window.width / columnFactor
-    Component {
-        id: textFieldStyle
-        TextFieldStyle {
-            background: Rectangle {
-                implicitWidth: window.width / columnFactor
-                color: "#f0f0f0"
-                antialiasing: true
-                border.color: "gray"
-                radius: height/2
-                Rectangle {
-                    anchors.fill: parent
-                    anchors.margins: 1
-                    color: "transparent"
-                    antialiasing: true
-                    border.color: "#aaffffff"
-                    radius: height/2
-                }
-            }
-        }
-    }
+//    Component {
+//        id: textFieldStyle
+//        TextFieldStyle {
+//            background: Rectangle {
+//                implicitWidth: window.width / columnFactor
+//                color: "#f0f0f0"
+//                antialiasing: true
+//                border.color: "gray"
+//                radius: height/2
+//                Rectangle {
+//                    anchors.fill: parent
+//                    anchors.margins: 1
+//                    color: "transparent"
+//                    antialiasing: true
+//                    border.color: "#aaffffff"
+//                    radius: height/2
+//                }
+//            }
+//        }
+//    }
 }
 
 

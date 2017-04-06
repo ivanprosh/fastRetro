@@ -3,5 +3,8 @@
         <file>images/textfield.png</file>
         <file>mainwindow.qml</file>
         <file>MyTextField.qml</file>
+        <file>SettingsDialog.qml</file>
+        <file>images/settings_applications.svg</file>
+        <file>images/add.svg</file>
     </qresource>
 </RCC>

@@ -36,8 +36,7 @@ int main(int argc, char *argv[])
     //QAbstractTableModel* AppAddressTable = new QAbstractTableModel();
     MainWindow* MainClass = new MainWindow(AppAddressTable);
 
-    //MainClass->setAddrTable(AppAddressTable);
-
+    MainClass->initializeSettings();
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("AppAddressTable", AppAddressTable);

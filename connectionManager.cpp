@@ -47,26 +47,3 @@ QByteArray ConnectionManager::clientId() const
     return id;
 }
 
-/*
-ConnectionManager::ConnectionManager(QAbstractTableModel* model,QObject *parent)
-    :_model(model), QObject(parent)
-{
-    setCurState(ConnectPermit);
-
-    if(_model == nullptr)
-        qWarning() << "Некорректная модель данных";
-
-    QDateTime dateTime = QDateTime::currentDateTime();
-
-    connect(_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
-    connect(&tcpSocket, SIGNAL(connected()), this, SLOT(connectEstablished()));
-    connect(&tcpSocket, SIGNAL(disconnected()),
-            this, SLOT(connectionClosedByServer()));
-    connect(&tcpSocket, SIGNAL(readyRead()),
-            this, SLOT(newDataAvailable()));
-    connect(&tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
-            this, SLOT(error()));
-
-}
-*/
-

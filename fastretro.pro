@@ -1,5 +1,7 @@
 TEMPLATE      = app
 QT           += network qml quick sql
+CONFIG += c++11
+
 HEADERS       = \
                 addresstable.h \
     global.h \

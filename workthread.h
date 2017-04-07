@@ -10,7 +10,9 @@ class WorkThread: public QThread
 
   public:
     //WorkThread(QMutex* mutex, QObject *parent = Q_NULLPTR):QThread(parent),m_mutex(mutex){}
-    WorkThread(QObject *parent = Q_NULLPTR):QThread(parent){}
+    WorkThread(QObject *parent = Q_NULLPTR);
+    ~WorkThread();
+
     void execute( const QString& query );
     void setConnection(const QString& serverName);
     Worker* getWorker(){return m_worker;}
@@ -21,6 +23,8 @@ class WorkThread: public QThread
   signals:
     void queue( const QString& query );
     void queryFinished( bool success );
+    void backupFolderNameChanged(const QString&);
+    void errorChange(GlobalError*);
     //void initFinished();
   private:
     Worker* m_worker;

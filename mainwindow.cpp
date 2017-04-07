@@ -3,6 +3,10 @@
 #include <QDate>
 #include <QSettings>
 #include <QTimer>
+#include <QFile>
+#include <QTextStream>
+#include <QSqlError>
+
 #include "mainwindow.h"
 #include "connectionManager.h"
 #include "dataanalizator.h"
@@ -12,6 +16,9 @@ namespace {
     const QString AutoStartSetting("AutoStart");
     const QString ServerNameSetting("ServerName");
     const QString BackupFolderSetting("BackupFolder");
+
+    const QString _logFileName("CurrentLog.txt");
+    //const QString _logFileTemplateString("%1 ");
 }
 
 MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_model(model)
@@ -21,17 +28,29 @@ MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_mo
     setSavePermit(true);
 
     _currentError = new GlobalError(GlobalError::None,QString());
-    //_currentError.first = GlobalError::DB;
-    //_currentError.second = QString();
+
+    logfile.setFileName(_logFileName);
+
+    if(!logfile.open(QIODevice::WriteOnly | QIODevice::Text)){
+        QScopedPointer<GlobalError> lastErr(new GlobalError(GlobalError::System,
+                                            "Ошибка открытия лог файла"));
+        errorChange(lastErr.data());
+    } else {
+        logFileStream.setDevice(&logfile);
+    }
+
 
     if(_model == nullptr)
         qWarning() << "Некорректная модель данных";
     serverStateNames << "Не подключен" << "Поиск сервера" << "Подключение" << "Подключен" << "Bound to address and port"
                      << "Пользовательский" << "Закрыт";
 
-    initObjConnections();
-    initializeSettings();
+    //Отдельный поток для отслеживания новых файлов в каталоге BackUp
+    currentThread = QSharedPointer<WorkThread>(new WorkThread());
+    currentThread->start();
 
+    initObjConnections();
+    //initializeSettings();
 }
 
 void MainWindow::initializeSettings()
@@ -39,6 +58,8 @@ void MainWindow::initializeSettings()
     QSettings settings;
     if(!settings.value(ServerNameSetting).toString().isEmpty())
         setServerName(settings.value(ServerNameSetting).toString());
+    if(!settings.value(BackupFolderSetting).toString().isEmpty())
+        setBackupFolderName(settings.value(BackupFolderSetting).toString());
     if(!settings.value(ModelSetting).toStringList().isEmpty()){
         setAutostart(settings.value(AutoStartSetting).toBool());
         initializeTable(settings.value(ModelSetting).toStringList());
@@ -54,14 +75,39 @@ MainWindow::~MainWindow()
     delete _currentError;
 }
 
+void MainWindow::setCurrentError(GlobalError *value){
+    if(_currentError->secondItem()!=value->secondItem()){
+        _currentError->setFirstItem(value->firstItem());
+        _currentError->setSecondItem(value->secondItem());
+        emit currentErrorChanged(_currentError);
+        if(logFileStream.device()){
+            //фиксируем в логе
+            logFileStream.setFieldAlignment(QTextStream::AlignLeft);
+            logFileStream.setFieldWidth(25);
+            logFileStream << value->getDateTime().toString("yyyy.MM.dd hh:mm:ss");
+            logFileStream.setFieldWidth(15);
+            if(value->ErrorCodes.size() < value->firstItem()) {
+                logFileStream << value->ErrorCodes.at(value->firstItem());//metaEnum.valueToKey(value->firstItem());
+            } else {
+                logFileStream << "UNKNOWN";
+            }
+            logFileStream.setFieldWidth(100);
+            logFileStream << value->secondItem();
+            logFileStream << "\n";
+        }
+    }
+}
+
 void MainWindow::initObjConnections()
 {
     connect(this, SIGNAL(serverNameChanged(const QString&)),
-            DataAnalizator::instance(), SLOT(setDB(const QString&)));
+            SLOT(setDB(const QString&)));
     connect(DataAnalizator::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
-    //connect(DataAnalizator::instance(), SIGNAL(connectError(const QString&)),
-    //        this, SLOT(connectErrorDB(const QString&)))
+    connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
+            DataAnalizator::instance(), SLOT(setNewFilePath(const QString&)));
+    connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
+            currentThread.data(), SIGNAL(backupFolderNameChanged(const QString&)));
 }
 
 void MainWindow::initSockConnections()
@@ -96,7 +142,42 @@ void MainWindow::updateStateSocket(PLCSocketClient* client){
     //    _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState)+",ошибка:"+client->errorString(),statusRole);
 
 }
+void MainWindow::setDB(const QString &server)
+{
+    qDebug() << "MainWindow::Server change name: " << server;
 
+    QMutexLocker locker(&GLOBAL::globalMutex);
+
+    if(currentThread==Q_NULLPTR) {
+        qDebug() << "currentThread is NULL!";
+        return;
+    }
+
+    QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.";
+    currentThread->setConnection(stringConnection.arg(server));
+
+
+    /*
+    if(currentThread->getWorker()->getDB().isValid() && currentThread->getWorker()->getDB().isOpen())
+        currentThread->getWorker()->getDB().close();
+
+    QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=wwAdmin;PWD=wwAdmin;Trusted_Connection=no; WSID=.";
+    currentThread->setConnection(stringConnection.arg(server));
+    */
+
+    if(currentThread->getWorker()->getDB().open()){
+        qDebug() << "DataAnalizator::DB open!";
+        if(!currentThread->isRunning())
+            ;
+        return;
+    }
+
+    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,
+                                                         getlastErrorDB()));
+
+    errorChange(CurError.data());
+
+}
 void MainWindow::socketStateChanged(QAbstractSocket::SocketState curState)
 {
     updateStateSocket(qobject_cast<PLCSocketClient* >(sender()));
@@ -138,25 +219,6 @@ void MainWindow::connectClient(QSharedPointer<PLCSocketClient> client)
 void MainWindow::connectEstablished()
 {
     updateStateSocket(qobject_cast<PLCSocketClient* >(sender()));
-    /*
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_3);
-    out << quint16(0) << quint8('S') << fromComboBox->currentText()
-        << toComboBox->currentText() << dateEdit->date()
-        << timeEdit->time();
-
-    if (departureRadioButton->isChecked()) {
-        out << quint8('D');
-    } else {
-        out << quint8('A');
-    }
-    out.device()->seek(0);
-    out << quint16(block.size() - sizeof(quint16));
-    tcpSocket.write(block);
-
-    statusLabel->setText(tr("Sending request..."));
-    */
 }
 
 void MainWindow::initializeServers()
@@ -255,6 +317,8 @@ void MainWindow::errorChange(GlobalError* lastErr)
         break;
     case GlobalError::Historian:
         break;
+    case GlobalError::System:
+        break;
     default:
         break;
     }
@@ -288,4 +352,9 @@ void MainWindow::setBackupFolderName(QString value){
     }
 }
 
+QString MainWindow::getlastErrorDB()
+{
+    return currentThread->getWorker()->getDB().lastError().text();
+    //return QString();
+}
 

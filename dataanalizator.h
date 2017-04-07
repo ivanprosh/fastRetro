@@ -21,9 +21,8 @@ public:
 
     QString rfile(const QString &name);
     QHash<int,bool> ignorePLClist;
-    QString getlastErrorDB();
 
-    void insertDataInQuery(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& query);
+    void insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& query);
     void initialize();
     void prepareQuery(QString&,int cycleIndex, int cycleStep, QDateTime curDateTime);
     //QMutex* mutex;
@@ -31,22 +30,22 @@ public:
 public slots:
     void newDataReceived();
     void queryResult(bool result);
-    void setDB(const QString& server);
+    //void setDB(const QString& server);
+    void setNewFilePath(const QString& filepath) {_filepath = filepath;}
     //void threadInitComplete();
 
 private:
+    QString generateFileName(const QDateTime& dt, const QString &abonent);
+    void streamtoFile(const QString &fileName, const QString& stream, QString filepath);
+
     QHash<int,QStringList> PLCtoParNames;
+    QString _filepath;
     QStringList queries;
-    QString createTablePref;
+
     QString templateQuery;
     QString insertHistTableQuery;
-    //QSqlDatabase db;
-    WorkThread* currentThread;
-//    bool lastQuerySuccess;
-//    bool forbiddenReceive;
-    //DataAnalizator(const DataAnalizator&);
-    //DataAnalizator();
-    void errorHandler(GlobalError::ErrorRoles, const QString&, const int idfrom);
+
+    void errorHandler(GlobalError::ErrorRoles, const QString&, const int idfrom = 1000);
 signals:
     void errorChange(GlobalError*);
 

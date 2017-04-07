@@ -2,7 +2,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2 as AppDialogs
 import QtQuick.Layouts 1.1
-import Qt.labs.platform 1.0
 
 AppDialogs.Dialog {
     id: dialog
@@ -10,6 +9,7 @@ AppDialogs.Dialog {
     title: qsTr("Настройки")
     width: grid.implicitWidth + 2 * grid.rowSpacing
     height: grid.implicitHeight + 2 * grid.columnSpacing
+
     standardButtons: StandardButton.Save | StandardButton.Discard
 
     signal finished(string fullName, string address, string city, string number)
@@ -54,7 +54,9 @@ AppDialogs.Dialog {
                     }
                     MyTextField {
                         id: backupFolder
-                        readOnly: true
+
+                        property var oldText
+                        //readOnly: true
                         placeholderText: "C:/"
                         Layout.fillWidth: true
                         Component.onCompleted: {
@@ -64,7 +66,10 @@ AppDialogs.Dialog {
                             width = hiddenText.contentWidth
                         }
 
-                        //anchors.verticalCenter: parent.verticalCenter
+                        validator: RegExpValidator {
+                            regExp: /\/\/\w.*/
+                        }
+
                     }
                     ToolButton {
                         id: chooseFilePath
@@ -86,11 +91,8 @@ AppDialogs.Dialog {
 
                 CheckBox {
                     id: autoStart
-                    //anchors.top: backupFolder.bottom
-                    //enabled: MainClass.savePermit
                     text: "Автостарт"
-                    //implicitWidth: window.width / columnFactor
-                    //onCheckedChanged: MainClass.setAutostart(checked)
+
                     Component.onCompleted: {
                         checked = MainClass.autostart
                     }
@@ -135,15 +137,20 @@ AppDialogs.Dialog {
 
     Component {
         id: filedialog
-        FolderDialog {
-            id: fileDialog
-            options: FolderDialog.DontResolveSymlinks | FolderDialog.ReadOnly
+        AppDialogs.FileDialog {
+            //id: dialog
+            //options: FolderDialog.DontResolveSymlinks | FolderDialog.ReadOnly
+            selectFolder: true
             title: "Выберите путь до каталога хранения временных файлов"
             //currentFolder: shortcuts.home
+
             onAccepted: {
-                console.log("You chose: " + fileDialog.folder)
-                backupFolder.text = fileDialog.folder
-                loader.active = false
+                console.log("You chose: " + folder)
+                var url = folder.toString();
+                var path = url.match('file\:(//\\w.*)');
+                if(path[1].length > 0)
+                    backupFolder.text = path[1];
+                loader.active = false;
             }
             onRejected: {
                 console.log("Canceled")
@@ -154,11 +161,12 @@ AppDialogs.Dialog {
     }
 
     onAccepted: {
-        console.log("Settings Accepted!");
+        console.log("in SettingsDialog.qml - Settings Accepted!");
         MainClass.resetError();
         MainClass.setServerName(historianName.text);
         MainClass.setAutostart(autoStart.checked);
         MainClass.setBackupFolderName(backupFolder.text);
     }
+
 }
 

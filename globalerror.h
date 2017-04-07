@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QDateTime>
 
 class GlobalError : public QObject
 {
@@ -11,11 +12,16 @@ class GlobalError : public QObject
     Q_PROPERTY(ErrorRoles firstItem READ firstItem NOTIFY firstItemChanged)
     Q_PROPERTY(QString secondItem READ secondItem NOTIFY secondItemChanged)
     Q_ENUMS(ErrorRoles)
-public:
-    enum ErrorRoles {Socket=1,Configuration,Historian,None=10};
 
+public:
+    enum ErrorRoles {Socket=1,Configuration,Historian,System,None=10};
+
+    QStringList ErrorCodes;//QStringList() << "Socket" << "Configuration" << "Historian" << "System"
     GlobalError(QObject *parent = 0):pair(),QObject(parent){}
-    GlobalError(ErrorRoles role,const QString& val):pair(role,val){}
+    GlobalError(ErrorRoles role,const QString& val):pair(role,val){
+        eventDateTime = QDateTime::currentDateTime();
+        ErrorCodes << "" << "Socket" << "Configuration" << "Historian" << "System";
+    }
 
     ErrorRoles firstItem() {return pair.first;}
     QString secondItem() {return pair.second;}
@@ -29,10 +35,12 @@ public:
         qDebug() << "GlobalError::Second item changed";
         emit secondItemChanged();
     }
+    QDateTime getDateTime(){return eventDateTime;}
     void setIdFrom(int idfrom){_idfrom=idfrom; emit idFromChanged();}
     int idFrom(){return _idfrom;}
 private:
     QPair<ErrorRoles, QString> pair;
+    QDateTime eventDateTime;
     int _idfrom;
 signals:
     void firstItemChanged();

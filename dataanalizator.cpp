@@ -1,5 +1,7 @@
 #include <QSettings>
 #include <QSqlError>
+#include <QFile>
+
 #include "plcsocketclient.h"
 #include "dataanalizator.h"
 #include "globalerror.h"
@@ -36,21 +38,22 @@ void DataAnalizator::newDataReceived()
         return;
     }
 
-    //если накопилось достаточно данных и успешно отправлен последний запрос
+    //если накопилось достаточно данных
     if(it>50) {
-        if(currentThread==Q_NULLPTR) {
-            qDebug() << "New data received but currentThread is NULL!";
-            return;
-        }
-        QString query;
-        query.append(createTablePref);
+
+        QString stream;
+        //query.append(createTablePref);
+        QString Filename = generateFileName(client->queReceivePackets.head()->getDateTime(),
+                                            PLCtoParNames.value(client->getServer()->id).first());
 
         while(!client->queReceivePackets.isEmpty() && (it > 0)){
-            insertDataInQuery(client->getServer(),client->queReceivePackets.head(), query);
+            insertDataInStream(client->getServer(),client->queReceivePackets.head(), stream);
             client->queReceivePackets.dequeue();
             it--;
         }
-        query.append(insertHistTableQuery);
+        //запись в файл
+        streamtoFile(Filename,stream,_filepath);
+        //query.append(insertHistTableQuery);
         //qDebug() << query;
         //currentThread->execute(query);
         //lastQuerySuccess = false;
@@ -73,7 +76,7 @@ void DataAnalizator::prepareQuery(QString& _prepareQuery,int cycleIndex, int cyc
                                  .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
 }
 
-void DataAnalizator::insertDataInQuery(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& query)
+void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& stream)
 {
     int cycleIndex = 0;
     QString _prepareQuery;
@@ -82,7 +85,7 @@ void DataAnalizator::insertDataInQuery(QSharedPointer<PLCServer> server, QShared
         int curPar = 0;
         prepareQuery(_prepareQuery,cycleIndex,server->cycleStep,curPacket->getDateTime());
         while (curPar < curPacket->getParCount()) {
-            query.append(_prepareQuery.arg(PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1))
+            stream.append(_prepareQuery.arg(PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1))
                          .arg(curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount())));
             curPar++;
         }
@@ -93,32 +96,13 @@ void DataAnalizator::insertDataInQuery(QSharedPointer<PLCServer> server, QShared
 
 void DataAnalizator::initialize()
 {
-    if(!INIT_TRUE){
-        qDebug() << "Start Thread!";
-        //mutex = new QMutex();
-        currentThread = new WorkThread();
-        //mutex->lock();
-        connect( currentThread, SIGNAL( queryFinished( bool ) ),
-                 this, SLOT( queryResult(bool) ) );
-        //connect( currentThread, SIGNAL( initFinished()),
-        //         this, SLOT(threadInitComplete()));
-        currentThread->start();
-        //mutex->unlock();
-        INIT_TRUE = true;
-    }
-
-    createTablePref =
-    "DECLARE @FastTableVar table( \n"
-    "    DateTime datetime2(7) NOT NULL, \n"
-    "    TagName nvarchar(256) NOT NULL, \n"
-    "    Value float,  \n"
-    "    Quality tinyint, \n"
-    "    QualityDetail int, \n"
-    "    wwTagKey int);\n";
-
+/*
     templateQuery =
     "INSERT @FastTableVar (DateTime,TagName,Value) "
     "VALUES ('%1 %2', '%3', %4) \n";
+*/
+    templateQuery =
+    "%1 %2, %3, %4\n";
 
     insertHistTableQuery =
     "INSERT INTO INSQL.Runtime.dbo.AnalogHistory (DateTime,TagName,Value) "
@@ -130,19 +114,14 @@ QString DataAnalizator::rfile(const QString& name)
 {
     QSettings settings(name, QSettings::IniFormat);
     QStringList Names;
-
     //общие
     int index(0);
     QStringList keys = settings.childGroups();
 
-    qDebug() << "keys!" << keys;
-
     foreach (QString key, keys) {
 
         settings.beginGroup(key);
-
         const QStringList childKeys = settings.childKeys();
-
         if(childKeys.empty()) return QString("Формат файла некорректный: в группе [Names] необходимо перечислить хранимые параметры через ,");
 
         PLCtoParNames[index].append(key);
@@ -151,47 +130,53 @@ QString DataAnalizator::rfile(const QString& name)
         if(Names.size() > MAX_PAR_COUNT) return QString("Параметров должно быть не более " + QString::number(MAX_PAR_COUNT));
 
         settings.endGroup();
-
-        qDebug() << index << ":" << PLCtoParNames.value(index);
-
+        //qDebug() << index << ":" << PLCtoParNames.value(index);
         index++;
     }
-
 
     return QString();
 }
 
-void DataAnalizator::setDB(const QString &server)
+QString DataAnalizator::generateFileName(const QDateTime &dt, const QString& abonent)
 {
-    qDebug() << "DataAnalizator::Server change name: " << server;
-
-    QMutexLocker locker(&GLOBAL::globalMutex);
-
-    if(currentThread==Q_NULLPTR) {
-        qDebug() << "currentThread is NULL!";
-        return;
-    }
-
-    if(currentThread->getWorker()->getDB().isValid() && currentThread->getWorker()->getDB().isOpen())
-        currentThread->getWorker()->getDB().close();
-
-    QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=wwAdmin;PWD=wwAdmin;Trusted_Connection=no; WSID=.";
-    currentThread->setConnection(stringConnection.arg(server));
-
-    if(currentThread->getWorker()->getDB().open()){
-        qDebug() << "DataAnalizator::DB open!";
-
-        return;
-    }
-    //mutex->unlock();
-    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,
-                                                         getlastErrorDB()));
-    emit errorChange(CurError.data());
-    //emit connectError(getlastErrorDB());
-    //return false;
+    QString pattern = "%1_%2_%3%4";
+    return pattern.arg(abonent).arg(dt.date().toString("yyyyMMdd")).arg(dt.time().toString("hhmmss"));
 }
 
-void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const int idfrom = 1000)
+void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream, QString filepath)
+{
+    //stream = GPA1_20170405_120522%1
+    if(filepath.isEmpty()) {
+        errorHandler(GlobalError::Configuration,
+                     "Каталог хранения временных файлов не задан");
+        return;
+    }
+
+    //QMutexLocker locker(&GLOBAL::globalMutex);
+
+    QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".txt")));
+    QTextStream out(outputFile.data());
+
+    int ver = 1;
+    if(outputFile->exists())
+        while(outputFile->exists()){
+            outputFile->setFileName(outputFile->fileName().arg("_v"+QString::number(ver++)));
+        }
+    else
+        outputFile->setFileName(outputFile->fileName().arg(""));
+
+    if (!outputFile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        errorHandler(GlobalError::System,
+                     "Невозможно открыть файл " + outputFile->fileName());
+        return;
+    }
+
+    out << stream;
+
+    outputFile->close();
+}
+
+void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const int idfrom)
 {
     QScopedPointer<GlobalError> CurError(new GlobalError(role,text));
     CurError->setIdFrom(idfrom);
@@ -202,12 +187,4 @@ void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &t
     if(role==GlobalError::Configuration) {
        if(idfrom!=1000) ignorePLClist[idfrom] = true;
     }
-}
-
-QString DataAnalizator::getlastErrorDB()
-{
-    qDebug() << " DataAnalizator:: last DB err: " <<  currentThread->getWorker()->getDB().lastError().text();
-    //if(currentThread->getWorker()->getDB().isValid())
-        return currentThread->getWorker()->getDB().lastError().text();
-    //return QString();
 }

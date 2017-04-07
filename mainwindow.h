@@ -5,9 +5,11 @@
 #include "plcsocketclient.h"
 #include "global.h"
 #include "globalerror.h"
+#include "workthread.h"
 #include <QObject>
 
 //Q_DECLARE_METATYPE(GlobalError)
+class QFile;
 
 class MainWindow: public QObject
 {
@@ -28,13 +30,8 @@ public:
     void setStartPermit(bool value){permitStart = value; emit startPermitChanged();}
     void setStopPermit(bool value){permitStop = value; emit stopPermitChanged();}
     void setSavePermit(bool value){permitSave = value; emit savePermitChanged();}
-    void setCurrentError(GlobalError* value){
-        if(_currentError->secondItem()!=value->secondItem()){
-            _currentError->setFirstItem(value->firstItem());
-            _currentError->setSecondItem(value->secondItem());
-            emit currentErrorChanged(_currentError);
-        }
-    }
+    void setCurrentError(GlobalError* value);
+    void initializeSettings();
 
 public slots:
     void socketStateChanged(QAbstractSocket::SocketState curState);
@@ -61,17 +58,19 @@ public slots:
     QString backupFolderName() {return _backupFolderName;}
 
     GlobalError* currentError(){return _currentError;} 
+    void setDB(const QString &server);
 
 private:
     void initObjConnections();
     void initSockConnections();
-    void initializeSettings();
+
     void initializeServers();
     void initializeTable(const QStringList& list);
     void stopClients();
     void connectClient(QSharedPointer<PLCSocketClient> client);
     //Обновляет запись в таблице подключений
     void updateStateSocket(PLCSocketClient *client);
+    QString getlastErrorDB();
 
     AddressTable* _model;
     QList<QSharedPointer<PLCServer> > servers;
@@ -79,6 +78,9 @@ private:
     bool permitStart,permitStop,permitSave,_autostart;
     QString _serverName, _backupFolderName;
     GlobalError* _currentError;
+    QSharedPointer<WorkThread> currentThread;
+    QFile logfile;
+    QTextStream logFileStream;
     //QList<PLCSocketClient> clients;
 
 signals:

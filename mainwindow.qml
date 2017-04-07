@@ -53,6 +53,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     anchors.margins: 4
                 }
+                //onClicked: settingsDialog.open()
                 onClicked: settingsDialog.open()
             }
         }
@@ -62,7 +63,32 @@ ApplicationWindow {
     SettingsDialog {
         id: settingsDialog
     }
-
+/*
+    Loader {
+        id: loaderSettingsDialog
+        visible: status == Loader.Ready
+        active: false
+        sourceComponent: settingsDialog
+    }
+    Component {
+        id: settingsDialog
+        SettingsDialog {
+            Component.onCompleted: {
+                console.log("Loader complete!");
+                //visible = true;
+                open();
+            }
+            onRejected: {
+                console.log("Rejected!");
+                loaderSettingsDialog.active = false;
+            }
+            onAccepted: {
+                console.log("Accepted!");
+                loaderSettingsDialog.active = false;
+            }
+        }
+    }
+*/
     TableView {
         id: tableView
 
@@ -118,6 +144,7 @@ ApplicationWindow {
 //                console.log("Changing data")
 //            }
         }
+
 
         Component {
             id: editableDelegate
@@ -197,7 +224,7 @@ ApplicationWindow {
         }
         onErrorChanged: {
             console.log("QML:: error changed " + MainClass.currentError.firstItem)
-            if(MainClass.currentError.firstItem !== 10) warningLoad.active = true
+            if(MainClass.currentError.firstItem !== 10 && MainClass.currentError.firstItem !== 4) warningLoad.active = true
         }
 
     }
@@ -223,7 +250,7 @@ ApplicationWindow {
 
             onAccepted: warningLoad.active = false
             Component.onCompleted: {
-                var states = ['','Ошибка','Ошибка конфигурирования','Ошибка подключения к БД'];
+                var states = ['','Ошибка','Ошибка конфигурирования','Ошибка подключения к БД','Системная ошибка'];
                 console.log("Warning window!");
                 warningText.text = MainClass.currentError.secondItem;
                 title = states[MainClass.currentError.firstItem];

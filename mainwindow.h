@@ -6,6 +6,7 @@
 #include "global.h"
 #include "globalerror.h"
 #include "workthread.h"
+#include "logger.h"
 #include <QObject>
 
 //Q_DECLARE_METATYPE(GlobalError)
@@ -21,6 +22,7 @@ class MainWindow: public QObject
     Q_PROPERTY(bool autostart READ isAutostart WRITE setAutostart NOTIFY autostartChanged)
     Q_PROPERTY(QString serverName READ serverName WRITE setServerName NOTIFY serverNameChanged)
     Q_PROPERTY(QString backupFolderName READ backupFolderName WRITE setBackupFolderName NOTIFY backupFolderNameChanged)
+    Q_PROPERTY(Logger* logger READ getLogger CONSTANT)
     Q_PROPERTY(GlobalError* currentError READ currentError WRITE setCurrentError NOTIFY currentErrorChanged)
 
 public:
@@ -32,6 +34,7 @@ public:
     void setSavePermit(bool value){permitSave = value; emit savePermitChanged();}
     void setCurrentError(GlobalError* value);
     void initializeSettings();
+    auto getLogger() -> Logger*;
 
 public slots:
     void socketStateChanged(QAbstractSocket::SocketState curState);
@@ -79,8 +82,7 @@ private:
     QString _serverName, _backupFolderName;
     GlobalError* _currentError;
     QSharedPointer<WorkThread> currentThread;
-    QFile logfile;
-    QTextStream logFileStream;
+
     //QList<PLCSocketClient> clients;
 
 signals:

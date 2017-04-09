@@ -11,7 +11,9 @@ HEADERS       = \
     dataanalizator.h \
     worker.h \
     workthread.h \
-    globalerror.h
+    globalerror.h \
+    logger.h \
+    circlequeue.h
 SOURCES       = main.cpp \
                 addresstable.cpp \
     plcsocketclient.cpp \
@@ -20,7 +22,8 @@ SOURCES       = main.cpp \
     dataanalizator.cpp \
     global.cpp \
     worker.cpp \
-    workthread.cpp
+    workthread.cpp \
+    logger.cpp
 #FORMS         = fastretro.ui
 
 deployment.path = $$OUT_PWD/
@@ -31,7 +34,8 @@ DISTFILES += \
     signals.ini \
     mainwindow.qml \
     MyTextField.qml \
-    SettingsDialog.qml
+    SettingsDialog.qml \
+    LogView.qml
 
 DEFINES += QML_DEBUG
 DEFINES += PRO_FILE_PWD=$$sprintf("\"\\\"%1\\\"\"", $$_PRO_FILE_PWD_)

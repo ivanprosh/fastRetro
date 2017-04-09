@@ -57,7 +57,7 @@ AppDialogs.Dialog {
 
                         property var oldText
                         //readOnly: true
-                        placeholderText: "C:/"
+                        placeholderText: "//A_Server"
                         Layout.fillWidth: true
                         Component.onCompleted: {
                             text = MainClass.backupFolderName

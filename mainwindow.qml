@@ -8,39 +8,70 @@ import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     id: window
-    width: 640
-    height: 480
+    minimumWidth: 640
+    minimumHeight: 500
+    //width: window.width < 640 ? 640 : window.width
+    //height: 480
     visible: true
     title: qsTr("FastRetro App")
 
     toolBar: ToolBar {
         RowLayout{
             anchors.fill: parent
-            Button {
+            ToolButton {
                 id: startButton
                 enabled: MainClass.startPermit
-                text: "Старт"
-                implicitWidth: window.width / columnFactor
+                //text: "Старт"
+                tooltip: "Старт"
+                //implicitWidth: window.width / columnFactor
                 anchors.left: parent.left
+                Image {
+                    source: Qt.resolvedUrl("qrc:/images/play_arrow.svg")
+                    anchors.fill: parent
+                    anchors.margins: 4
+                }
                 onClicked: MainClass.connectToServer()
             }
-            Button {
+            ToolButton {
                 id: stopButton
                 enabled: MainClass.stopPermit
-                text: "Стоп"
-                implicitWidth: window.width / columnFactor
+                //text: "Стоп"
+                tooltip: "Останов"
+                Image {
+                    source: Qt.resolvedUrl("qrc:/images/stop.svg")
+                    anchors.fill: parent
+                    anchors.margins: 4
+                }
+                //implicitWidth: window.width / columnFactor
                 onClicked: MainClass.stopScan()
             }
-            Button {
+            ToolButton {
                 id: saveButton
                 enabled: MainClass.savePermit
-                text: "Сохранить"
+                //text: "Сохранить"
+                Image {
+                    source: Qt.resolvedUrl("qrc:/images/file_download.svg")
+                    anchors.fill: parent
+                    anchors.margins: 4
+                }
                 tooltip: "Сохранение карты IP-адресов в реестре"
-                implicitWidth: window.width / columnFactor
+                //implicitWidth: window.width / columnFactor
                 onClicked: MainClass.saveConfig()
             }
 
             Item { Layout.fillWidth: true }
+            ToolButton {
+                id: warningLogButton
+                //enabled: MainClass.savePermit
+                visible: false
+                Image {
+                    source: Qt.resolvedUrl("qrc:/images/warning.svg")
+                    anchors.fill: parent
+                    anchors.margins: 4
+                }
+                tooltip: "Есть предупреждения"
+                onClicked: logErrorsView.open()
+            }
             ToolButton {
                 height: startButton.height
                 //width: window.width / columnFactor
@@ -62,7 +93,15 @@ ApplicationWindow {
 
     SettingsDialog {
         id: settingsDialog
+        width: settingsDialog.width > 600 ? settingsDialog.width:600
+        //height: 500
     }
+    LogView {
+        id: logErrorsView
+        width: logErrorsView.width > 300 ? logErrorsView.width:300
+        height: logErrorsView.height > 500 ? logErrorsView.height:500
+    }
+
 /*
     Loader {
         id: loaderSettingsDialog
@@ -224,7 +263,11 @@ ApplicationWindow {
         }
         onErrorChanged: {
             console.log("QML:: error changed " + MainClass.currentError.firstItem)
-            if(MainClass.currentError.firstItem !== 10 && MainClass.currentError.firstItem !== 4) warningLoad.active = true
+            if(MainClass.currentError.firstItem !== 10 && MainClass.currentError.firstItem !== 4) {
+                warningLoad.active = true
+                warningLogButton.visible = true
+            }
+            if(MainClass.currentError.firstItem === 5) logErrorsView.errorFile = true
         }
 
     }
@@ -250,11 +293,11 @@ ApplicationWindow {
 
             onAccepted: warningLoad.active = false
             Component.onCompleted: {
-                var states = ['','Ошибка','Ошибка конфигурирования','Ошибка подключения к БД','Системная ошибка'];
-                console.log("Warning window!");
+                var states = ['','Сокет','Конфигурация','Ошибка подключения к БД','Системная ошибка','Ошибка лога'];
+                //console.log("Warning window!");
                 warningText.text = MainClass.currentError.secondItem;
                 title = states[MainClass.currentError.firstItem];
-                visible = true;
+                //visible = true;
             }
         }
 

@@ -29,8 +29,9 @@ MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_mo
 
     _currentError = new GlobalError(GlobalError::None,QString());
 
-    logfile.setFileName(_logFileName);
-
+    //logfile.setFileName(_logFileName);
+    Logger::instance()->setFile(_logFileName);
+/*
     if(!logfile.open(QIODevice::WriteOnly | QIODevice::Text)){
         QScopedPointer<GlobalError> lastErr(new GlobalError(GlobalError::System,
                                             "Ошибка открытия лог файла"));
@@ -38,7 +39,7 @@ MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_mo
     } else {
         logFileStream.setDevice(&logfile);
     }
-
+*/
 
     if(_model == nullptr)
         qWarning() << "Некорректная модель данных";
@@ -80,21 +81,8 @@ void MainWindow::setCurrentError(GlobalError *value){
         _currentError->setFirstItem(value->firstItem());
         _currentError->setSecondItem(value->secondItem());
         emit currentErrorChanged(_currentError);
-        if(logFileStream.device()){
-            //фиксируем в логе
-            logFileStream.setFieldAlignment(QTextStream::AlignLeft);
-            logFileStream.setFieldWidth(25);
-            logFileStream << value->getDateTime().toString("yyyy.MM.dd hh:mm:ss");
-            logFileStream.setFieldWidth(15);
-            if(value->ErrorCodes.size() < value->firstItem()) {
-                logFileStream << value->ErrorCodes.at(value->firstItem());//metaEnum.valueToKey(value->firstItem());
-            } else {
-                logFileStream << "UNKNOWN";
-            }
-            logFileStream.setFieldWidth(100);
-            logFileStream << value->secondItem();
-            logFileStream << "\n";
-        }
+        if(value->firstItem() != GlobalError::None)
+            Logger::instance()->addEntry(value);
     }
 }
 
@@ -103,6 +91,8 @@ void MainWindow::initObjConnections()
     connect(this, SIGNAL(serverNameChanged(const QString&)),
             SLOT(setDB(const QString&)));
     connect(DataAnalizator::instance(), SIGNAL(errorChange(GlobalError*)),
+            this, SLOT(errorChange(GlobalError*)));
+    connect(Logger::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             DataAnalizator::instance(), SLOT(setNewFilePath(const QString&)));
@@ -338,7 +328,7 @@ void MainWindow::setServerName(QString value){
         QSettings settings;
         settings.setValue(ServerNameSetting,_serverName);
         emit serverNameChanged(_serverName);
-        //qDebug() << "Server name confirm changed " << _serverName;
+        qDebug() << "Server name confirm changed " << _serverName;
     }
 }
 
@@ -357,4 +347,6 @@ QString MainWindow::getlastErrorDB()
     return currentThread->getWorker()->getDB().lastError().text();
     //return QString();
 }
-
+auto MainWindow::getLogger() -> Logger* {
+    return Logger::instance();
+}

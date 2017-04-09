@@ -6,5 +6,10 @@
         <file>SettingsDialog.qml</file>
         <file>images/settings_applications.svg</file>
         <file>images/add.svg</file>
+        <file>images/launch.svg</file>
+        <file>images/warning.svg</file>
+        <file>images/file_download.svg</file>
+        <file>images/play_arrow.svg</file>
+        <file>images/stop.svg</file>
     </qresource>
 </RCC>

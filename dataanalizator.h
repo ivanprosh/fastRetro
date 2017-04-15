@@ -24,7 +24,7 @@ public:
 
     void insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& query);
     void initialize();
-    void prepareQuery(QString&,int cycleIndex, int cycleStep, QDateTime curDateTime);
+    void correctDTime(QString&,int cycleIndex, int cycleStep, QDateTime curDateTime);
     //QMutex* mutex;
 
 public slots:
@@ -32,6 +32,7 @@ public slots:
     void queryResult(bool result);
     //void setDB(const QString& server);
     void setNewFilePath(const QString& filepath) {_filepath = filepath;}
+    void timeZoneChanged(const QString& timeZone) {_curTimeZone = timeZone.toInt();}
     //void threadInitComplete();
 
 private:
@@ -44,6 +45,7 @@ private:
 
     QString templateQuery;
     QString insertHistTableQuery;
+    int _curTimeZone;
 
     void errorHandler(GlobalError::ErrorRoles, const QString&, const int idfrom = 1000);
 signals:

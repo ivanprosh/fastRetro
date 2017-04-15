@@ -94,12 +94,12 @@ ApplicationWindow {
     SettingsDialog {
         id: settingsDialog
         width: settingsDialog.width > 600 ? settingsDialog.width:600
-        //height: 500
+        //height: 500                  
     }
     LogView {
         id: logErrorsView
-        width: logErrorsView.width > 300 ? logErrorsView.width:300
-        height: logErrorsView.height > 500 ? logErrorsView.height:500
+        width: width > 600 ? width : 600
+        height: height > 300 ? height : 300
     }
 
 /*
@@ -257,13 +257,13 @@ ApplicationWindow {
                 id: statusData
                 text: MainClass.currentError.secondItem
                 onTextChanged: {
-                    settingsDialog.textColor = (MainClass.currentError.firstItem === 3) ? "red" : "black";
+                    ;//settingsDialog.textColor = (MainClass.currentError.firstItem === 3) ? "red" : "black";
                 }
             }
         }
         onErrorChanged: {
             console.log("QML:: error changed " + MainClass.currentError.firstItem)
-            if(MainClass.currentError.firstItem !== 10 && MainClass.currentError.firstItem !== 4) {
+            if(MainClass.currentError.firstItem !== 10) {
                 warningLoad.active = true
                 warningLogButton.visible = true
             }

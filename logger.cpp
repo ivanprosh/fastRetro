@@ -18,6 +18,7 @@ void Logger::setFile(const QString &_logFileName)
 {
     if(!_logFileName.isEmpty()){
         logfile.setFileName(_logFileName);
+        fileCorrupted = false;
     }
 }
 
@@ -27,10 +28,10 @@ void Logger::clear() {
 }
 
 auto Logger::addEntry(GlobalError* entry) -> void {
-    if(!fileCorrupted && logFileStream.device()){
+    if(!fileCorrupted){
         addEntryInFile(entry);
     }
-    this->m_entries.enqueue(entry->ErrorCodes.at(entry->firstItem()) + ":" + entry->secondItem());
+    this->m_entries.enqueue(entry->getDateTime().time().toString("hh:mm:ss") + " " + entry->ErrorCodes.at(entry->firstItem()) + ":" + entry->secondItem());
 
     QMetaObject::invokeMethod(this, "entriesChanged", Qt::QueuedConnection);
 }

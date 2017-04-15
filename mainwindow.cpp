@@ -16,8 +16,11 @@ namespace {
     const QString AutoStartSetting("AutoStart");
     const QString ServerNameSetting("ServerName");
     const QString BackupFolderSetting("BackupFolder");
+    const QString TimeZoneSetting("TimeZone");
 
     const QString _logFileName("CurrentLog.txt");
+
+    //const QString _DBConnectionString("DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;Trusted_Connection=yes");
     //const QString _logFileTemplateString("%1 ");
 }
 
@@ -59,6 +62,10 @@ void MainWindow::initializeSettings()
     QSettings settings;
     if(!settings.value(ServerNameSetting).toString().isEmpty())
         setServerName(settings.value(ServerNameSetting).toString());
+    if(!settings.value(TimeZoneSetting).toString().isEmpty())
+        setTimeZone(settings.value(TimeZoneSetting).toString());
+    else
+        setTimeZone("+3");
     if(!settings.value(BackupFolderSetting).toString().isEmpty())
         setBackupFolderName(settings.value(BackupFolderSetting).toString());
     if(!settings.value(ModelSetting).toStringList().isEmpty()){
@@ -89,7 +96,7 @@ void MainWindow::setCurrentError(GlobalError *value){
 void MainWindow::initObjConnections()
 {
     connect(this, SIGNAL(serverNameChanged(const QString&)),
-            SLOT(setDB(const QString&)));
+            currentThread.data(), SIGNAL(serverNameChanged(const QString&)));
     connect(DataAnalizator::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
     connect(Logger::instance(), SIGNAL(errorChange(GlobalError*)),
@@ -98,6 +105,10 @@ void MainWindow::initObjConnections()
             DataAnalizator::instance(), SLOT(setNewFilePath(const QString&)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             currentThread.data(), SIGNAL(backupFolderNameChanged(const QString&)));
+    connect(currentThread.data(), SIGNAL(errorChange(GlobalError*)),
+            this, SLOT(errorChange(GlobalError*)));
+    connect(this, SIGNAL(timeZoneChanged(const QString&)),
+            DataAnalizator::instance(), SLOT(timeZoneChanged(const QString&)));
 }
 
 void MainWindow::initSockConnections()
@@ -132,6 +143,7 @@ void MainWindow::updateStateSocket(PLCSocketClient* client){
     //    _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState)+",ошибка:"+client->errorString(),statusRole);
 
 }
+/*
 void MainWindow::setDB(const QString &server)
 {
     qDebug() << "MainWindow::Server change name: " << server;
@@ -143,31 +155,19 @@ void MainWindow::setDB(const QString &server)
         return;
     }
 
-    QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.";
-    currentThread->setConnection(stringConnection.arg(server));
+    //QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.";
+    currentThread->setConnection(QString(_DBConnectionString).arg(server));
 
-
-    /*
-    if(currentThread->getWorker()->getDB().isValid() && currentThread->getWorker()->getDB().isOpen())
-        currentThread->getWorker()->getDB().close();
-
-    QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=wwAdmin;PWD=wwAdmin;Trusted_Connection=no; WSID=.";
-    currentThread->setConnection(stringConnection.arg(server));
-    */
 
     if(currentThread->getWorker()->getDB().open()){
         qDebug() << "DataAnalizator::DB open!";
         if(!currentThread->isRunning())
             ;
         return;
-    }
-
-    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,
-                                                         getlastErrorDB()));
-
-    errorChange(CurError.data());
+    }  
 
 }
+*/
 void MainWindow::socketStateChanged(QAbstractSocket::SocketState curState)
 {
     updateStateSocket(qobject_cast<PLCSocketClient* >(sender()));
@@ -298,7 +298,7 @@ void MainWindow::error()
 
 void MainWindow::errorChange(GlobalError* lastErr)
 {
-    qDebug() << "New error: " << lastErr;
+    //qDebug() << "New error: " << lastErr;
     //QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,lastErr));
     switch (lastErr->firstItem()) {
     case GlobalError::Configuration:
@@ -317,7 +317,7 @@ void MainWindow::errorChange(GlobalError* lastErr)
 
 void MainWindow::resetError()
 {
-    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::None,QString()));
+    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::None,"Ок"));
     setCurrentError(CurError.data());
 }
 
@@ -339,6 +339,16 @@ void MainWindow::setBackupFolderName(QString value){
         QSettings settings;
         settings.setValue(BackupFolderSetting,_backupFolderName);
         emit backupFolderNameChanged(_backupFolderName);
+    }
+}
+
+void MainWindow::setTimeZone(QString value)
+{
+    if(QString::number(_timeZone)!=value){
+        _timeZone = value.toInt();
+        QSettings settings;
+        settings.setValue(TimeZoneSetting,_timeZone);
+        emit timeZoneChanged(QString::number(_timeZone));
     }
 }
 

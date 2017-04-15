@@ -17,14 +17,17 @@ Dialog {
         ListElement { content: "Ошибка (проверьте существование лог файла и права на доступ)"}
     }
     ListView {
+        id: listview
         anchors.left: parent.left;
         anchors.right: parent.right;
         anchors.top: parent.top;
         anchors.bottom: footer.top;
+        //contentWidth:
 
         model: errorFile ? errorModel : MainClass.logger.entries;
 
         delegate: Text {
+
             anchors.leftMargin: 4;
             anchors.left: parent.left;
             anchors.right: parent.right;

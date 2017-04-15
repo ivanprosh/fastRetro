@@ -11,6 +11,10 @@ Q_GLOBAL_STATIC(DataAnalizator, dataAnalizator)
 
 static bool INIT_TRUE = false;
 
+namespace {
+    const QString FileHeaderData = "ASCII\n,\nUser,1,Server Local,10,2\n";
+}
+
 DataAnalizator* DataAnalizator::instance()
 {
     return dataAnalizator();
@@ -39,7 +43,7 @@ void DataAnalizator::newDataReceived()
     }
 
     //если накопилось достаточно данных
-    if(it>50) {
+    if(it>100) {
 
         QString stream;
         //query.append(createTablePref);
@@ -68,25 +72,30 @@ void DataAnalizator::queryResult(bool result)
     qDebug() << "Query success is - " << result;
 }
 
-void DataAnalizator::prepareQuery(QString& _prepareQuery,int cycleIndex, int cycleStep, QDateTime curDateTime)
+void DataAnalizator::correctDTime(QString& _prepareDTime,int cycleIndex, int cycleStep, QDateTime curDateTime)
 {
     QDateTime corectDateTime(curDateTime.addMSecs(cycleStep*cycleIndex));
+    if(_curTimeZone != 0)
+        corectDateTime = corectDateTime.addSecs(_curTimeZone*3600);
 
-    _prepareQuery = templateQuery.arg(corectDateTime.date().toString(Qt::ISODate))
+    _prepareDTime = QString("%1,%2").arg(corectDateTime.date().toString("yyyy/MM/dd"))
                                  .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
 }
 
 void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& stream)
 {
     int cycleIndex = 0;
-    QString _prepareQuery;
+    QString _prepareDTime;
 
     while(cycleIndex < curPacket->getCyclesCount()){
         int curPar = 0;
-        prepareQuery(_prepareQuery,cycleIndex,server->cycleStep,curPacket->getDateTime());
+        correctDTime(_prepareDTime,cycleIndex,server->cycleStep,curPacket->getDateTime());
         while (curPar < curPacket->getParCount()) {
-            stream.append(_prepareQuery.arg(PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1))
-                         .arg(curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount())));
+            QString TagName = PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1);
+            float Value = curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount());
+            stream.append(QString("%1,%2,%3,%4,%5,192\n").arg(TagName).arg(QString::number(0)).arg(_prepareDTime).arg(QString::number(0)).arg(Value));
+            //stream.append(_prepareQuery.arg(PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1))
+            //             .arg(curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount())));
             curPar++;
         }
         cycleIndex++;
@@ -101,8 +110,8 @@ void DataAnalizator::initialize()
     "INSERT @FastTableVar (DateTime,TagName,Value) "
     "VALUES ('%1 %2', '%3', %4) \n";
 */
-    templateQuery =
-    "%1 %2, %3, %4\n";
+//    templateQuery =
+//    "%1,%2,%3,%4,%5\n";
 
     insertHistTableQuery =
     "INSERT INTO INSQL.Runtime.dbo.AnalogHistory (DateTime,TagName,Value) "
@@ -140,7 +149,10 @@ QString DataAnalizator::rfile(const QString& name)
 QString DataAnalizator::generateFileName(const QDateTime &dt, const QString& abonent)
 {
     QString pattern = "%1_%2_%3%4";
-    return pattern.arg(abonent).arg(dt.date().toString("yyyyMMdd")).arg(dt.time().toString("hhmmss"));
+    QDateTime corectDateTime = dt;
+    if(_curTimeZone != 0)
+        corectDateTime = corectDateTime.addSecs(_curTimeZone*3600);
+    return pattern.arg(abonent).arg(corectDateTime.date().toString("yyyyMMdd")).arg(corectDateTime.time().toString("hhmmss"));
 }
 
 void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream, QString filepath)
@@ -154,7 +166,7 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
 
     //QMutexLocker locker(&GLOBAL::globalMutex);
 
-    QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".txt")));
+    QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
     QTextStream out(outputFile.data());
 
     int ver = 1;
@@ -171,6 +183,7 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
         return;
     }
 
+    out << FileHeaderData;
     out << stream;
 
     outputFile->close();

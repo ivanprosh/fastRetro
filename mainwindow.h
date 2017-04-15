@@ -21,6 +21,7 @@ class MainWindow: public QObject
     Q_PROPERTY(bool savePermit READ savePermit WRITE setSavePermit NOTIFY savePermitChanged)
     Q_PROPERTY(bool autostart READ isAutostart WRITE setAutostart NOTIFY autostartChanged)
     Q_PROPERTY(QString serverName READ serverName WRITE setServerName NOTIFY serverNameChanged)
+    Q_PROPERTY(QString timeZone READ timeZone WRITE setTimeZone NOTIFY timeZoneChanged)
     Q_PROPERTY(QString backupFolderName READ backupFolderName WRITE setBackupFolderName NOTIFY backupFolderNameChanged)
     Q_PROPERTY(Logger* logger READ getLogger CONSTANT)
     Q_PROPERTY(GlobalError* currentError READ currentError WRITE setCurrentError NOTIFY currentErrorChanged)
@@ -33,7 +34,6 @@ public:
     void setStopPermit(bool value){permitStop = value; emit stopPermitChanged();}
     void setSavePermit(bool value){permitSave = value; emit savePermitChanged();}
     void setCurrentError(GlobalError* value);
-    void initializeSettings();
     auto getLogger() -> Logger*;
 
 public slots:
@@ -41,6 +41,7 @@ public slots:
     void saveConfig();
     void setAutostart(bool value);
     bool isAutostart() {return _autostart;}
+    void initializeSettings();
     //
     void connectToServer();
     void stopScan();
@@ -60,8 +61,11 @@ public slots:
     void setBackupFolderName(QString value);
     QString backupFolderName() {return _backupFolderName;}
 
+    void setTimeZone(QString value);
+    QString timeZone() {return QString::number(_timeZone);}
+
     GlobalError* currentError(){return _currentError;} 
-    void setDB(const QString &server);
+    //void setDB(const QString &server);
 
 private:
     void initObjConnections();
@@ -82,6 +86,7 @@ private:
     QString _serverName, _backupFolderName;
     GlobalError* _currentError;
     QSharedPointer<WorkThread> currentThread;
+    int _timeZone;
 
     //QList<PLCSocketClient> clients;
 
@@ -92,6 +97,7 @@ signals:
     void autostartChanged();
     void serverNameChanged(const QString&);
     void backupFolderNameChanged(const QString&);
+    void timeZoneChanged(const QString&);
     void currentErrorChanged(GlobalError*);
 };
 

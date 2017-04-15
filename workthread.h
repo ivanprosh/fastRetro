@@ -14,7 +14,6 @@ class WorkThread: public QThread
     ~WorkThread();
 
     void execute( const QString& query );
-    void setConnection(const QString& serverName);
     Worker* getWorker(){return m_worker;}
   protected:
     void run();
@@ -25,6 +24,7 @@ class WorkThread: public QThread
     void queryFinished( bool success );
     void backupFolderNameChanged(const QString&);
     void errorChange(GlobalError*);
+    void serverNameChanged(const QString&);
     //void initFinished();
   private:
     Worker* m_worker;

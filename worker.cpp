@@ -3,8 +3,17 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QTimer>
 
-Worker::Worker(QObject *parent):QObject(parent),m_database(QSqlDatabase::addDatabase("QODBC"))
+namespace {
+    const QString _DBConnectionString("DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.");
+    //const QString _DBConnectionString("DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;Trusted_Connection=yes; WSID=.");
+}
+
+
+Worker::Worker(QObject *parent):QObject(parent),
+    m_database(QSqlDatabase::addDatabase("QODBC")),
+    curError(new GlobalError(GlobalError::None,"Ок"))
 {
     createTablePref =
     "IF OBJECT_ID('tempdb.dbo.#FastRetroBuffer', 'U') IS NOT NULL\n"
@@ -28,6 +37,9 @@ Worker::Worker(QObject *parent):QObject(parent),m_database(QSqlDatabase::addData
     resultInsert =
     "INSERT INTO INSQL.Runtime.dbo.AnalogHistory (DateTime,TagName,Value) "
     "SELECT DateTime,TagName,Value FROM #FastRetroBuffer";
+
+    //connect(&watcher, SIGNAL(directoryChanged(QString)),
+    //        this, SLOT(directoryChanged(QString)));
 }
 
 bool Worker::executeQuery(const QString &query)
@@ -38,9 +50,9 @@ bool Worker::executeQuery(const QString &query)
     if(queryClass.exec(query))
         return true;
 
-    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,
-                                         queryClass.lastError().text()));
-    emit errorChange(CurError.data());
+    curError->setFirstItem(GlobalError::Historian);
+    curError->setSecondItem(queryClass.lastError().text());
+    emit errorChange(curError.data());
 
     qDebug() << queryClass.lastError().text();
     return false;
@@ -49,16 +61,24 @@ bool Worker::executeQuery(const QString &query)
 void Worker::setBackupFolder(const QString &path)
 {
     backupFolder.setPath(path);
+    watcher.addPath(path);
     scanfolder();
 }
 
 void Worker::scanfolder()
 {
-    QStringList filesNames = backupFolder.entryList(QStringList("*.txt"),QDir::Files,QDir::Name);
+    if(!m_database.isValid() || !m_database.isOpen())
+        return;//QTimer::singleShot(10000, this, SLOT(scanfolder()));
+
+    QStringList filesNames = backupFolder.entryList(QStringList("*.fr"),QDir::Files,QDir::Name);
+
     checkedFiles.clear();
     queryStream.clear();
 
     qDebug() << "Worker::scanfolder: " << filesNames;
+
+    if(filesNames.isEmpty())
+        return;
 
     if(executeQuery(createTablePref)) {
         //QMutexLocker locker(&GLOBAL::globalMutex);
@@ -67,34 +87,45 @@ void Worker::scanfolder()
 
             if(executeQuery(bulkInsert.arg(backupFolder.path() + "/" + name))){
                 //удаляем
-                if(!QFile::remove(name)){
-                    QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::System,
-                                                         name + ": Ошибка удаления файла"));
-                    emit errorChange(CurError.data());
+                if(!QFile::remove(backupFolder.path() + "/" + name)){
+                    curError->setFirstItem(GlobalError::System);
+                    curError->setSecondItem(name + ": Ошибка удаления файла");
+                    emit errorChange(curError.data());
                 }
             } else {
-                qDebug() << "Ошибка BULK " << bulkInsert.arg(backupFolder.path() + "/" + name);
+                qDebug() << "Ошибка BULK " << bulkInsert.arg(backupFolder.path() + "/" + name);              
             }
             //обработанные файлы
             //checkedFiles << name;
         }
         //qDebug() << "Worker::queryPrepare: " << queryStream;
     }
-    //удаляем
-//    QMutexLocker locker(&GLOBAL::globalMutex);
-//    if(executeQuery(queryStream)){
-//        foreach (QString name, checkedFiles) {
-//            //QFile inputFile(name);
-//            if(!QFile::remove(name)){
-//                QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::System,
-//                                                     name + ": Ошибка удаления файла"));
-//                emit errorChange(CurError.data());
-//            }
-//        }
-//    }
+
+    resultInsertQuery();
+    //QTimer::singleShot(10000, this, SLOT(scanfolder()));
+}
+
+void Worker::resultInsertQuery()
+{
     if(!executeQuery(resultInsert)) {
         qDebug() << "Finished NOT EXEC!";//что-то делаем
+        //QTimer::singleShot(1000, this, SLOT(resultInsertQuery()));
     } else {
         qDebug() << "ALL EXEC!";
     }
+}
+
+void Worker::serverNameChanged(const QString &server)
+{
+    qDebug() << "Worker:: Init new connection to server: " << server;
+    if(m_database.isValid() && m_database.isOpen())
+        m_database.close();
+    if(!server.isEmpty())
+        m_database.setDatabaseName(QString(_DBConnectionString).arg(server));
+    if(!m_database.open()) {
+        curError->setFirstItem(GlobalError::Historian);
+        curError->setSecondItem("Проверьте доступность указанного сервера Historian");
+        emit errorChange(curError.data());
+    }
+    scanfolder();
 }

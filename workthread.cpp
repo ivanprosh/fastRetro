@@ -2,12 +2,20 @@
 #include "global.h"
 #include <QDebug>
 
+WorkThread::WorkThread(QObject *parent):QThread(parent)
+{
+    // Create worker object within the context of the new thread
+    //m_worker = new Worker();
+    qDebug() << "Point1";
+}
+
 void WorkThread::run()
 {
   qDebug() << "WorkThread:: init Worker";
 
   GLOBAL::globalMutex.lock();
 
+  m_worker = new Worker();
   //qDebug() << "Point0";
 
   // forward to the worker: a 'queued connection'!
@@ -16,10 +24,12 @@ void WorkThread::run()
 
   //qDebug() << "Point2";
   // forward a signal back out
-  connect( m_worker, SIGNAL( results( bool ) ),
-           this, SIGNAL( queryFinished( bool ) ) );
+  connect( this, SIGNAL( serverNameChanged( const QString& ) ),
+           m_worker, SLOT( serverNameChanged( const QString& ) ) );
   connect( this, SIGNAL( backupFolderNameChanged( const QString& ) ),
            m_worker, SLOT( setBackupFolder( const QString& ) ) );
+  connect( m_worker, SIGNAL( results( bool ) ),
+           this, SIGNAL( queryFinished( bool ) ) );
   connect(m_worker, SIGNAL(errorChange(GlobalError*)),
           this, SIGNAL(errorChange(GlobalError*)));
 
@@ -34,13 +44,6 @@ void WorkThread::run()
   exec();  // start our own event loop
 }
 
-WorkThread::WorkThread(QObject *parent):QThread(parent)
-{
-    // Create worker object within the context of the new thread
-    m_worker = new Worker();
-    qDebug() << "Point1";
-}
-
 WorkThread::~WorkThread()
 {
     delete m_worker;
@@ -51,7 +54,7 @@ void WorkThread::execute( const QString& query )
     qDebug() << "WorkThread:: Emit Send SQL query to Worker";
     emit queue(query); // queues to worker
 }
-
+/*
 void WorkThread::setConnection(const QString &connection)
 {
     qDebug() << "WorkThread:: Init new connection to db: " << connection;
@@ -60,3 +63,4 @@ void WorkThread::setConnection(const QString &connection)
     if(!connection.isEmpty())
         m_worker->getDB().setDatabaseName(connection);
 }
+*/

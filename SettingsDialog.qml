@@ -57,7 +57,7 @@ AppDialogs.Dialog {
 
                         property var oldText
                         //readOnly: true
-                        placeholderText: "//A_Server"
+                        placeholderText: "//V_Server1"
                         Layout.fillWidth: true
                         Component.onCompleted: {
                             text = MainClass.backupFolderName
@@ -88,15 +88,39 @@ AppDialogs.Dialog {
                     //}
                 }
 
-
-                CheckBox {
-                    id: autoStart
-                    text: "Автостарт"
-
-                    Component.onCompleted: {
-                        checked = MainClass.autostart
+                RowLayout {
+                    //anchors.fill: parent
+                    Label {
+                        text: "Часовой пояс сервера относительно ПЛК:"
                     }
+                    MyTextField {
+                        id: timeZone
+
+                        placeholderText: "+3"
+                        Layout.fillWidth: true
+                        validator: RegExpValidator {
+                            regExp: /[+-]\d{0,2}/
+                        }
+                        Component.onCompleted: {
+                            text = MainClass.timeZone
+                        }
+
+                    }
+
+                    CheckBox {
+                        id: autoStart
+                        text: "Автостарт"
+
+                        Component.onCompleted: {
+                            checked = MainClass.autostart
+                        }
+                    }
+                    //Item { Layout.fillWidth: true }
+                    //}
                 }
+
+
+
             }
 
         }
@@ -148,8 +172,10 @@ AppDialogs.Dialog {
                 console.log("You chose: " + folder)
                 var url = folder.toString();
                 var path = url.match('file\:(//\\w.*)');
-                if(path[1].length > 0)
+                if(path !== null)
                     backupFolder.text = path[1];
+                else
+                    backupFolder.placeholderText = "Выберите сетевую папку! //V_Server1/...";
                 loader.active = false;
             }
             onRejected: {
@@ -161,11 +187,15 @@ AppDialogs.Dialog {
     }
 
     onAccepted: {
-        console.log("in SettingsDialog.qml - Settings Accepted!");
+        console.log("in SettingsDialog.qml - Settings Accepted start!");
+
         MainClass.resetError();
+
         MainClass.setServerName(historianName.text);
         MainClass.setAutostart(autoStart.checked);
         MainClass.setBackupFolderName(backupFolder.text);
+
+        console.log("in SettingsDialog.qml - Settings Accepted finished!");
     }
 
 }

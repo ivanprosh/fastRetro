@@ -1,5 +1,5 @@
 TEMPLATE      = app
-QT           += network qml quick sql
+QT           += core network qml quick sql
 CONFIG += c++11
 
 HEADERS       = \

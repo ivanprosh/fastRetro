@@ -21,6 +21,7 @@ private:
     CQueue<QString> m_entries;
     bool m_visible = false;
     bool fileCorrupted = true;
+    quint64 lastFilePos;
 public:
     Logger();
     static Logger* instance();

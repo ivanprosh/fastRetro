@@ -93,13 +93,25 @@ ApplicationWindow {
 
     SettingsDialog {
         id: settingsDialog
-        width: settingsDialog.width > 600 ? settingsDialog.width:600
+        width: 600
+        onWidthChanged: {
+            //if (width < 600) width = 600;
+        }
         //height: 500                  
     }
     LogView {
         id: logErrorsView
-        width: width > 600 ? width : 600
-        height: height > 300 ? height : 300
+        width: 600
+        height: 300
+        onWidthChanged: {
+            //if (width < 600) width = 600;
+        }
+        onHeightChanged: {
+            //if (height < 300) height = 300;
+        }
+        onReset: {
+            warningLogButton.visible = false;
+        }
     }
 
 /*
@@ -190,16 +202,26 @@ ApplicationWindow {
             Item {
 
                 function setColor(data, color){
-                    if(data == "Подключение")
-                        return "green"
+                    //if(data == "Подключение")
+                    //    return "green"
                     if(data.indexOf('Ошибка',0) !== -1)
                         return "red"
                     else
-                        return color
+                        return "green"
+                }
+                function changeState(data){
+                    if(data.indexOf('Ошибка',0) !== -1)
+                        state = "disconnect";
+                    else if(data.indexOf('Подключ',0) !== -1)
+                        state = "connecting";
+                    else if(data === "")
+                        state = "wrong";
+                    else
+                        state = "stopByUser";
                 }
 
                 Text {
-                    width: parent.width
+                    //width: parent.width
                     anchors.margins: 4
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
@@ -208,11 +230,64 @@ ApplicationWindow {
                     color : "black"
                     visible: !styleData.selected
                     onTextChanged: {
-                       //console.log("Changing text")
-                       this.color = setColor(styleData.value,color)
+                        this.color = setColor(styleData.value,color)
+                        changeState(styleData.value);
                     }
 
                 }
+                Image {
+                    id: forceStopConnectIcon
+                    visible: false
+                    source: Qt.resolvedUrl("qrc:/images/stop.svg")
+                    fillMode: Image.PreserveAspectFit
+                    height: parent.height
+                    width: height
+                    anchors.right: forceReconnectIcon.left
+                    anchors.margins: 1
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            //Принудительно выполняем коннект
+                            MainClass.forceStopConnect(styleData.Row);
+                        }
+                    }
+                }
+                Image {
+                    id: forceStartConnectIcon
+                    visible: false
+                    source: Qt.resolvedUrl("qrc:/images/play_arrow.svg")
+                    fillMode: Image.PreserveAspectFit
+                    height: parent.height
+                    width: height
+                    anchors.right: forceReconnectIcon.left
+                    anchors.margins: 1
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            //Принудительно выполняем коннект
+                            MainClass.forceStartConnect(styleData.Row);
+                        }
+                    }
+                }
+                Image {
+                    id: forceReconnectIcon
+                    visible: false
+                    source: Qt.resolvedUrl("qrc:/images/restore.svg")
+                    fillMode: Image.PreserveAspectFit
+                    height: parent.height
+                    width: height
+                    anchors.right: parent.right
+                    anchors.margins: 1
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            //Принудительно выполняем реконнект
+                            console.log("click force");
+                            MainClass.forceReconnect(styleData.Row);
+                        }
+                    }
+                }
+
                 Loader {
                     id: loaderEditor
                     anchors.fill: parent
@@ -231,24 +306,59 @@ ApplicationWindow {
                             id: textinput
                             color: styleData.textColor
                             text: styleData.value
-                            enabled: styleData.column === 0
+                            enabled: state === "stopByUser"
                             MouseArea {
                                 id: mouseArea
                                 //enabled: styleData.column === 0
                                 anchors.fill: parent
                                 hoverEnabled: true
+                                enabled: MainClass.startPermit
                                 onClicked: textinput.forceActiveFocus()
                             }
                         }
                     }
                 }
+                states: [
+                    State {
+                        name: "connecting"
+                        PropertyChanges { target: forceStopConnectIcon; visible: styleData.column === 1 }
+                        PropertyChanges { target: forceStartConnectIcon; visible: false }
+                        PropertyChanges { target: forceReconnectIcon; visible: false }
+                        //PropertyChanges { target: textinput; enabled: false }
+                    },
+                    State {
+                        name: "disconnect"
+                        PropertyChanges { target: forceStopConnectIcon; visible: false }
+                        PropertyChanges { target: forceStartConnectIcon; visible: false }
+                        PropertyChanges { target: forceReconnectIcon; visible: styleData.column === 1 }
+                        //PropertyChanges { target: textinput; enabled: false}
+                    },
+                    State {
+                        name: "stopByUser"
+                        PropertyChanges { target: forceStopConnectIcon; visible: false }
+                        PropertyChanges { target: forceStartConnectIcon; visible: styleData.column === 1 }
+                        PropertyChanges { target: forceReconnectIcon; visible: false }
+                        //PropertyChanges { target: textinput; enabled: styleData.column === 0}
+                    },
+                    State {
+                        name: "wrong"
+                        PropertyChanges { target: forceStopConnectIcon; visible: false }
+                        PropertyChanges { target: forceStartConnectIcon; visible: false }
+                        PropertyChanges { target: forceReconnectIcon; visible: false }
+                        //PropertyChanges { target: textinput; enabled: false}
+                    }
+                ]
+                /*Component.onCompleted: {
+                    state = "stopByUser"
+                }*/
+
             }
         }
     }
     statusBar: StatusBar {
         id: statusBar
         visible: statusData.text.length > 0
-        width: parent.width
+        //width: parent.width
         property var error: MainClass.currentError.secondItem
 
         RowLayout {
@@ -304,34 +414,4 @@ ApplicationWindow {
 
     }
 
-    /*
-    GridLayout {
-        rowSpacing: 12
-        columnSpacing: 30
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.margins: 30
-
-        MyTextField {
-            Layout.row: 1
-            implicitWidth: window.width / columnFactor
-        }
-        MyTextField {
-            readOnly: true
-            implicitWidth: window.width / columnFactor
-        }
-        CheckBox {
-            text: "Активен"
-            implicitWidth: window.width / columnFactor
-        }
-
-        ProgressBar {
-            Layout.row: 2
-            value: slider1.value
-            implicitWidth: window.width / columnFactor
-        }
-
-
-    }
-    */
 }

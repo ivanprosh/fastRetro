@@ -6,7 +6,7 @@
 #include "plcsocketclient.h"
 #include "global.h"
 
-class ConnectionManager : public QObject//, private Ui::TripPlanner
+class ConnectionManager : public QObject//
 {
     Q_OBJECT
 
@@ -18,6 +18,11 @@ public:
     void removeConnection(QSharedPointer<PLCSocketClient> connection);
     int maxConnections() const;
     QByteArray clientId() const;
+    void errorHandler(PLCSocketClient *curClient, QAbstractSocket::SocketError);
+    void closeConnection(PLCSocketClient *curClient);
+    void activateConnection(PLCSocketClient *curClient);
+    void forceReconnect(PLCSocketClient *curClient);
+    //void forceStopConnect(PLCSocketClient *curClient);
 
     //ConnectionManager(QAbstractTableModel* model,QObject *parent = 0);
 protected:

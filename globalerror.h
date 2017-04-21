@@ -8,7 +8,7 @@
 class GlobalError : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int idFrom READ idFrom WRITE setIdFrom NOTIFY idFromChanged)
+    Q_PROPERTY(QString idFrom READ idFrom WRITE setIdFrom NOTIFY idFromChanged)
     Q_PROPERTY(ErrorRoles firstItem READ firstItem NOTIFY firstItemChanged)
     Q_PROPERTY(QString secondItem READ secondItem NOTIFY secondItemChanged)
     Q_ENUMS(ErrorRoles)
@@ -17,8 +17,8 @@ public:
     enum ErrorRoles {Socket=1,Configuration,Historian,System,Logger,None=10};
 
     QStringList ErrorCodes;//QStringList() << "Socket" << "Configuration" << "Historian" << "System"
-    GlobalError(QObject *parent = 0):pair(),QObject(parent){}
-    GlobalError(ErrorRoles role,const QString& val):pair(role,val){
+    //GlobalError(QObject *parent = 0):pair(),QObject(parent){}
+    GlobalError(ErrorRoles role = None,const QString& val = QString("Ok"), QObject *parent = 0):QObject(parent),pair(role,val){
         eventDateTime = QDateTime::currentDateTime();
         ErrorCodes << "" << "сокет" << "конфигурация" << "архиватор" << "общие" << "лог";
     }
@@ -36,12 +36,12 @@ public:
         emit secondItemChanged();
     }
     QDateTime getDateTime(){return eventDateTime;}
-    void setIdFrom(int idfrom){_idfrom=idfrom; emit idFromChanged();}
-    int idFrom(){return _idfrom;}
+    void setIdFrom(QString idfrom){_idfrom=idfrom; emit idFromChanged();}
+    QString idFrom(){return _idfrom;}
 private:
     QPair<ErrorRoles, QString> pair;
     QDateTime eventDateTime;
-    int _idfrom;
+    QString _idfrom;
 signals:
     void firstItemChanged();
     void secondItemChanged();

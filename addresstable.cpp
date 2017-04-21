@@ -45,9 +45,18 @@ void AddressTable::ipChange(const int curRow, const int curColumn, const QVarian
 
     QRegExp correctIp("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\:(\\d+)");
 
-    if(index(curRow,curColumn).isValid() && (correctIp.exactMatch(value.toString())))
-        if(correctIp.cap(1).toInt() < 255 || correctIp.cap(2).toInt() < 255 || correctIp.cap(3).toInt() < 255 || correctIp.cap(4).toInt() < 255)
-            setData(index(curRow,curColumn), value, Qt::UserRole+curColumn);
+    if(index(curRow,curColumn).isValid() && (correctIp.exactMatch(value.toString()))){
+        if(correctIp.cap(1).toInt() < 255 || correctIp.cap(2).toInt() < 255 || correctIp.cap(3).toInt() < 255 || correctIp.cap(4).toInt() < 255){
+            //setData(index(curRow,curColumn), value, Qt::UserRole+curColumn);
+            setData(index(curRow,curColumn), value, ipRole);
+            setData(index(curRow,curColumn), QString("Не активен"), statusRole);
+        }
+    }
+    else if(value.toString().isEmpty()){
+        //setData(index(curRow,curColumn), value, Qt::UserRole+curColumn);
+        setData(index(curRow,curColumn), value, ipRole);
+        setData(index(curRow,curColumn), QString(), statusRole);
+    }
 
 }
 

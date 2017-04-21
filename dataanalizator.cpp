@@ -12,7 +12,7 @@ Q_GLOBAL_STATIC(DataAnalizator, dataAnalizator)
 static bool INIT_TRUE = false;
 
 namespace {
-    const QString FileHeaderData = "ASCII\n,\nUser,1,Server Local,10,2\n";
+    const QString FileHeaderData = QString("ASCII\n,\nUser,1,Server Local,10,2\n").toUtf8();
 }
 
 DataAnalizator* DataAnalizator::instance()
@@ -20,30 +20,33 @@ DataAnalizator* DataAnalizator::instance()
     return dataAnalizator();
 }
 
+DataAnalizator::DataAnalizator():_segmentInterval(1){}
+
 void DataAnalizator::newDataReceived()
 {
     PLCSocketClient* client = static_cast<PLCSocketClient*>(sender());
 
     if(client == Q_NULLPTR) return;
 
-//    if(PLCtoParNames.size() < (client->getServer()->id))
-//        qDebug() << "DataAnalizator::Unknown PLC";
     if(ignorePLClist.value(client->getServer()->id)) return;
 
     int it=client->queReceivePackets.size();
 
     if(!PLCtoParNames.contains(client->getServer()->id) || PLCtoParNames.value(client->getServer()->id).isEmpty()){
-        errorHandler(GlobalError::Configuration,"Не найдены быстрые параметры абонента. Проверьте конф. файл",client->getServer()->id);
+        errorHandler(GlobalError::Configuration,
+                     "Не найдены быстрые параметры абонента. Проверьте конф. файл",
+                     PLCtoParNames.value(client->getServer()->id).first());
         return;
     }
-    if(it>0 && PLCtoParNames.value(client->getServer()->id).size() < client->queReceivePackets.first()->getParCount()){
+    if(it>0 && PLCtoParNames.value(client->getServer()->id).size() != client->queReceivePackets.first()->getParCount() + 1){
         errorHandler(GlobalError::Configuration,
-                     PLCtoParNames.value(client->getServer()->id).first() + ": Проверьте идентичность количества параметров в контроллере и конф. файле", client->getServer()->id);
+                     "Проверьте идентичность количества параметров в контроллере и конф. файле (значение параметра ParCount в ПЛК)",
+                     PLCtoParNames.value(client->getServer()->id).first());
         return;
     }
 
     //если накопилось достаточно данных
-    if(it>100) {
+    if(it>_segmentInterval*10) {
 
         QString stream;
         //query.append(createTablePref);
@@ -57,13 +60,8 @@ void DataAnalizator::newDataReceived()
         }
         //запись в файл
         streamtoFile(Filename,stream,_filepath);
-        //query.append(insertHistTableQuery);
-        //qDebug() << query;
-        //currentThread->execute(query);
-        //lastQuerySuccess = false;
     }
 
-    //forbiddenReceive = false;
 }
 
 void DataAnalizator::queryResult(bool result)
@@ -75,6 +73,10 @@ void DataAnalizator::queryResult(bool result)
 void DataAnalizator::correctDTime(QString& _prepareDTime,int cycleIndex, int cycleStep, QDateTime curDateTime)
 {
     QDateTime corectDateTime(curDateTime.addMSecs(cycleStep*cycleIndex));
+
+    _prepareDTime = QString("%1,%2").arg(corectDateTime.date().toString("yyyy/MM/dd"))
+                                 .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
+
     if(_curTimeZone != 0)
         corectDateTime = corectDateTime.addSecs(_curTimeZone*3600);
 
@@ -164,6 +166,7 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
         return;
     }
 
+    GLOBAL::globalMutex.lock();
     //QMutexLocker locker(&GLOBAL::globalMutex);
 
     QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
@@ -187,17 +190,19 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
     out << stream;
 
     outputFile->close();
+    GLOBAL::globalMutex.unlock();
 }
 
-void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const int idfrom)
+void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const QString& idfrom)
 {
     QScopedPointer<GlobalError> CurError(new GlobalError(role,text));
     CurError->setIdFrom(idfrom);
 
     //if(!ignorePLClist.value(idfrom))
     emit errorChange(CurError.data());
-
+/*
     if(role==GlobalError::Configuration) {
        if(idfrom!=1000) ignorePLClist[idfrom] = true;
     }
+*/
 }

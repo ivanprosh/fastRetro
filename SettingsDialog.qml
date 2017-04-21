@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.2 as AppDialogs
 import QtQuick.Layouts 1.1
 
@@ -7,13 +7,12 @@ AppDialogs.Dialog {
     id: dialog
     modality: Qt.WindowModal
     title: qsTr("Настройки")
-    width: grid.implicitWidth + 2 * grid.rowSpacing
-    height: grid.implicitHeight + 2 * grid.columnSpacing
+    //width: grid.implicitWidth + 2 * grid.rowSpacing
+    //height: grid.implicitHeight + 2 * grid.columnSpacing
 
-    standardButtons: StandardButton.Save | StandardButton.Discard
+    //standardButtons: StandardButton.Save | StandardButton.Discard
 
     signal finished(string fullName, string address, string city, string number)
-    property alias textColor : historianName.textColor
 
     GridLayout {
         id: grid
@@ -42,39 +41,41 @@ AppDialogs.Dialog {
 
                 RowLayout {
                     id: rowLay
-                    anchors.fill: parent
+                    //anchors.fill: parent
                     Label {
                         text: "Каталог временных файлов:"
                     }
+
                     Text {
                         id: hiddenText
-                        anchors.fill: backupFolder
-                        text: backupFolder.text
+                        anchors.fill: backupFolderPath
+                        text: backupFolderPath.text
                         visible: false
                     }
-                    MyTextField {
-                        id: backupFolder
 
-                        property var oldText
-                        //readOnly: true
-                        placeholderText: "//V_Server1"
+                    MyTextField {
+                        id: backupFolderPath
+
+                        ToolTip.text: "Каталог для сформированных .csv файлов.\nЕсли запись идет напрямую\n в БД, должен быть на Historian, иначе на локальной машине"
+
+                        placeholderText: "//A_Server/FastRetro или C:\\FastRetro"
                         Layout.fillWidth: true
                         Component.onCompleted: {
-                            text = MainClass.backupFolderName
+                            text = MainClass.backupFolderName;
+                            console.log("Backup folder " + text);
                         }
                         onTextChanged: {
-                            width = hiddenText.contentWidth
+                            width = hiddenText.contentWidth;
                         }
 
                         validator: RegExpValidator {
-                            regExp: /\/\/\w.*/
+                            regExp: /(\w:\\)|(\/\/)\w.*/
                         }
 
                     }
                     ToolButton {
                         id: chooseFilePath
-                        height: backupFolder.height
-                        //iconSource: Qt.resolvedUrl("qrc:/images/add.svg")
+                        height: backupFolderPath.height
                         Image {
                             source: Qt.resolvedUrl("qrc:/images/add.svg")
                             anchors.fill: parent
@@ -84,12 +85,10 @@ AppDialogs.Dialog {
                             loader.active = true
                         }
                     }
-                    //Item { Layout.fillWidth: true }
-                    //}
                 }
 
                 RowLayout {
-                    //anchors.fill: parent
+
                     Label {
                         text: "Часовой пояс сервера относительно ПЛК:"
                     }
@@ -110,46 +109,75 @@ AppDialogs.Dialog {
                     CheckBox {
                         id: autoStart
                         text: "Автостарт"
-
+                        indicator.height: timeZone.height
+                        indicator.width: indicator.height
+                        //anchors.margins: 10
                         Component.onCompleted: {
                             checked = MainClass.autostart
+                            height = parent.height
                         }
                     }
-                    //Item { Layout.fillWidth: true }
-                    //}
                 }
-
-
 
             }
 
         }
+
         GroupBox {
             title: "Архивирование"
 
             Layout.fillWidth: true
             Layout.columnSpan: grid.columns
-            RowLayout {
+            ColumnLayout {
+                Layout.fillWidth: true
                 anchors.fill: parent
-                Label {
-                    text: "Имя сервера:"
-                }
-                MyTextField {
-                    id: historianName
-                    //enabled: MainClass.savePermit
-                    //text: MainClass.serverName
-                    validator: RegExpValidator {
-                        regExp: /[^А-я]*/
+                RowLayout {
+                    //anchors.fill: parent
+                    Label {
+                        text: "Сетевой путь до Historian"
                     }
+                    MyTextField {
+                        id: historianName
 
-                    placeholderText: "A_Server"
-                    Layout.fillWidth: true
-                    Component.onCompleted: {
-                        text = MainClass.serverName
+                        ToolTip.text: "Укажите сетевое имя сервера Historian. Если предполагается вставка данных\n
+                                   родными средствами Wonderware, укажите дополнительно путь до каталога FastLoad"
+
+                        validator: RegExpValidator {
+                            regExp: /\\\\\w.*(\\.*)?/
+                        }
+
+                        placeholderText: "\\%Server_name%\[FastLoadPath]"
+                        Layout.fillWidth: true
+                        Component.onCompleted: {
+                            text = MainClass.serverName
+                        }
+                    }
+                }
+                RowLayout {
+                    //anchors.fill: parent
+                    Label {
+                        text: "Время накопления одного сегмента данных в сек."
+                    }
+                    MyTextField {
+                        id: segmentInterval
+
+                        ToolTip.text: "Параметр помогает учесть нагрузку сети и сервера historian.\n
+                                       Параметр определяет размеры .csv файлов импорта и частоту их копирования на сервер"
+
+                        validator: RegExpValidator {
+                            regExp: /([1]\d)|[1-9]/
+                        }
+
+                        placeholderText: "1..19"
+                        Layout.fillWidth: true
+                        Component.onCompleted: {
+                            text = MainClass.segmentInterval
+                        }
                     }
                 }
             }
         }
+
     }
 
     Loader {
@@ -171,11 +199,11 @@ AppDialogs.Dialog {
             onAccepted: {
                 console.log("You chose: " + folder)
                 var url = folder.toString();
-                var path = url.match('file\:(//\\w.*)');
+                var path = url.match('file\:///(.*)');
                 if(path !== null)
-                    backupFolder.text = path[1];
+                    backupFolderPath.text = path[1];
                 else
-                    backupFolder.placeholderText = "Выберите сетевую папку! //V_Server1/...";
+                    backupFolderPath.placeholderText = "Некорректный путь...";
                 loader.active = false;
             }
             onRejected: {
@@ -193,10 +221,16 @@ AppDialogs.Dialog {
 
         MainClass.setServerName(historianName.text);
         MainClass.setAutostart(autoStart.checked);
-        MainClass.setBackupFolderName(backupFolder.text);
+        MainClass.setBackupFolderName(backupFolderPath.text);
+        MainClass.setTimeZone(timeZone.text);
+        MainClass.setSegmentInterval(segmentInterval.text);
 
         console.log("in SettingsDialog.qml - Settings Accepted finished!");
     }
 
+    Component.onCompleted: {
+        width = grid.implicitWidth + 2 * grid.rowSpacing;
+        height = grid.implicitHeight + 2 * grid.columnSpacing;
+    }
 }
 

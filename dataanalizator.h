@@ -3,8 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QSqlDatabase>
-#include "workthread.h"
+//#include "workthread.h"
 #include "globalerror.h"
 
 class Packet;
@@ -18,7 +17,7 @@ class DataAnalizator: public QObject//, private Ui::TripPlanner
 public:
     static DataAnalizator* instance();
     //void startWorkerThread() {currentThread->start();}
-
+    DataAnalizator();
     QString rfile(const QString &name);
     QHash<int,bool> ignorePLClist;
 
@@ -33,6 +32,7 @@ public slots:
     //void setDB(const QString& server);
     void setNewFilePath(const QString& filepath) {_filepath = filepath;}
     void timeZoneChanged(const QString& timeZone) {_curTimeZone = timeZone.toInt();}
+    void segmentIntervalChanged(int interval) {_segmentInterval = interval;}
     //void threadInitComplete();
 
 private:
@@ -45,9 +45,10 @@ private:
 
     QString templateQuery;
     QString insertHistTableQuery;
-    int _curTimeZone;
+    qint64 _curTimeZone;
+    int _segmentInterval;
 
-    void errorHandler(GlobalError::ErrorRoles, const QString&, const int idfrom = 1000);
+    void errorHandler(GlobalError::ErrorRoles, const QString&, const QString &idfrom = QString());
 signals:
     void errorChange(GlobalError*);
 

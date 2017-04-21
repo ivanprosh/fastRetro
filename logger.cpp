@@ -19,6 +19,18 @@ void Logger::setFile(const QString &_logFileName)
     if(!_logFileName.isEmpty()){
         logfile.setFileName(_logFileName);
         fileCorrupted = false;
+        lastFilePos = 0;
+        if(logfile.open(QIODevice::ReadWrite | QIODevice::Text) && logfile.size()==0){
+            logFileStream.setDevice(&logfile);
+            logFileStream.setFieldAlignment(QTextStream::AlignCenter);
+            logFileStream << QString("Время");
+            logFileStream.setFieldWidth(15);
+            logFileStream << QString("Тип");
+            logFileStream.setFieldWidth(15);
+            logFileStream << QString("Идентификатор");
+            logFileStream << QString("Текст сообщения");
+        }
+        logfile.close();
     }
 }
 
@@ -28,10 +40,16 @@ void Logger::clear() {
 }
 
 auto Logger::addEntry(GlobalError* entry) -> void {
-    if(!fileCorrupted){
-        addEntryInFile(entry);
-    }
-    this->m_entries.enqueue(entry->getDateTime().time().toString("hh:mm:ss") + " " + entry->ErrorCodes.at(entry->firstItem()) + ":" + entry->secondItem());
+    //if(!fileCorrupted){
+    addEntryInFile(entry);
+    //}
+    this->m_entries.enqueue(entry->getDateTime().time().toString("hh:mm:ss")
+                            + " "
+                            + entry->ErrorCodes.at(entry->firstItem())
+                            + "\t"
+                            + entry->idFrom()
+                            + "\t"
+                            + entry->secondItem());
 
     QMetaObject::invokeMethod(this, "entriesChanged", Qt::QueuedConnection);
 }
@@ -39,7 +57,7 @@ auto Logger::addEntry(GlobalError* entry) -> void {
 void Logger::addEntryInFile(GlobalError* entry)
 {
     //logfile.open(QIODevice::Write | QIODevice::Text);
-    if(!logfile.open(QIODevice::WriteOnly | QIODevice::Text)){
+    if(!logfile.open(QIODevice::ReadWrite | QIODevice::Text)){
         QScopedPointer<GlobalError> lastErr(new GlobalError(GlobalError::Logger,
                                                             "Ошибка открытия лог файла"));
         fileCorrupted = true;
@@ -47,19 +65,25 @@ void Logger::addEntryInFile(GlobalError* entry)
     } else {
         fileCorrupted = false;
         logFileStream.setDevice(&logfile);
+        logFileStream.seek(logfile.size());
         logFileStream.setFieldAlignment(QTextStream::AlignLeft);
-        logFileStream.setFieldWidth(25);
-        logFileStream << entry->getDateTime().toString("yyyy.MM.dd hh:mm:ss");
+        //logFileStream.setFieldWidth(15);
+        logFileStream << "\n" << entry->getDateTime().toString("yyyy.MM.dd hh:mm:ss\t");
         logFileStream.setFieldWidth(15);
         if(entry->ErrorCodes.size() > entry->firstItem()) {
             logFileStream << entry->ErrorCodes.at(entry->firstItem());//metaEnum.valueToKey(value->firstItem());
         } else {
             logFileStream << "UNKNOWN";
         }
-        logFileStream.setFieldWidth(100);
+        logFileStream.setFieldWidth(30);
+        logFileStream << entry->idFrom();
+        //logFileStream.setFieldWidth(100);
         logFileStream << entry->secondItem();
-        logFileStream << "\n";
+        //logFileStream << "\n";
+        lastFilePos = logFileStream.pos();
+
         logfile.close();
+        qDebug() << "Logger:: Current pos of logfile" << logfile.size();
     }
 }
 

@@ -5,6 +5,8 @@
 #include <QTcpSocket>
 #include <QSharedPointer>
 #include <QTime>
+#include <QTimer>
+
 #include "circlequeue.h"
 
 class QByteArray;
@@ -74,7 +76,13 @@ public:
     float getValue(int index) const { return (index<size) ?  data[index].f : float(0);
     }
 };
-
+/*
+struct _tcp_keepalive{
+    u_long onoff;
+    u_long keepalivetime;
+    u_long keepaliveinterval;
+};
+*/
 class PLCSocketClient : public QTcpSocket
 {
     Q_OBJECT
@@ -88,6 +96,8 @@ public:
     void initialize(const QByteArray &infoHash, int pieceCount);
     QSharedPointer<PLCServer> getServer();
     void setServer(const QSharedPointer<PLCServer> &peer);
+    void startReconnectTimer();
+    void stopReconnectTimer();
 
     QSharedPointer<PLCServer> server() const;
     CQueue<QSharedPointer<Packet> > queReceivePackets;
@@ -101,22 +111,25 @@ public slots:
     void connectEstablished();
     void newDataAvailable();
     void closeConnection();
+    void reconnect();
 
 private:
     // Timeout handling
-    int timeoutTimer;
+    //int timeoutTimer;
+    int reconnectDelay;
+    quint32 reconnectCount;
     bool invalidateTimeout;
+    //keep-alive
+    //_tcp_keepalive vals;
+
     // Data waiting to be read/written
     QByteArray incomingBuffer;
     QByteArray outgoingBuffer;
-    //quint32 nextBlockSize;
-    union {
-        float nextBlockSizeFloat;
-        quint32 nextBlockSizeUint;
-    };
-    //+
+    quint32 nextBlockSize;
+
     QSharedPointer<PLCServer> _plcServer;
     QByteArray sockIdString;
+    QSharedPointer<QTimer> reconnectTimer,keepAliveTimer;
 
 };
 

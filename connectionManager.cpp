@@ -47,3 +47,44 @@ QByteArray ConnectionManager::clientId() const
     return id;
 }
 
+void ConnectionManager::errorHandler(PLCSocketClient* curClient,QAbstractSocket::SocketError errCode)
+{
+    qDebug() << "ConnectionManager:: Start Reconnect";
+    curClient->close();
+    curClient->startReconnectTimer();
+    /*
+    switch (errCode) {
+    case QAbstractSocket::ConnectionRefusedError:
+    case QAbstractSocket::RemoteHostClosedError:
+    case QAbstractSocket::SocketTimeoutError:
+
+        break;
+    case QAbstractSocket::NetworkError:
+        break;
+    default:
+        break;
+    }
+    */
+}
+
+
+void ConnectionManager::closeConnection(PLCSocketClient *curClient)
+{
+    curClient->stopReconnectTimer();
+    curClient->close();
+}
+
+void ConnectionManager::activateConnection(PLCSocketClient *curClient)
+{
+    PLCServer* plc = curClient->getServer().data();
+    plc->cycleStep = 20;
+    plc->connectStart = QDateTime::currentDateTime().toTime_t();
+    plc->lastVisited = plc->connectStart;
+    curClient->connectToHost(plc->address, plc->port);
+}
+
+void ConnectionManager::forceReconnect(PLCSocketClient *curClient)
+{
+    curClient->reconnect();
+}
+

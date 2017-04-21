@@ -32,7 +32,7 @@ Dialog {
             anchors.left: parent.left;
             anchors.right: parent.right;
             text: modelData;
-            color: enabled ? "#9DA5B4" : "#6E7582"
+            color: enabled ? "#2d2f33" : "#a6b0c1"
 
             font.family: "Tahoma"
             font.pointSize: 10;
@@ -52,7 +52,7 @@ Dialog {
 
         height: footerCol.height;
 
-        color: "#282C34";
+        color: "#c9ccd3";
 
         Column {
             id: footerCol;

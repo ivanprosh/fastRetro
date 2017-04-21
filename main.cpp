@@ -36,21 +36,20 @@ int main(int argc, char *argv[])
     //QAbstractTableModel* AppAddressTable = new QAbstractTableModel();
     MainWindow* MainClass = new MainWindow(AppAddressTable);
 
-    QTimer::singleShot(500, MainClass, SLOT(initializeSettings()));
+    //QTimer::singleShot(0, MainClass, SLOT(initializeSettings()));
 
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("AppAddressTable", AppAddressTable);
     engine.rootContext()->setContextProperty("MainClass", MainClass);
-    //qDebug() << QString(PRO_FILE_PWD);
+
+    MainClass->initializeSettings();
+
 #ifdef QML_DEBUG
     engine.load(QString(QString(PRO_FILE_PWD) + "/mainwindow.qml"));
-    //engine.load(QString("d:/WORK/_QT/SS/FastRetroSocketClient/mainwindow.qml"));
 #else
     engine.load(QUrl(QStringLiteral("qrc:/mainwindow.qml")));
 #endif
-    //tripPlanner.show();
-    //DataAnalizator::instance()->startWorkerThread();
 
     return app.exec();
 }

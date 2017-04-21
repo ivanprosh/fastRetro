@@ -11,5 +11,6 @@
         <file>images/file_download.svg</file>
         <file>images/play_arrow.svg</file>
         <file>images/stop.svg</file>
+        <file>images/restore.svg</file>
     </qresource>
 </RCC>

@@ -17,6 +17,7 @@ namespace GLOBAL {
 
 //    void warning(QWidget *parent, const QString &title,
 //             const QString &text, const QString &detailedText);
+   int Fib(int i);
 }
 
 

@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "connectionManager.h"
 #include "dataanalizator.h"
+#include "strategies.h"
 
 namespace {
     const QString ModelSetting("AddressList");
@@ -17,6 +18,7 @@ namespace {
     const QString ServerNameSetting("ServerName");
     const QString BackupFolderSetting("BackupFolder");
     const QString TimeZoneSetting("TimeZone");
+    const QString SegmentIntervalSetting("SegmentInterval");
 
     const QString _logFileName("CurrentLog.txt");
 
@@ -24,7 +26,7 @@ namespace {
     //const QString _logFileTemplateString("%1 ");
 }
 
-MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_model(model)
+MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_model(model),_segmentInterval(1)
 {
     setStartPermit(true);
     setStopPermit(false);
@@ -50,7 +52,9 @@ MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_mo
                      << "Пользовательский" << "Закрыт";
 
     //Отдельный поток для отслеживания новых файлов в каталоге BackUp
-    currentThread = QSharedPointer<WorkThread>(new WorkThread());
+
+    currentThread = QSharedPointer<WorkThread >(new WorkThread());
+
     currentThread->start();
 
     initObjConnections();
@@ -62,6 +66,8 @@ void MainWindow::initializeSettings()
     QSettings settings;
     if(!settings.value(ServerNameSetting).toString().isEmpty())
         setServerName(settings.value(ServerNameSetting).toString());
+    if(settings.value(SegmentIntervalSetting).toInt()>0)
+        setSegmentInterval(settings.value(SegmentIntervalSetting).toInt());
     if(!settings.value(TimeZoneSetting).toString().isEmpty())
         setTimeZone(settings.value(TimeZoneSetting).toString());
     else
@@ -84,38 +90,43 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setCurrentError(GlobalError *value){
-    if(_currentError->secondItem()!=value->secondItem()){
-        _currentError->setFirstItem(value->firstItem());
-        _currentError->setSecondItem(value->secondItem());
-        emit currentErrorChanged(_currentError);
-        if(value->firstItem() != GlobalError::None)
-            Logger::instance()->addEntry(value);
-    }
+    //if(_currentError->secondItem()!=value->secondItem()){
+    _currentError->setFirstItem(value->firstItem());
+    _currentError->setSecondItem(value->secondItem());
+    _currentError->setIdFrom(value->idFrom());
+    emit currentErrorChanged(_currentError);
+    if(value->firstItem() != GlobalError::None)
+        Logger::instance()->addEntry(value);
+    //}
 }
 
 void MainWindow::initObjConnections()
 {
-    connect(this, SIGNAL(serverNameChanged(const QString&)),
-            currentThread.data(), SIGNAL(serverNameChanged(const QString&)));
+    //обработка сообщений об ошибках
     connect(DataAnalizator::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
     connect(Logger::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
+    connect(currentThread.data(), SIGNAL(errorChange(GlobalError*)),
+            this, SLOT(errorChange(GlobalError*)));
+    //изменение свойств
+    connect(this, SIGNAL(historianPathChanged(const QString&)),
+            currentThread.data(), SIGNAL(historianPathChanged(const QString&)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             DataAnalizator::instance(), SLOT(setNewFilePath(const QString&)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             currentThread.data(), SIGNAL(backupFolderNameChanged(const QString&)));
-    connect(currentThread.data(), SIGNAL(errorChange(GlobalError*)),
-            this, SLOT(errorChange(GlobalError*)));
     connect(this, SIGNAL(timeZoneChanged(const QString&)),
             DataAnalizator::instance(), SLOT(timeZoneChanged(const QString&)));
+    connect(this, SIGNAL(segmentIntervalChanged(int)),
+            DataAnalizator::instance(), SLOT(segmentIntervalChanged(int)));
+    //
 }
 
 void MainWindow::initSockConnections()
 {
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
-        _model->setData(_model->index(client->server()->id,statusColumn),"Не активен",statusRole);
-        //client->close();
+        _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
         ConnectionManager::instance()->removeConnection(client);
     }
    ConnectionManager::instance()->connections.clear();
@@ -143,31 +154,7 @@ void MainWindow::updateStateSocket(PLCSocketClient* client){
     //    _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState)+",ошибка:"+client->errorString(),statusRole);
 
 }
-/*
-void MainWindow::setDB(const QString &server)
-{
-    qDebug() << "MainWindow::Server change name: " << server;
 
-    QMutexLocker locker(&GLOBAL::globalMutex);
-
-    if(currentThread==Q_NULLPTR) {
-        qDebug() << "currentThread is NULL!";
-        return;
-    }
-
-    //QString stringConnection="DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.";
-    currentThread->setConnection(QString(_DBConnectionString).arg(server));
-
-
-    if(currentThread->getWorker()->getDB().open()){
-        qDebug() << "DataAnalizator::DB open!";
-        if(!currentThread->isRunning())
-            ;
-        return;
-    }  
-
-}
-*/
 void MainWindow::socketStateChanged(QAbstractSocket::SocketState curState)
 {
     updateStateSocket(qobject_cast<PLCSocketClient* >(sender()));
@@ -202,7 +189,7 @@ void MainWindow::connectClient(QSharedPointer<PLCSocketClient> client)
     connect(client.data(), SIGNAL(connectionClosedByServer()),
             this, SLOT(connectionClosedByServer()));
     connect(client.data(), SIGNAL(error(QAbstractSocket::SocketError)),
-            this, SLOT(error()));
+            this, SLOT(error(QAbstractSocket::SocketError)));
     connect(client.data(), SIGNAL(newDataReceived()),
             DataAnalizator::instance(), SLOT(newDataReceived()));
 }
@@ -234,14 +221,26 @@ void MainWindow::initializeServers()
          curRow++;
     }
 }
+void MainWindow::updateServer(int idServer)
+{
+    foreach (QSharedPointer<PLCServer> plc, servers) {
+        if(plc->id == idServer){
+            QString note = _model->index(idServer,ipColumn).data(ipRole).toString();
+            plc->address = note.left(note.indexOf(":"));
+            plc->port = note.right(note.size()-note.indexOf(":")-1).toUInt();
+        }
+    }
+}
+
 void MainWindow::stopClients(){
     // Close all existing connections
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
-        _model->setData(_model->index(client->server()->id,statusColumn),"Не активен",statusRole);
-        client->close();
-        //ConnectionManager::instance()->removeConnection(client);
+        _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
+        //client->close();
+        ConnectionManager::instance()->closeConnection(client.data());
+        ConnectionManager::instance()->removeConnection(client);
     }
-    //ConnectionManager::instance()->connections.clear();
+    ConnectionManager::instance()->connections.clear();
 }
 
 void MainWindow::connectToServer()
@@ -264,12 +263,8 @@ void MainWindow::connectToServer()
         ConnectionManager::instance()->addConnection(client);
         client->setServer(plc);
         connectClient(client);
-
-        plc->cycleStep = 20;
-        plc->connectStart = QDateTime::currentDateTime().toTime_t();
-        plc->lastVisited = plc->connectStart;
-        DataAnalizator::instance()->ignorePLClist[plc->id] = false;
-        client->connectToHost(plc->address, plc->port);
+        //DataAnalizator::instance()->ignorePLClist[plc->id] = false;
+        ConnectionManager::instance()->activateConnection(client.data());
     }
 
     //nextBlockSize = 0;
@@ -287,13 +282,48 @@ void MainWindow::connectionClosedByServer()
     qDebug() << "MainClass Connect close by server...";
 }
 
-void MainWindow::error()
+void MainWindow::error(QAbstractSocket::SocketError errCode)
 {
     PLCSocketClient* curClient= dynamic_cast<PLCSocketClient* >(sender());
     Q_ASSERT(curClient);
-    QString curStatus = _model->data(_model->index(curClient->server()->id,statusColumn),statusRole).toString();
-    _model->setData(_model->index(curClient->server()->id,statusColumn),curStatus+",ошибка:"+curClient->errorString(),statusRole);
-    //closeConnection();
+    QScopedPointer<GlobalError> curSocketErr(new GlobalError());
+    if(curClient){
+        qDebug() << "Socket error type is " << errCode;
+    //QString curStatus = _model->data(_model->index(curClient->server()->id,statusColumn),statusRole).toString();
+    //_model->setData(_model->index(curClient->server()->id,statusColumn),curStatus+",ошибка:"+curClient->errorString(),statusRole);
+        _model->setData(_model->index(curClient->server()->id,statusColumn),"Ошибка:"+curClient->errorString(),statusRole);
+
+        curSocketErr->setFirstItem(GlobalError::Configuration);
+        curSocketErr->setIdFrom(QString(curClient->getServer()->address)+":"
+                                +QString::number(curClient->getServer()->port));
+
+        switch (errCode) {
+        case QAbstractSocket::HostNotFoundError:
+            curSocketErr->setSecondItem(curClient->errorString());
+            break;
+            //case QAbstractSocket::SocketAccessError:
+            //case QAbstractSocket::SocketResourceError:
+        case QAbstractSocket::AddressInUseError:
+        case QAbstractSocket::SocketAddressNotAvailableError:
+        case QAbstractSocket::UnsupportedSocketOperationError:
+            //curSocketErr->setFirstItem(GlobalError::Configuration);
+            curSocketErr->setSecondItem(curClient->errorString() + ". Проверьте таблицу адресов.");
+            //errorChange(curSocketErr.data());
+            break;
+        case QAbstractSocket::DatagramTooLargeError:
+            //curSocketErr->setFirstItem(GlobalError::Configuration);
+            curSocketErr->setSecondItem(curClient->errorString() + ". Проверьте размер пакета от ПЛК");
+            //errorChange(curSocketErr.data());
+            break;
+        default:
+            curSocketErr->setFirstItem(GlobalError::Socket);
+            curSocketErr->setSecondItem(curClient->errorString());
+            //errorChange(curSocketErr.data());
+            ConnectionManager::instance()->errorHandler(curClient,errCode);
+
+        }
+        errorChange(curSocketErr.data());
+    }
 }
 
 void MainWindow::errorChange(GlobalError* lastErr)
@@ -321,14 +351,56 @@ void MainWindow::resetError()
     setCurrentError(CurError.data());
 }
 
+void MainWindow::forceReconnect(int rowInTable)
+{
+    qDebug() << "Force!";
+    foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
+        if(client->server()->id == rowInTable){
+            ConnectionManager::instance()->forceReconnect(client.data());
+            break;
+        }
+    }
+}
+
+void MainWindow::forceStartConnect(int rowInTable)
+{
+    foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
+        if(client->server()->id == rowInTable){
+            updateServer(rowInTable);
+            ConnectionManager::instance()->activateConnection(client.data());
+            return;
+        }
+    }
+}
+
+void MainWindow::forceStopConnect(int rowInTable)
+{
+    foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
+        if(client->server()->id == rowInTable){
+            ConnectionManager::instance()->closeConnection(client.data());
+            break;
+        }
+    }
+}
+
 void MainWindow::setServerName(QString value){
     //qDebug() << "Server name changed (non confirm)";
     if(_serverName!=value){
         _serverName = value;
         QSettings settings;
         settings.setValue(ServerNameSetting,_serverName);
-        emit serverNameChanged(_serverName);
+        emit historianPathChanged(_serverName);
         qDebug() << "Server name confirm changed " << _serverName;
+    }
+}
+
+void MainWindow::setSegmentInterval(int value)
+{
+    if(_segmentInterval != value){
+        _segmentInterval = value;
+        QSettings settings;
+        settings.setValue(SegmentIntervalSetting,_segmentInterval);
+        emit segmentIntervalChanged(_segmentInterval);
     }
 }
 
@@ -339,6 +411,7 @@ void MainWindow::setBackupFolderName(QString value){
         QSettings settings;
         settings.setValue(BackupFolderSetting,_backupFolderName);
         emit backupFolderNameChanged(_backupFolderName);
+        qDebug() << "New backup folder name set - " << _backupFolderName;
     }
 }
 
@@ -352,11 +425,6 @@ void MainWindow::setTimeZone(QString value)
     }
 }
 
-QString MainWindow::getlastErrorDB()
-{
-    return currentThread->getWorker()->getDB().lastError().text();
-    //return QString();
-}
 auto MainWindow::getLogger() -> Logger* {
     return Logger::instance();
 }

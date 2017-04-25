@@ -51,7 +51,7 @@ PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
 */
     connect(this, SIGNAL(readyRead()),SLOT(newDataAvailable()));
     connect(this, SIGNAL(connected()), SLOT(connectEstablished()));
-    connect(this, SIGNAL(disconnected()), SLOT(connectionClosed()));
+    connect(this, SIGNAL(disconnected()), SLOT(closeConnection()));
     connect(reconnectTimer.data(), SIGNAL(timeout()), this, SLOT(reconnect()));
 
     //connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
@@ -144,11 +144,11 @@ void PLCSocketClient::newDataAvailable()
         for(int it=0;it<(nextBlockSize-sizeof(quint32))*0.25;it++){
             in >> curPacket->data[it].u;
             curPacket->data[it].u = qFromBigEndian(curPacket->data[it].u);
-            qDebug() << curPacket->data[it].f;
+            //qDebug() << curPacket->data[it].f;
         }
         //qDebug() << "after read " << this->bytesAvailable();
         if(!in.commitTransaction()) {
-            qDebug() << "Transaction fault! Status:" << in.status();
+            //qDebug() << "Transaction fault! Status:" << in.status();
             return;
         }
         //curPacket->setTime((int)curPacket->getValue(0),(int)curPacket->getValue(1),(int)curPacket->getValue(2),(int)(curPacket->getValue(3)/1000));
@@ -168,10 +168,6 @@ void PLCSocketClient::newDataAvailable()
         qDebug() << "PLCSocketClient:: Wrong Packet Size!";
         readAll();
     }
-}
-void PLCSocketClient::connectionClosed()
-{
-    closeConnection();
 }
 
 void PLCSocketClient::connectEstablished()
@@ -195,7 +191,7 @@ void PLCSocketClient::connectEstablished()
 }
 void PLCSocketClient::closeConnection()
 {
-    this->close();
+    this->abort();
 }
 void PLCSocketClient::startReconnectTimer()
 {
@@ -209,6 +205,14 @@ void PLCSocketClient::stopReconnectTimer()
     reconnectCount = 0;
     reconnectDelay = 1000;
     reconnectTimer->stop();
+}
+
+bool PLCSocketClient::isActive()
+{
+    //if(reconnectTimer.data())
+    return (reconnectTimer.data()->isActive() || this->isOpen());
+    //return this->isOpen();
+    //return true;
 }
 void PLCSocketClient::reconnect()
 {

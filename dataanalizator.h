@@ -48,7 +48,7 @@ private:
     qint64 _curTimeZone;
     int _segmentInterval;
 
-    void errorHandler(GlobalError::ErrorRoles, const QString&, const QString &idfrom = QString());
+    void errorHandler(GlobalError::ErrorRoles, const QString&, const QString &from = QString(), int _idFrom = -1);
 signals:
     void errorChange(GlobalError*);
 

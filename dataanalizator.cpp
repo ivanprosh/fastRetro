@@ -35,13 +35,15 @@ void DataAnalizator::newDataReceived()
     if(!PLCtoParNames.contains(client->getServer()->id) || PLCtoParNames.value(client->getServer()->id).isEmpty()){
         errorHandler(GlobalError::Configuration,
                      "Не найдены быстрые параметры абонента. Проверьте конф. файл",
-                     PLCtoParNames.value(client->getServer()->id).first());
+                     PLCtoParNames.value(client->getServer()->id).first(),
+                     client->getServer()->id);
         return;
     }
     if(it>0 && PLCtoParNames.value(client->getServer()->id).size() != client->queReceivePackets.first()->getParCount() + 1){
         errorHandler(GlobalError::Configuration,
                      "Проверьте идентичность количества параметров в контроллере и конф. файле (значение параметра ParCount в ПЛК)",
-                     PLCtoParNames.value(client->getServer()->id).first());
+                     PLCtoParNames.value(client->getServer()->id).first(),
+                     client->getServer()->id);
         return;
     }
 
@@ -167,6 +169,7 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
     }
 
     GLOBAL::globalMutex.lock();
+    //GLOBAL::ThreadCheck << "Thr1";
     //QMutexLocker locker(&GLOBAL::globalMutex);
 
     QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
@@ -193,10 +196,11 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
     GLOBAL::globalMutex.unlock();
 }
 
-void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const QString& idfrom)
+void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &text, const QString& from,int _idFrom)
 {
     QScopedPointer<GlobalError> CurError(new GlobalError(role,text));
-    CurError->setIdFrom(idfrom);
+    CurError->setFrom(from);
+    CurError->setPlcIdFrom(_idFrom);
 
     //if(!ignorePLClist.value(idfrom))
     emit errorChange(CurError.data());

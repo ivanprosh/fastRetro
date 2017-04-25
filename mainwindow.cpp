@@ -36,15 +36,6 @@ MainWindow::MainWindow(AddressTable *model, QObject *parent):QObject(parent),_mo
 
     //logfile.setFileName(_logFileName);
     Logger::instance()->setFile(_logFileName);
-/*
-    if(!logfile.open(QIODevice::WriteOnly | QIODevice::Text)){
-        QScopedPointer<GlobalError> lastErr(new GlobalError(GlobalError::System,
-                                            "Ошибка открытия лог файла"));
-        errorChange(lastErr.data());
-    } else {
-        logFileStream.setDevice(&logfile);
-    }
-*/
 
     if(_model == nullptr)
         qWarning() << "Некорректная модель данных";
@@ -93,7 +84,7 @@ void MainWindow::setCurrentError(GlobalError *value){
     //if(_currentError->secondItem()!=value->secondItem()){
     _currentError->setFirstItem(value->firstItem());
     _currentError->setSecondItem(value->secondItem());
-    _currentError->setIdFrom(value->idFrom());
+    _currentError->setFrom(value->from());
     emit currentErrorChanged(_currentError);
     if(value->firstItem() != GlobalError::None)
         Logger::instance()->addEntry(value);
@@ -102,6 +93,9 @@ void MainWindow::setCurrentError(GlobalError *value){
 
 void MainWindow::initObjConnections()
 {
+    //добавлен клиент
+    connect(_model,SIGNAL(SockClientAdd(QSharedPointer<PLCSocketClient>)),
+                                this,SLOT(connectClient(QSharedPointer<PLCSocketClient>)));
     //обработка сообщений об ошибках
     connect(DataAnalizator::instance(), SIGNAL(errorChange(GlobalError*)),
             this, SLOT(errorChange(GlobalError*)));
@@ -127,9 +121,9 @@ void MainWindow::initSockConnections()
 {
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
         _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
-        ConnectionManager::instance()->removeConnection(client);
+        //ConnectionManager::instance()->removeConnection(client);
     }
-   ConnectionManager::instance()->connections.clear();
+   //ConnectionManager::instance()->connections.clear();
 }
 
 void MainWindow::initializeTable(const QStringList& list){
@@ -150,8 +144,6 @@ void MainWindow::updateStateSocket(PLCSocketClient* client){
 
     //if(client->errorString().isEmpty())
     _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState),statusRole);
-    //else
-    //    _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState)+",ошибка:"+client->errorString(),statusRole);
 
 }
 
@@ -200,7 +192,7 @@ void MainWindow::connectEstablished()
 
 void MainWindow::initializeServers()
 {
-    servers.clear();
+    //servers.clear();
     int curRow(0);
     QString note;
     //QString note = _model->data(_model->index(curRow,ipColumn),ipRole).toString();
@@ -208,19 +200,20 @@ void MainWindow::initializeServers()
 
     while(!(note=_model->index(curRow,ipColumn).data(ipRole).toString()).isEmpty()){
          qDebug() << note.left(note.indexOf(":")) << " and port " << note.right(note.size()-note.indexOf(":")-1);
-
+/* описано в PLCServer
          //инициализация серверов
          QSharedPointer<PLCServer> plc = QSharedPointer<PLCServer>(new PLCServer);
 
          plc->id = curRow;
          plc->address = note.left(note.indexOf(":"));
          plc->port =  note.right(note.size()-note.indexOf(":")-1).toUInt();
-
-         servers.push_back(plc);
+*/
+         //servers.push_back(plc);
 
          curRow++;
     }
 }
+/*
 void MainWindow::updateServer(int idServer)
 {
     foreach (QSharedPointer<PLCServer> plc, servers) {
@@ -231,43 +224,40 @@ void MainWindow::updateServer(int idServer)
         }
     }
 }
-
+*/
 void MainWindow::stopClients(){
     // Close all existing connections
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
-        _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
-        //client->close();
-        ConnectionManager::instance()->closeConnection(client.data());
-        ConnectionManager::instance()->removeConnection(client);
+        stopClients(client->server()->id);
+        //_model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
+        //ConnectionManager::instance()->closeConnection(client.data());
     }
-    ConnectionManager::instance()->connections.clear();
+    //ConnectionManager::instance()->connections.clear();
 }
-
-void MainWindow::connectToServer()
+void MainWindow::stopClients(int id){
+    // Close all existing connections
+    _model->setData(_model->index(id,statusColumn),serverStateNames.first(),statusRole);
+    ConnectionManager::instance()->closeConnection(ConnectionManager::instance()->findClient(id));
+}
+void MainWindow::connectToServer(int plcId)
 {
+    _model->setData(_model->index(plcId,statusColumn),serverStateNames.first(),statusRole);
+    stopClients(plcId);
+    ConnectionManager::instance()->activateConnection(ConnectionManager::instance()->findClient(plcId));
+}
+void MainWindow::connectToServer()
+{   
+    //initializeServers();
     setStartPermit(false);
     setStopPermit(true);
     setSavePermit(false);
 
-    initializeServers();
-    stopClients();
-    initSockConnections();
-    //clients.clear();
-
-    foreach (QSharedPointer<PLCServer> plc, servers) {
-        if(!ConnectionManager::instance()->canAddConnection()) {
-            qDebug() << "Достигнут максимум подключений";
-            break;
-        }
-        QSharedPointer<PLCSocketClient> client = QSharedPointer<PLCSocketClient>(new PLCSocketClient(ConnectionManager::instance()->clientId()));
-        ConnectionManager::instance()->addConnection(client);
-        client->setServer(plc);
-        connectClient(client);
-        //DataAnalizator::instance()->ignorePLClist[plc->id] = false;
-        ConnectionManager::instance()->activateConnection(client.data());
+    foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
+        //if(plcIds.contains(QVariant::fromValue(client->getServer()->id)))
+        connectToServer(client->getServer()->id);
+        //ConnectionManager::instance()->removeConnection(client);
     }
 
-    //nextBlockSize = 0;
 }
 void MainWindow::stopScan()
 {
@@ -294,8 +284,9 @@ void MainWindow::error(QAbstractSocket::SocketError errCode)
         _model->setData(_model->index(curClient->server()->id,statusColumn),"Ошибка:"+curClient->errorString(),statusRole);
 
         curSocketErr->setFirstItem(GlobalError::Configuration);
-        curSocketErr->setIdFrom(QString(curClient->getServer()->address)+":"
+        curSocketErr->setFrom(QString(curClient->getServer()->address)+":"
                                 +QString::number(curClient->getServer()->port));
+        curSocketErr->setPlcIdFrom(curClient->getServer()->id);
 
         switch (errCode) {
         case QAbstractSocket::HostNotFoundError:
@@ -332,7 +323,11 @@ void MainWindow::errorChange(GlobalError* lastErr)
     //QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,lastErr));
     switch (lastErr->firstItem()) {
     case GlobalError::Configuration:
-        stopScan();
+        if((lastErr->plcIdFrom() > -1) && (lastErr->plcIdFrom() <= MAX_CONNECTIONS_COUNT)){
+            stopClients(lastErr->plcIdFrom());
+        } else
+            stopScan();
+        //stopClients(int id);
         //GLOBAL::warning(0,0,"Ошибка конфигурации",lastErr->secondItem());
         break;
     case GlobalError::Historian:
@@ -356,6 +351,7 @@ void MainWindow::forceReconnect(int rowInTable)
     qDebug() << "Force!";
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
         if(client->server()->id == rowInTable){
+            setSavePermit(false);
             ConnectionManager::instance()->forceReconnect(client.data());
             break;
         }
@@ -364,23 +360,33 @@ void MainWindow::forceReconnect(int rowInTable)
 
 void MainWindow::forceStartConnect(int rowInTable)
 {
+    connectToServer(rowInTable);
+    setSavePermit(false);
+    setStopPermit(true);
+    /*
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
         if(client->server()->id == rowInTable){
-            updateServer(rowInTable);
+            //updateServer(rowInTable);
+            //client->server()->setAddress(_model->index(idServer,ipColumn).data(ipRole).toString());
             ConnectionManager::instance()->activateConnection(client.data());
             return;
         }
     }
+    */
 }
 
 void MainWindow::forceStopConnect(int rowInTable)
 {
+    stopClients(rowInTable);
+    //если нет активных клиентов, то даем разрешение на редактирование настроек
+
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
-        if(client->server()->id == rowInTable){
-            ConnectionManager::instance()->closeConnection(client.data());
-            break;
-        }
+        if(ConnectionManager::instance()->isConnectActive(client))
+            return;
     }
+    setStopPermit(false);
+    setSavePermit(true);
+
 }
 
 void MainWindow::setServerName(QString value){

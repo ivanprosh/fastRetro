@@ -150,7 +150,7 @@ void Native::scanFolder()
 {
     if(!componentReady()){
         curError->setFirstItem(GlobalError::Configuration);
-        curError->setSecondItem("Не задан каталог копирования файлов на сервере Historian");
+        curError->setSecondItem("Не задан(не доступен) каталог копирования файлов на сервере Historian");
         emit errorChange(curError.data());
         return;
     }
@@ -163,21 +163,28 @@ void Native::scanFolder()
 
     if(filesNames.isEmpty())
         return;
+
     foreach (QString name, filesNames) {
-        if(QFile(backupFolder.path() + "/" + name).size() < 100)
+        QFileInfo info(backupFolder.path() + "/" + name);
+        //qDebug() << info.size();
+        if(info.size() < 100){
+            qDebug() << "File is busy: " << name;
             continue;
+        }
+        //if(!QFile::copy(backupFolder.path() + "/" + name,"\\\\WW_SERVER\\FastRetroBuf\\" + name)){
         if(!QFile::copy(backupFolder.path() + "/" + name,HistServerFastFolder.path() + "/" + name)){
             curError->setFirstItem(GlobalError::System);
-            curError->setSecondItem(name + ": Ошибка копирования файла");
+            curError->setFrom(name);
+            curError->setSecondItem("Ошибка копирования файла");
             emit errorChange(curError.data());
             errCount++;
         } else {
             //для сличения
-            QFile::copy(backupFolder.path() + "/" + name, "D:/temp/" + name );
+            //QFile::copy(backupFolder.path() + "/" + name, HistServerFastFolder.path() + "/" + name );
 
             if(!QFile::remove(backupFolder.path() + "/" + name)) {
                 curError->setFirstItem(GlobalError::System);
-                curError->setIdFrom(name);
+                curError->setFrom(name);
                 curError->setSecondItem("Ошибка удаления файла");
                 emit errorChange(curError.data());
                 errCount++;
@@ -193,6 +200,13 @@ void Native::scanFolder()
 void Native::setBackupPath(const QString &path)
 {
     qDebug() << "Native:: Backup Path is " << path;
+    QFileInfo backupDir(path);
+    if(!backupDir.isDir()){
+        curError->setFirstItem(GlobalError::Configuration);
+        curError->setSecondItem("Не задан(не доступен) каталог локального хранения файлов");
+        emit errorChange(curError.data());
+        return;
+    }
     AbstractStrategy::setBackupPath(path);
     watcher.addPath(path);
     reinit();
@@ -207,4 +221,12 @@ void Native::backupDirectoryChanged(QString)
 void Native::reinit() {
     qDebug() << "Native:: reinit()";
     scanFolder();
+}
+
+bool Native::componentReady() {
+    if(HistServerFastFolder.path().isEmpty())
+        return false;
+    QFileInfo destinationDir(HistServerFastFolder.path());
+
+    return destinationDir.isDir();
 }

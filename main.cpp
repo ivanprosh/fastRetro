@@ -9,6 +9,7 @@
 #include "global.h"
 
 QMutex GLOBAL::globalMutex(QMutex::NonRecursive);
+QString GLOBAL::ThreadCheck("");
 
 int main(int argc, char *argv[])
 {

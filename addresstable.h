@@ -3,12 +3,15 @@
 
 #include <QAbstractTableModel>
 
+class PLCSocketClient;
+class MainWindow;
 class AddressTable : public QAbstractTableModel
 {
     Q_OBJECT
 
 private:
     QVector<QPair<QString,QString> > items;
+    MainWindow* _mainwindow;
 public:
 
     AddressTable(QObject *parent = 0);
@@ -31,8 +34,8 @@ public:
 protected:
     QHash<int,QByteArray> *hash;
     QHash<int,QByteArray> roleNames() const;
-public slots:
-    //set
+signals:
+    void SockClientAdd(QSharedPointer<PLCSocketClient> client);
 
 };
 

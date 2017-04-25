@@ -15,6 +15,12 @@ ApplicationWindow {
     visible: true
     title: qsTr("FastRetro App")
 
+    //property var PLCList
+
+    Component.onCompleted: {
+        //PLCList = new Array(MainClass.maxConnectionsCount());
+    }
+
     toolBar: ToolBar {
         RowLayout{
             anchors.fill: parent
@@ -30,7 +36,10 @@ ApplicationWindow {
                     anchors.fill: parent
                     anchors.margins: 4
                 }
-                onClicked: MainClass.connectToServer()
+                onClicked: {
+                    //tableView.getColumn(0)
+                    MainClass.connectToServer()
+                }
             }
             ToolButton {
                 id: stopButton
@@ -99,6 +108,7 @@ ApplicationWindow {
         }
         //height: 500                  
     }
+
     LogView {
         id: logErrorsView
         width: 600
@@ -114,32 +124,6 @@ ApplicationWindow {
         }
     }
 
-/*
-    Loader {
-        id: loaderSettingsDialog
-        visible: status == Loader.Ready
-        active: false
-        sourceComponent: settingsDialog
-    }
-    Component {
-        id: settingsDialog
-        SettingsDialog {
-            Component.onCompleted: {
-                console.log("Loader complete!");
-                //visible = true;
-                open();
-            }
-            onRejected: {
-                console.log("Rejected!");
-                loaderSettingsDialog.active = false;
-            }
-            onAccepted: {
-                console.log("Accepted!");
-                loaderSettingsDialog.active = false;
-            }
-        }
-    }
-*/
     TableView {
         id: tableView
 
@@ -175,20 +159,6 @@ ApplicationWindow {
 
         itemDelegate: editableDelegate;
 
-        /*
-        ListModel {
-            id: sourceModel
-            ListElement {
-                ipAddr: "172."
-                status: "Herman Melville"
-            }
-            ListElement {
-                ipAddr: "The Adventures of Tom Sawyer"
-                status: "Mark Twain"
-            }
-
-        }
-        */
         Connections {
 //            target: tableView.model
 //            onDataChanged: {
@@ -200,7 +170,7 @@ ApplicationWindow {
         Component {
             id: editableDelegate
             Item {
-
+                id: delegateItem
                 function setColor(data, color){
                     //if(data == "Подключение")
                     //    return "green"
@@ -215,9 +185,10 @@ ApplicationWindow {
                     else if(data.indexOf('Подключ',0) !== -1)
                         state = "connecting";
                     else if(data === "")
-                        state = "wrong";
+                        state = "empty";
                     else
                         state = "stopByUser";
+                    console.log("state is " + state);
                 }
 
                 Text {
@@ -248,7 +219,7 @@ ApplicationWindow {
                         anchors.fill: parent
                         onClicked: {
                             //Принудительно выполняем коннект
-                            MainClass.forceStopConnect(styleData.Row);
+                            MainClass.forceStopConnect(styleData.row);
                         }
                     }
                 }
@@ -265,7 +236,8 @@ ApplicationWindow {
                         anchors.fill: parent
                         onClicked: {
                             //Принудительно выполняем коннект
-                            MainClass.forceStartConnect(styleData.Row);
+                            console.log("force start row - " + styleData.row);
+                            MainClass.forceStartConnect(styleData.row);
                         }
                     }
                 }
@@ -283,7 +255,7 @@ ApplicationWindow {
                         onClicked: {
                             //Принудительно выполняем реконнект
                             console.log("click force");
-                            MainClass.forceReconnect(styleData.Row);
+                            MainClass.forceReconnect(styleData.row);
                         }
                     }
                 }
@@ -296,6 +268,12 @@ ApplicationWindow {
                         target: loaderEditor.item
                         onEditingFinished: {
                             AppAddressTable.ipChange(styleData.row,styleData.column, loaderEditor.item.text)
+                            /*
+                            if(loaderEditor.item.text !== "")
+                                PLCList[styleData.row] = true;
+                            else
+                                PLCList[styleData.row] = false;
+                            */
                             //historianName.forceActiveFocus();
                         }
                     }
@@ -306,7 +284,7 @@ ApplicationWindow {
                             id: textinput
                             color: styleData.textColor
                             text: styleData.value
-                            enabled: state === "stopByUser"
+                            enabled: (styleData.column === 0) && (delegateItem.state=="stopByUser" || delegateItem.state=="empty")
                             MouseArea {
                                 id: mouseArea
                                 //enabled: styleData.column === 0
@@ -338,23 +316,24 @@ ApplicationWindow {
                         PropertyChanges { target: forceStopConnectIcon; visible: false }
                         PropertyChanges { target: forceStartConnectIcon; visible: styleData.column === 1 }
                         PropertyChanges { target: forceReconnectIcon; visible: false }
-                        //PropertyChanges { target: textinput; enabled: styleData.column === 0}
+                        //PropertyChanges { target: textinput; enabled: true}
                     },
                     State {
-                        name: "wrong"
+                        name: "empty"
                         PropertyChanges { target: forceStopConnectIcon; visible: false }
                         PropertyChanges { target: forceStartConnectIcon; visible: false }
                         PropertyChanges { target: forceReconnectIcon; visible: false }
                         //PropertyChanges { target: textinput; enabled: false}
                     }
                 ]
-                /*Component.onCompleted: {
-                    state = "stopByUser"
-                }*/
+                Component.onCompleted: {
+                    state = "empty"
+                }
 
             }
         }
     }
+
     statusBar: StatusBar {
         id: statusBar
         visible: statusData.text.length > 0
@@ -381,6 +360,7 @@ ApplicationWindow {
         }
 
     }
+
     Loader {
         id: warningLoad
         visible: status == Loader.Ready

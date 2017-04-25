@@ -1,5 +1,7 @@
 #include "addresstable.h"
 #include "global.h"
+#include "ConnectionManager.h"
+#include "plcsocketclient.h"
 
 #include <QDebug>
 #include <QRegExp>
@@ -23,11 +25,13 @@ void AddressTable::initialize()
     //setHorizontalHeaderLabels(QStringList() << tr("IP адрес") << tr("Статус"));
 
     //добавим строки
-    items.push_back(QPair<QString,QString>("172.16.3.121:10000","Не активен"));
+    //items.push_back(QPair<QString,QString>("172.16.3.121:10000","Не активен"));
 
-    int row(1);
+    int row(0);
     while(row < MAX_CONNECTIONS_COUNT){
         items.push_back(QPair<QString,QString>("",""));
+        setData(index(row,ipColumn), QString(""), ipRole);
+        setData(index(row,ipColumn), QString(""), statusRole);
         row++;
     }
 }
@@ -55,7 +59,7 @@ void AddressTable::ipChange(const int curRow, const int curColumn, const QVarian
     else if(value.toString().isEmpty()){
         //setData(index(curRow,curColumn), value, Qt::UserRole+curColumn);
         setData(index(curRow,curColumn), value, ipRole);
-        setData(index(curRow,curColumn), QString(), statusRole);
+        setData(index(curRow,curColumn), QString(""), statusRole);
     }
 
 }
@@ -66,17 +70,46 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
         qDebug() << role << " " << value.toString();
 
         Q_ASSERT(index.row()<=items.size());
-
+        /*
         if(items.empty()){
             Q_ASSERT(role==statusRole);
             items.push_back(QPair<QString,QString>(value.toString(),"Не активен"));
         } else {
+        */
             switch (role) {
             case ipRole:
+            {
                 if(items.at(index.row()).first == value.toString())
                     return false;
+                //смотрим, была ли уже запись о клиенте
+                PLCSocketClient* curClient = ConnectionManager::instance()->findClient(index.row());
+                if(curClient){
+                    ConnectionManager::instance()->removeConnection(QSharedPointer<PLCSocketClient>(curClient));
+                }
+
                 items[index.row()].first = value.toString();
+
+                if(items.at(index.row()).first.isEmpty()){
+                    //удаляем клиента
+                    return true;
+                }
+
+                //заполняем параметры сервера
+                if(!ConnectionManager::instance()->canAddConnection()) {
+                    qDebug() << "Достигнут максимум подключений";
+                    return false;
+                }
+                QSharedPointer<PLCServer> plc = QSharedPointer<PLCServer>(new PLCServer);
+                plc->setId(index.row());
+                plc->setAddress(value.toString());
+                //инициализируем клиента
+                QSharedPointer<PLCSocketClient> client(new PLCSocketClient(ConnectionManager::instance()->clientId()));
+                client->setServer(plc);
+                ConnectionManager::instance()->addConnection(client);
+                //сигнал извещает класс главного окна о необходимости привязки клиента
+                emit SockClientAdd(client);
                 break;
+            }
             case statusRole:
                 if(items.at(index.row()).second == value.toString())
                     return false;
@@ -85,7 +118,7 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
             default:
                 return false;
             }
-        }
+        //}
 
         emit dataChanged(index, index);
         return true;

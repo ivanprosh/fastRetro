@@ -26,7 +26,7 @@ class MainWindow: public QObject
     Q_PROPERTY(QString backupFolderName READ backupFolderName WRITE setBackupFolderName NOTIFY backupFolderNameChanged)
     Q_PROPERTY(Logger* logger READ getLogger CONSTANT)
     Q_PROPERTY(GlobalError* currentError READ currentError WRITE setCurrentError NOTIFY currentErrorChanged)
-
+    Q_PROPERTY(int maxConnectionsCount READ maxConnectionsCount)
 public:
     MainWindow(AddressTable* model,QObject *parent = 0);
     ~MainWindow();
@@ -44,7 +44,9 @@ public slots:
     bool isAutostart() {return _autostart;}
     void initializeSettings();
     //
+    void connectClient(QSharedPointer<PLCSocketClient> client);
     void connectToServer();
+    void connectToServer(int id);
     void stopScan();
     void connectionClosedByServer();
     void connectEstablished();
@@ -68,6 +70,7 @@ public slots:
     QString backupFolderName() { return _backupFolderName; }
     QString serverName() {return _serverName;}
     int segmentInterval() {return _segmentInterval;}
+    int maxConnectionsCount() {return MAX_CONNECTIONS_COUNT;}
 
     GlobalError* currentError(){return _currentError;} 
 
@@ -77,13 +80,15 @@ private:
 
     void initializeServers();
     void initializeTable(const QStringList& list);
+    //void stopClients(QSet<QSharedPointer<PLCSocketClient> >&);
     void stopClients();
-    void connectClient(QSharedPointer<PLCSocketClient> client);
+    void stopClients(int id);
+
     //Обновляет запись в таблице подключений
     void updateStateSocket(PLCSocketClient *client);
 
     AddressTable* _model;
-    QList<QSharedPointer<PLCServer> > servers;
+    //QList<QSharedPointer<PLCServer> > servers;
     QStringList serverStateNames;
     bool permitStart,permitStop,permitSave,_autostart;
     QString _serverName, _backupFolderName;
@@ -95,7 +100,7 @@ private:
 
     //QList<PLCSocketClient> clients;
 
-    void updateServer(int idServer);
+    //void updateServer(int idServer);
 signals:
     void segmentIntervalChanged(int);
     void startPermitChanged();

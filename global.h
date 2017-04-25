@@ -13,6 +13,7 @@ enum Columns{ipColumn = 0, statusColumn};
 namespace GLOBAL {
 
     extern QMutex globalMutex;
+    extern QString ThreadCheck;
 //enum ErrorRoles;
 
 //    void warning(QWidget *parent, const QString &title,

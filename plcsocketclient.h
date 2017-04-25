@@ -24,6 +24,15 @@ public:
     uint connectTime;
     //QBitArray pieces;
     //int numCompletedPieces;
+    void setId(int _id){
+        id = _id;
+    }
+
+    void setAddress(QString addrString){
+        //id = curRow;
+        address = addrString.left(addrString.indexOf(":"));
+        port =  addrString.right(addrString.size()-addrString.indexOf(":")-1).toUInt();
+    }
 
     inline bool operator==(const PLCServer &other)
     {
@@ -98,6 +107,7 @@ public:
     void setServer(const QSharedPointer<PLCServer> &peer);
     void startReconnectTimer();
     void stopReconnectTimer();
+    bool isActive();
 
     QSharedPointer<PLCServer> server() const;
     CQueue<QSharedPointer<Packet> > queReceivePackets;
@@ -107,7 +117,6 @@ signals:
     void newDataReceived();
 
 public slots:
-    void connectionClosed();
     void connectEstablished();
     void newDataAvailable();
     void closeConnection();

@@ -25,8 +25,11 @@ void ConnectionManager::addConnection(QSharedPointer<PLCSocketClient> client)
 
 void ConnectionManager::removeConnection(QSharedPointer<PLCSocketClient> client)
 {
+    qDebug() << "ConnectionManager::removeConnection() " << client->getServer()->address;
+    closeConnection(client.data());
     connections.remove(client);
 }
+
 
 int ConnectionManager::maxConnections() const
 {
@@ -71,11 +74,12 @@ void ConnectionManager::errorHandler(PLCSocketClient* curClient,QAbstractSocket:
 void ConnectionManager::closeConnection(PLCSocketClient *curClient)
 {
     curClient->stopReconnectTimer();
-    curClient->close();
+    curClient->closeConnection();
 }
 
 void ConnectionManager::activateConnection(PLCSocketClient *curClient)
 {
+    if(!curClient) return;
     PLCServer* plc = curClient->getServer().data();
     plc->cycleStep = 20;
     plc->connectStart = QDateTime::currentDateTime().toTime_t();
@@ -86,5 +90,22 @@ void ConnectionManager::activateConnection(PLCSocketClient *curClient)
 void ConnectionManager::forceReconnect(PLCSocketClient *curClient)
 {
     curClient->reconnect();
+}
+
+PLCSocketClient *ConnectionManager::findClient(int id)
+{
+    foreach (QSharedPointer<PLCSocketClient> client, connections) {
+        if(client.data()->getServer()->id == id)
+            return client.data();
+    }
+    return nullptr;
+}
+
+bool ConnectionManager::isConnectActive(QSharedPointer<PLCSocketClient> curClient)
+{
+    if(connections.contains(curClient)) {
+        return curClient->isActive();
+    }
+    return false;
 }
 

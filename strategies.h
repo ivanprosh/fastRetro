@@ -42,7 +42,7 @@ public slots:
 protected:
     void scanFolder() override;
     void reinit() override;
-    bool componentReady() override { return !HistServerFastFolder.path().isEmpty();}
+    bool componentReady() override;
 private:
     QFileSystemWatcher watcher;
 };

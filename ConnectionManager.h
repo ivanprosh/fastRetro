@@ -22,6 +22,8 @@ public:
     void closeConnection(PLCSocketClient *curClient);
     void activateConnection(PLCSocketClient *curClient);
     void forceReconnect(PLCSocketClient *curClient);
+    PLCSocketClient *findClient(int id);
+    bool isConnectActive(QSharedPointer<PLCSocketClient> curClient);
     //void forceStopConnect(PLCSocketClient *curClient);
 
     //ConnectionManager(QAbstractTableModel* model,QObject *parent = 0);

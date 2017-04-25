@@ -23,11 +23,13 @@ void Logger::setFile(const QString &_logFileName)
         if(logfile.open(QIODevice::ReadWrite | QIODevice::Text) && logfile.size()==0){
             logFileStream.setDevice(&logfile);
             logFileStream.setFieldAlignment(QTextStream::AlignCenter);
+            logFileStream.setFieldWidth(20);
             logFileStream << QString("Время");
-            logFileStream.setFieldWidth(15);
+            logFileStream.setFieldWidth(10);
             logFileStream << QString("Тип");
-            logFileStream.setFieldWidth(15);
+            logFileStream.setFieldWidth(30);
             logFileStream << QString("Идентификатор");
+            logFileStream.setFieldWidth(80);
             logFileStream << QString("Текст сообщения");
         }
         logfile.close();
@@ -47,7 +49,7 @@ auto Logger::addEntry(GlobalError* entry) -> void {
                             + " "
                             + entry->ErrorCodes.at(entry->firstItem())
                             + "\t"
-                            + entry->idFrom()
+                            + entry->from()
                             + "\t"
                             + entry->secondItem());
 
@@ -76,7 +78,7 @@ void Logger::addEntryInFile(GlobalError* entry)
             logFileStream << "UNKNOWN";
         }
         logFileStream.setFieldWidth(30);
-        logFileStream << entry->idFrom();
+        logFileStream << entry->from();
         //logFileStream.setFieldWidth(100);
         logFileStream << entry->secondItem();
         //logFileStream << "\n";

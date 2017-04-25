@@ -2,8 +2,10 @@
 #define WORKTHREAD_H
 
 #include <QThread>
-#include "worker.h"
+//#include "worker.h"
 #include "global.h"
+#include "globalerror.h"
+#include "strategies.h"
 
 //template<class Strategy>
 class WorkThread: public QThread

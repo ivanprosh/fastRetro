@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QFile>
 #include <QTextStream>
-#include <QSqlError>
+//#include <QSqlError>
 
 #include "mainwindow.h"
 #include "connectionManager.h"
@@ -16,6 +16,8 @@ namespace {
     const QString ModelSetting("AddressList");
     const QString AutoStartSetting("AutoStart");
     const QString ServerNameSetting("ServerName");
+    const QString RedundantSetting("Redundant");
+    const QString RedundancyFilePathSetting("RedundancyFilePath");
     const QString BackupFolderSetting("BackupFolder");
     const QString TimeZoneSetting("TimeZone");
     const QString SegmentIntervalSetting("SegmentInterval");
@@ -65,6 +67,9 @@ void MainWindow::initializeSettings()
         setTimeZone("+3");
     if(!settings.value(BackupFolderSetting).toString().isEmpty())
         setBackupFolderName(settings.value(BackupFolderSetting).toString());
+    setRedundant(settings.value(RedundantSetting).toBool());
+    if(!settings.value(RedundancyFilePathSetting).toString().isEmpty())
+        setRedundancyFilePath(settings.value(RedundancyFilePathSetting).toString());
     if(!settings.value(ModelSetting).toStringList().isEmpty()){
         setAutostart(settings.value(AutoStartSetting).toBool());
         initializeTable(settings.value(ModelSetting).toStringList());
@@ -108,6 +113,10 @@ void MainWindow::initObjConnections()
             currentThread.data(), SIGNAL(historianPathChanged(const QString&)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             DataAnalizator::instance(), SLOT(setNewFilePath(const QString&)));
+    connect(this, SIGNAL(redundancyFilePathChanged(const QString&)),
+            DataAnalizator::instance(), SLOT(setRedundancyFilePath(const QString&)));
+    connect(this, SIGNAL(redundantChanged(bool)),
+            DataAnalizator::instance(), SLOT(setRedundantOption(bool)));
     connect(this, SIGNAL(backupFolderNameChanged(const QString&)),
             currentThread.data(), SIGNAL(backupFolderNameChanged(const QString&)));
     connect(this, SIGNAL(timeZoneChanged(const QString&)),
@@ -121,9 +130,7 @@ void MainWindow::initSockConnections()
 {
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
         _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
-        //ConnectionManager::instance()->removeConnection(client);
     }
-   //ConnectionManager::instance()->connections.clear();
 }
 
 void MainWindow::initializeTable(const QStringList& list){
@@ -142,7 +149,6 @@ void MainWindow::updateStateSocket(PLCSocketClient* client){
     QAbstractSocket::SocketState curState = client->state();
     Q_ASSERT(curState < QAbstractSocket::ClosingState+1);
 
-    //if(client->errorString().isEmpty())
     _model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.at(curState),statusRole);
 
 }
@@ -173,6 +179,14 @@ void MainWindow::setAutostart(bool value){
     emit autostartChanged();
 }
 
+void MainWindow::setRedundant(bool value)
+{
+    _redundant = value;
+    QSettings settings;
+    settings.setValue(RedundantSetting,value);
+    emit redundantChanged(value);
+}
+
 void MainWindow::connectClient(QSharedPointer<PLCSocketClient> client)
 {
     connect(client.data(),SIGNAL(stateChanged(QAbstractSocket::SocketState)),
@@ -189,7 +203,7 @@ void MainWindow::connectEstablished()
 {
     updateStateSocket(qobject_cast<PLCSocketClient* >(sender()));
 }
-
+/*
 void MainWindow::initializeServers()
 {
     //servers.clear();
@@ -200,28 +214,10 @@ void MainWindow::initializeServers()
 
     while(!(note=_model->index(curRow,ipColumn).data(ipRole).toString()).isEmpty()){
          qDebug() << note.left(note.indexOf(":")) << " and port " << note.right(note.size()-note.indexOf(":")-1);
-/* описано в PLCServer
-         //инициализация серверов
-         QSharedPointer<PLCServer> plc = QSharedPointer<PLCServer>(new PLCServer);
 
-         plc->id = curRow;
-         plc->address = note.left(note.indexOf(":"));
-         plc->port =  note.right(note.size()-note.indexOf(":")-1).toUInt();
-*/
          //servers.push_back(plc);
 
          curRow++;
-    }
-}
-/*
-void MainWindow::updateServer(int idServer)
-{
-    foreach (QSharedPointer<PLCServer> plc, servers) {
-        if(plc->id == idServer){
-            QString note = _model->index(idServer,ipColumn).data(ipRole).toString();
-            plc->address = note.left(note.indexOf(":"));
-            plc->port = note.right(note.size()-note.indexOf(":")-1).toUInt();
-        }
     }
 }
 */
@@ -229,10 +225,7 @@ void MainWindow::stopClients(){
     // Close all existing connections
     foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
         stopClients(client->server()->id);
-        //_model->setData(_model->index(client->server()->id,statusColumn),serverStateNames.first(),statusRole);
-        //ConnectionManager::instance()->closeConnection(client.data());
     }
-    //ConnectionManager::instance()->connections.clear();
 }
 void MainWindow::stopClients(int id){
     // Close all existing connections
@@ -277,10 +270,10 @@ void MainWindow::error(QAbstractSocket::SocketError errCode)
     PLCSocketClient* curClient= dynamic_cast<PLCSocketClient* >(sender());
     Q_ASSERT(curClient);
     QScopedPointer<GlobalError> curSocketErr(new GlobalError());
+
     if(curClient){
         qDebug() << "Socket error type is " << errCode;
-    //QString curStatus = _model->data(_model->index(curClient->server()->id,statusColumn),statusRole).toString();
-    //_model->setData(_model->index(curClient->server()->id,statusColumn),curStatus+",ошибка:"+curClient->errorString(),statusRole);
+
         _model->setData(_model->index(curClient->server()->id,statusColumn),"Ошибка:"+curClient->errorString(),statusRole);
 
         curSocketErr->setFirstItem(GlobalError::Configuration);
@@ -319,8 +312,6 @@ void MainWindow::error(QAbstractSocket::SocketError errCode)
 
 void MainWindow::errorChange(GlobalError* lastErr)
 {
-    //qDebug() << "New error: " << lastErr;
-    //QScopedPointer<GlobalError> CurError(new GlobalError(GlobalError::Historian,lastErr));
     switch (lastErr->firstItem()) {
     case GlobalError::Configuration:
         if((lastErr->plcIdFrom() > -1) && (lastErr->plcIdFrom() <= MAX_CONNECTIONS_COUNT)){
@@ -363,16 +354,6 @@ void MainWindow::forceStartConnect(int rowInTable)
     connectToServer(rowInTable);
     setSavePermit(false);
     setStopPermit(true);
-    /*
-    foreach (QSharedPointer<PLCSocketClient> client, ConnectionManager::instance()->connections) {
-        if(client->server()->id == rowInTable){
-            //updateServer(rowInTable);
-            //client->server()->setAddress(_model->index(idServer,ipColumn).data(ipRole).toString());
-            ConnectionManager::instance()->activateConnection(client.data());
-            return;
-        }
-    }
-    */
 }
 
 void MainWindow::forceStopConnect(int rowInTable)
@@ -419,6 +400,18 @@ void MainWindow::setBackupFolderName(QString value){
         emit backupFolderNameChanged(_backupFolderName);
         qDebug() << "New backup folder name set - " << _backupFolderName;
     }
+}
+
+void MainWindow::setRedundancyFilePath(QString value)
+{
+    if(_redundancyFilePath!=value){
+        _redundancyFilePath = value;
+        QSettings settings;
+        settings.setValue(RedundancyFilePathSetting,_redundancyFilePath);
+        emit redundancyFilePathChanged(_redundancyFilePath);
+        qDebug() << "New redundancy file is - " << _redundancyFilePath;
+    }
+
 }
 
 void MainWindow::setTimeZone(QString value)

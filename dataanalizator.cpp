@@ -1,7 +1,9 @@
-#include <QSettings>
-#include <QSqlError>
+#ifdef FORWARD
+    #include <QSqlError>
+#endif
 #include <QFile>
-
+#include <QFileInfo>
+#include <QSettings>
 #include "plcsocketclient.h"
 #include "dataanalizator.h"
 #include "globalerror.h"
@@ -32,7 +34,13 @@ void DataAnalizator::newDataReceived()
 
     int it=client->queReceivePackets.size();
 
-    if(!PLCtoParNames.contains(client->getServer()->id) || PLCtoParNames.value(client->getServer()->id).isEmpty()){
+    if(PLCtoParNames.value(client->getServer()->id).isEmpty()){
+        errorHandler(GlobalError::Configuration,
+                     "Проверьте конф. файл .ini");
+        return;
+    }
+
+    if(!PLCtoParNames.contains(client->getServer()->id)){
         errorHandler(GlobalError::Configuration,
                      "Не найдены быстрые параметры абонента. Проверьте конф. файл",
                      PLCtoParNames.value(client->getServer()->id).first(),
@@ -51,6 +59,11 @@ void DataAnalizator::newDataReceived()
     if(it>_segmentInterval*10) {
 
         QString stream;
+
+        if(_isRedundant){
+            if(!redundancyHandler())
+                return;
+        }
         //query.append(createTablePref);
         QString Filename = generateFileName(client->queReceivePackets.head()->getDateTime(),
                                             PLCtoParNames.value(client->getServer()->id).first());
@@ -68,7 +81,6 @@ void DataAnalizator::newDataReceived()
 
 void DataAnalizator::queryResult(bool result)
 {
-    //lastQuerySuccess = result;
     qDebug() << "Query success is - " << result;
 }
 
@@ -77,13 +89,43 @@ void DataAnalizator::correctDTime(QString& _prepareDTime,int cycleIndex, int cyc
     QDateTime corectDateTime(curDateTime.addMSecs(cycleStep*cycleIndex));
 
     _prepareDTime = QString("%1,%2").arg(corectDateTime.date().toString("yyyy/MM/dd"))
-                                 .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
+                                    .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
 
     if(_curTimeZone != 0)
         corectDateTime = corectDateTime.addSecs(_curTimeZone*3600);
 
     _prepareDTime = QString("%1,%2").arg(corectDateTime.date().toString("yyyy/MM/dd"))
-                                 .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
+                                    .arg(corectDateTime.time().toString("hh:mm:ss.zzz"));
+}
+
+bool DataAnalizator::redundancyHandler()
+{
+    QFileInfo redundantPath(_redundantFilePath);
+    if(!redundantPath.isFile()){
+        errorHandler(GlobalError::Configuration,
+                     "Проверьте путь до файла резервирования");
+        return false;
+    }
+    QFile rFile(_redundantFilePath);
+    QTextStream in(&rFile);
+
+    if (!rFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+        errorHandler(GlobalError::System,
+                     "Ошибка открытия файла резервирования.");
+    } else {
+        char master;
+        in >> master;
+        qDebug() << "Symbol is " << master;
+        if(QString(master).toInt() == 1){
+            _isMaster = true;
+        }
+        else {
+            _isMaster = false;
+            return false;
+        }
+        rFile.close();
+    }
+    return true;
 }
 
 void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& stream)
@@ -126,6 +168,12 @@ void DataAnalizator::initialize()
 QString DataAnalizator::rfile(const QString& name)
 {
     QSettings settings(name, QSettings::IniFormat);
+
+    if(settings.status()!=QSettings::NoError){
+        errorHandler(GlobalError::Configuration,
+                     "Проблемы с открытием конф. файла!");
+        return QString("Err");
+    }
     QStringList Names;
     //общие
     int index(0);
@@ -135,7 +183,9 @@ QString DataAnalizator::rfile(const QString& name)
 
         settings.beginGroup(key);
         const QStringList childKeys = settings.childKeys();
-        if(childKeys.empty()) return QString("Формат файла некорректный: в группе [Names] необходимо перечислить хранимые параметры через ,");
+
+        if(childKeys.empty())
+            return QString("Формат файла некорректный: в группе [Names] необходимо перечислить хранимые параметры через ,");
 
         PLCtoParNames[index].append(key);
         PLCtoParNames[index].append(settings.value("Names").toStringList());
@@ -143,11 +193,11 @@ QString DataAnalizator::rfile(const QString& name)
         if(Names.size() > MAX_PAR_COUNT) return QString("Параметров должно быть не более " + QString::number(MAX_PAR_COUNT));
 
         settings.endGroup();
-        //qDebug() << index << ":" << PLCtoParNames.value(index);
         index++;
+
     }
 
-    return QString();
+    return QString("");
 }
 
 QString DataAnalizator::generateFileName(const QDateTime &dt, const QString& abonent)
@@ -169,10 +219,9 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
     }
 
     GLOBAL::globalMutex.lock();
-    //GLOBAL::ThreadCheck << "Thr1";
-    //QMutexLocker locker(&GLOBAL::globalMutex);
 
-    QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
+    //QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
+    QScopedPointer<QFile> outputFile(new QFile(filepath.append("\\"+fileName +".csv")));
     QTextStream out(outputFile.data());
 
     int ver = 1;
@@ -202,11 +251,6 @@ void DataAnalizator::errorHandler(GlobalError::ErrorRoles role, const QString &t
     CurError->setFrom(from);
     CurError->setPlcIdFrom(_idFrom);
 
-    //if(!ignorePLClist.value(idfrom))
     emit errorChange(CurError.data());
-/*
-    if(role==GlobalError::Configuration) {
-       if(idfrom!=1000) ignorePLClist[idfrom] = true;
-    }
-*/
+
 }

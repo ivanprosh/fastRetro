@@ -23,12 +23,6 @@ int main(int argc, char *argv[])
 
     //инициализация объекта работы с DB
     DataAnalizator::instance()->initialize();
-    QString err = DataAnalizator::instance()->rfile("signals.ini");
-    if(!err.isEmpty()){
-        qDebug() << "Не найден конфигур. файл!";
-        //GLOBAL::warning(0,0,"Ошибка чтения",err);
-        return 0;
-    }
 
     //подключение к базе выполняется при смене имени сервера и/или старте подключения
     //DataAnalizator::instance()->
@@ -46,9 +40,12 @@ int main(int argc, char *argv[])
 
     MainClass->initializeSettings();
 
+    QString err = DataAnalizator::instance()->rfile("signals.ini");
+
 #ifdef QML_DEBUG
     engine.load(QString(QString(PRO_FILE_PWD) + "/mainwindow.qml"));
 #else
+    //engine.load(QUrl(QStringLiteral("qrc:/mainwindow.qml")));
     engine.load(QUrl(QStringLiteral("qrc:/mainwindow.qml")));
 #endif
 

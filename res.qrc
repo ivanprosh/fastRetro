@@ -12,5 +12,7 @@
         <file>images/play_arrow.svg</file>
         <file>images/stop.svg</file>
         <file>images/restore.svg</file>
+        <file>LogView.qml</file>
+        <file>Filedialog.qml</file>
     </qresource>
 </RCC>

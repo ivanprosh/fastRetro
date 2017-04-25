@@ -9,7 +9,6 @@ AppDialogs.Dialog {
     title: qsTr("Настройки")
     //width: grid.implicitWidth + 2 * grid.rowSpacing
     //height: grid.implicitHeight + 2 * grid.columnSpacing
-
     //standardButtons: StandardButton.Save | StandardButton.Discard
 
     signal finished(string fullName, string address, string city, string number)
@@ -58,7 +57,7 @@ AppDialogs.Dialog {
 
                         ToolTip.text: "Каталог для сформированных .csv файлов.\nЕсли запись идет напрямую\n в БД, должен быть на Historian, иначе на локальной машине"
 
-                        placeholderText: "//A_Server/FastRetro или C:\\FastRetro"
+                        placeholderText: "\\\\%Server_name%\\FolderName или C:\\FolderName"
                         Layout.fillWidth: true
                         Component.onCompleted: {
                             text = MainClass.backupFolderName;
@@ -69,7 +68,8 @@ AppDialogs.Dialog {
                         }
 
                         validator: RegExpValidator {
-                            regExp: /(\w:\\)|(\/\/)\w.*/
+                            //regExp: /(\w:\\)|(\/\/)\w.*/
+                            regExp: /(\w:\\)|(\\\\)\w.*/
                         }
 
                     }
@@ -82,6 +82,8 @@ AppDialogs.Dialog {
                             anchors.margins: 4
                         }
                         onClicked: {
+                            loader.setSource("Filedialog.qml",{"context": backupFolderPath, "selectFolder":true})
+                            //filedialog.selectFolder = true;
                             loader.active = true
                         }
                     }
@@ -118,6 +120,63 @@ AppDialogs.Dialog {
                         }
                     }
                 }
+                RowLayout {
+
+                    Label {
+                        text: "Путь до файла состояния резервирования:"
+                    }
+                    MyTextField {
+                        id: redundancyFilePath
+
+                        enabled: redundant.checked
+
+                        ToolTip.text: "Путь до файла, по изменению которого отслеживается мастерство запущенных экземпляров приложения.
+                                       \nФормат записи в файле:\n 0 - текущий сервер slave, 1 - master"
+
+                        placeholderText: "\\\\%Server_name%\\FolderName\\file.txt или C:\\FolderName\\file.txt"
+                        Layout.fillWidth: true
+                        Component.onCompleted: {
+                            text = MainClass.redundancyFilePath;
+                            //console.log("Backup folder " + text);
+                        }
+                        onTextChanged: {
+                            width = hiddenText.contentWidth;
+                        }
+
+                        validator: RegExpValidator {
+                            //regExp: /(\w:\\)|(\/\/)\w.*/
+                            regExp: /(\w:\\)|(\\\\)\w.*/
+                        }
+
+                    }
+                    ToolButton {
+                        id: chooseRedFilePath
+                        height: redundancyFilePath.height
+                        visible: redundant.checked
+                        Image {
+                            source: Qt.resolvedUrl("qrc:/images/add.svg")
+                            anchors.fill: parent
+                            anchors.margins: 4
+                        }
+                        onClicked: {
+                            //filedialog.selectFolder = false;
+                            loader.setSource("Filedialog.qml",{"context": redundancyFilePath, "selectFolder":false})
+                            loader.active = true
+                        }
+                    }
+
+                    CheckBox {
+                        id: redundant
+                        text: "Резервирование"
+                        indicator.height: redundancyFilePath.height
+                        indicator.width: indicator.height
+                        //anchors.margins: 10
+                        Component.onCompleted: {
+                            checked = MainClass.redundant
+                            height = parent.height
+                        }
+                    }
+                }
 
             }
 
@@ -146,7 +205,7 @@ AppDialogs.Dialog {
                             regExp: /\\\\\w.*(\\.*)?/
                         }
 
-                        placeholderText: "\\%Server_name%\[FastLoadPath]"
+                        placeholderText: "\\\\%Server_name%\\[FastLoadPath]"
                         Layout.fillWidth: true
                         Component.onCompleted: {
                             text = MainClass.serverName
@@ -184,36 +243,13 @@ AppDialogs.Dialog {
        id: loader
        visible: status == Loader.Ready
        active: false
-       sourceComponent: filedialog
+       //sourceComponent: filedialog
     }
-
-    Component {
+/*
+    Filedialog {
         id: filedialog
-        AppDialogs.FileDialog {
-            //id: dialog
-            //options: FolderDialog.DontResolveSymlinks | FolderDialog.ReadOnly
-            selectFolder: true
-            title: "Выберите путь до каталога хранения временных файлов"
-            //currentFolder: shortcuts.home
-
-            onAccepted: {
-                console.log("You chose: " + folder)
-                var url = folder.toString();
-                var path = url.match('file\:///(.*)');
-                if(path !== null)
-                    backupFolderPath.text = path[1];
-                else
-                    backupFolderPath.placeholderText = "Некорректный путь...";
-                loader.active = false;
-            }
-            onRejected: {
-                console.log("Canceled")
-                loader.active = false
-            }
-            Component.onCompleted: visible = true
-        }
     }
-
+*/
     onAccepted: {
         console.log("in SettingsDialog.qml - Settings Accepted start!");
 
@@ -222,6 +258,8 @@ AppDialogs.Dialog {
         MainClass.setServerName(historianName.text);
         MainClass.setAutostart(autoStart.checked);
         MainClass.setBackupFolderName(backupFolderPath.text);
+        MainClass.setRedundant(redundant.checked);
+        MainClass.setRedundancyFilePath(redundancyFilePath.text);
         MainClass.setTimeZone(timeZone.text);
         MainClass.setSegmentInterval(segmentInterval.text);
 

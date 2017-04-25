@@ -1,8 +1,10 @@
 #ifndef STRATEGIES_H
 #define STRATEGIES_H
 
+#ifdef FORWARD
+    #include <QSqlDatabase>
+#endif
 #include <QObject>
-#include <QSqlDatabase>
 #include <QDir>
 #include <QFileSystemWatcher>
 #include "globalerror.h"
@@ -47,6 +49,7 @@ private:
     QFileSystemWatcher watcher;
 };
 
+#ifdef FORWARD
 class Forward : public AbstractStrategy
 {
    Q_OBJECT
@@ -68,5 +71,6 @@ public slots:
 private:
     QSqlDatabase m_database;
 };
+#endif
 
 #endif // STRATEGIES_H

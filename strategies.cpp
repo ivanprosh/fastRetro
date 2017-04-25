@@ -1,6 +1,6 @@
 #include <QDebug>
-#include <QSqlQuery>
-#include <QSqlError>
+//#include <QSqlQuery>
+//#include <QSqlError>
 #include "strategies.h"
 #include "global.h"
 
@@ -49,7 +49,7 @@ void AbstractStrategy::setHistorianPath(const QString& path){
         qDebug() << "New path: cap(1) - wrong";
     }
 }
-
+#ifdef FORWARD
 Forward::Forward(QObject *parent):AbstractStrategy(parent),
     m_database(QSqlDatabase::addDatabase("QODBC"))
 {
@@ -135,6 +135,7 @@ void Forward::scanFolder()
         emit errorChange(curError.data());
     }
 }
+#endif
 /*
  *
  */

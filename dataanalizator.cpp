@@ -36,7 +36,7 @@ void DataAnalizator::newDataReceived()
 
     if(PLCtoParNames.value(client->getServer()->id).isEmpty()){
         errorHandler(GlobalError::Configuration,
-                     "Проверьте конф. файл .ini");
+                     "Проверьте формат описания конф. файла signals.ini. Не найдены параметры");
         return;
     }
 
@@ -58,6 +58,7 @@ void DataAnalizator::newDataReceived()
     //если накопилось достаточно данных
     if(it>_segmentInterval*10) {
 
+        qDebug() << "New data available in DataAnalizator";
         QString stream;
 
         if(_isRedundant){
@@ -115,7 +116,7 @@ bool DataAnalizator::redundancyHandler()
     } else {
         char master;
         in >> master;
-        qDebug() << "Symbol is " << master;
+        //qDebug() << "Symbol is " << master;
         if(QString(master).toInt() == 1){
             _isMaster = true;
         }

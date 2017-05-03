@@ -69,7 +69,7 @@ AppDialogs.Dialog {
 
                         validator: RegExpValidator {
                             //regExp: /(\w:\\)|(\/\/)\w.*/
-                            regExp: /(\w:\\)|(\\\\)\w.*/
+                            regExp: /(\w:\\)|(\\\\)|(\/\/)\w.*/
                         }
 
                     }
@@ -125,6 +125,12 @@ AppDialogs.Dialog {
                     Label {
                         text: "Путь до файла состояния резервирования:"
                     }
+                    Text {
+                        id: redundancyFilehidden
+                        anchors.fill: redundancyFilePath
+                        text: redundancyFilePath.text
+                        visible: false
+                    }
                     MyTextField {
                         id: redundancyFilePath
 
@@ -140,12 +146,12 @@ AppDialogs.Dialog {
                             //console.log("Backup folder " + text);
                         }
                         onTextChanged: {
-                            width = hiddenText.contentWidth;
+                            width = redundancyFilehidden.contentWidth;
                         }
 
                         validator: RegExpValidator {
                             //regExp: /(\w:\\)|(\/\/)\w.*/
-                            regExp: /(\w:\\)|(\\\\)\w.*/
+                            regExp: /(\w:\\)|(\\\\)|(\/\/)\w.*/
                         }
 
                     }
@@ -167,7 +173,7 @@ AppDialogs.Dialog {
 
                     CheckBox {
                         id: redundant
-                        text: "Резервирование"
+                        text: "Резервир."
                         indicator.height: redundancyFilePath.height
                         indicator.width: indicator.height
                         //anchors.margins: 10

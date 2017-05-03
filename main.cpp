@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 
     //инициализация объекта работы с DB
     DataAnalizator::instance()->initialize();
+    QString err = DataAnalizator::instance()->rfile("signals.ini");
 
     //подключение к базе выполняется при смене имени сервера и/или старте подключения
     //DataAnalizator::instance()->
@@ -39,8 +40,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("MainClass", MainClass);
 
     MainClass->initializeSettings();
-
-    QString err = DataAnalizator::instance()->rfile("signals.ini");
 
 #ifdef QML_DEBUG
     engine.load(QString(QString(PRO_FILE_PWD) + "/mainwindow.qml"));

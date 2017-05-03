@@ -70,12 +70,7 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
         qDebug() << role << " " << value.toString();
 
         Q_ASSERT(index.row()<=items.size());
-        /*
-        if(items.empty()){
-            Q_ASSERT(role==statusRole);
-            items.push_back(QPair<QString,QString>(value.toString(),"Не активен"));
-        } else {
-        */
+
             switch (role) {
             case ipRole:
             {

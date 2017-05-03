@@ -82,5 +82,6 @@ Dialog {
     }
     onReset: {
         MainClass.logger.clear();
+        MainClass.setCurrentError();
     }
 }

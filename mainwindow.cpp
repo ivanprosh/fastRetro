@@ -74,7 +74,7 @@ void MainWindow::initializeSettings()
         setAutostart(settings.value(AutoStartSetting).toBool());
         initializeTable(settings.value(ModelSetting).toStringList());
         if(isAutostart())
-           QTimer::singleShot(0, this, SLOT(connectToServer()));
+           QTimer::singleShot(500, this, SLOT(connectToServer()));
     } else {
         setAutostart(0);
     }
@@ -86,14 +86,18 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setCurrentError(GlobalError *value){
-    //if(_currentError->secondItem()!=value->secondItem()){
-    _currentError->setFirstItem(value->firstItem());
-    _currentError->setSecondItem(value->secondItem());
-    _currentError->setFrom(value->from());
-    emit currentErrorChanged(_currentError);
-    if(value->firstItem() != GlobalError::None)
-        Logger::instance()->addEntry(value);
-    //}
+
+    if(value != nullptr){
+        _currentError->setFirstItem(value->firstItem());
+        _currentError->setSecondItem(value->secondItem());
+        _currentError->setFrom(value->from());
+        emit currentErrorChanged(_currentError);
+        if(value->firstItem() != GlobalError::None)
+            Logger::instance()->addEntry(value);
+    } else {
+        _currentError->setFirstItem(GlobalError::None);
+        _currentError->setSecondItem("Ok");
+    }
 }
 
 void MainWindow::initObjConnections()

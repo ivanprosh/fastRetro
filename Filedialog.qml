@@ -21,12 +21,20 @@ AppDialogs.FileDialog {
             url = fileUrl.toString();
             console.log(url);
         }
-        var path = url.match('file\:///(.*)');
-        if(path !== null)
+        var path = url.match('file\:\/*(\\w\:\/.*)|(\/\/\\w[^\:].*)');
+        //var path = url.match('file\:\/*([A-z].*)');
+        if(path === null){
+            context.text = "Некорректный путь...";
+            return;
+        }
+        if(path[1] !== undefined){
             context.text = path[1];
-        else
-            context.placeholderText = "Некорректный путь...";
-
+            console.log("Filedialog result string: " + context.text);
+        } else if(path[2] !== undefined) {
+            context.text = path[2];
+            console.log("Filedialog result string: " + context.text);;
+        } else
+            context.text = "Некорректный путь...";
         loader.active = false;
     }
     onRejected: {

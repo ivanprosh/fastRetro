@@ -36,7 +36,7 @@ public:
     void setStartPermit(bool value){permitStart = value; emit startPermitChanged();}
     void setStopPermit(bool value){permitStop = value; emit stopPermitChanged();}
     void setSavePermit(bool value){permitSave = value; emit savePermitChanged();}
-    void setCurrentError(GlobalError* value);
+    void setCurrentError(GlobalError* value = 0);
     auto getLogger() -> Logger*;
 
 public slots:

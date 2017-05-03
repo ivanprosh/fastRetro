@@ -181,7 +181,7 @@ void Native::scanFolder()
             errCount++;
         } else {
             //для сличения
-            //QFile::copy(backupFolder.path() + "/" + name, HistServerFastFolder.path() + "/" + name );
+            //QFile::copy(backupFolder.path() + "/" + name, "/" + name );
 
             if(!QFile::remove(backupFolder.path() + "/" + name)) {
                 curError->setFirstItem(GlobalError::System);

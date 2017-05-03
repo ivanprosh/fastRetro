@@ -1,0 +1,3613 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="20.00" TargetName="MainProgram" TargetType="Program" ContainsContext="true" Owner="user, ss" ExportDate="Wed May 03 16:04:59 2017" ExportOptions="References DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<Controller Use="Context" Name="SOCK">
+<DataTypes Use="Context">
+<DataType Name="WRT_DATA" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Timeout" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="ToAddr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Buffer" DataType="TFastRetroBuf" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SockAddr"/>
+<Dependency Type="DataType" Name="TFastRetroBuf"/>
+</Dependencies>
+</DataType>
+<DataType Name="TAnpar" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Sys" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Params" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+<DataType Name="SockAddr" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Family" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Address Family Must be 2]]>
+</Description>
+</Member>
+<Member Name="Port" DataType="INT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Port Number]]>
+</Description>
+</Member>
+<Member Name="Addr" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[IP Address]]>
+</Description>
+</Member>
+</Members>
+</DataType>
+<DataType Name="Anpars" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Tg_inN1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_inAVO1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_outAVO1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_outN1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_inN2" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_inAVO2" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_outAVO2" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Tg_outN2" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_aftKr4" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_outSep21" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_aftKr6" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_aftKr16" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_outSep22" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Pg_aftKr18" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_Kr1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_Sep11" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_Kr3" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_AVO1" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_Sep21" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="dPg_Kr13" DataType="TAnpar" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+<Dependency Type="DataType" Name="TAnpar"/>
+</Dependencies>
+</DataType>
+<DataType Name="READ_RESP" Family="NoFamily" Class="User">
+<Members>
+<Member Name="FromAddr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="READ_BUFF" DataType="STR_4096" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SockAddr"/>
+<Dependency Type="DataType" Name="STR_4096"/>
+</Dependencies>
+</DataType>
+<DataType Name="STR_4096" Family="StringFamily" Class="User">
+<Members>
+<Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="DATA" DataType="SINT" Dimension="4096" Radix="ASCII" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+<DataType Name="REQUEST_PARAMETERS" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Type" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[1 - TCP 2- UPD]]>
+</Description>
+</Member>
+<Member Name="Addr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SockAddr"/>
+</Dependencies>
+</DataType>
+<DataType Name="AcceptResponse" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Instance" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Addr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SockAddr"/>
+</Dependencies>
+</DataType>
+<DataType Name="SocketInstAttr" Family="NoFamily" Class="User">
+<Members>
+<Member Name="LocalAddr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="RemoteAddr" DataType="SockAddr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="SendBufSize" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="RcvBufSize" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="TCPKeepAlive" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="TCPNoDelay" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="InactivityTimeout" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="MulticastTTL" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="UDPBroadcast" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="LingerOnOff" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SockAddr"/>
+<Dependency Type="DataType" Name="SockAddr"/>
+</Dependencies>
+</DataType>
+<DataType Name="READ_DATA_REQ" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Timeout" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="BufLen" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+<DataType Name="TFastRetroBuf" Family="NoFamily" Class="User">
+<Members>
+<Member Name="LEN" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="PacketSize" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Data" DataType="REAL" Dimension="109" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+<DataType Name="SocketData" Family="NoFamily" Class="User">
+<Members>
+<Member Name="Instance" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+<Member Name="Attr" DataType="SocketInstAttr" Dimension="0" Radix="NullType" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+<Dependencies>
+<Dependency Type="DataType" Name="SocketInstAttr"/>
+</Dependencies>
+</DataType>
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Name="_FastRetro_checkErr" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false" CreatedDate="2017-05-03T06:08:37.082Z" CreatedBy="VMAB20\User" EditedDate="2017-05-03T09:32:19.866Z" EditedBy="VMAB20\User" SoftwareRevision="v20.00">
+<Description>
+<![CDATA[Проверка ошибок в сообщении, возвращает true, если необходимо предпринять действия]]>
+</Description>
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Input - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Enable Output - System Defined Parameter]]>
+</Description>
+</Parameter>
+<Parameter Name="Msg" TagType="Base" DataType="MESSAGE" Usage="InOut" Required="true" Visible="true"/>
+<Parameter Name="err" TagType="Base" DataType="DINT" Usage="Output" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Принятие решений 0-не треб., 1-отвалился сокет,
+10-другое]]>
+</Description>
+<DefaultData>00 00 00 00</DefaultData>
+<DefaultData Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</DefaultData>
+</Parameter>
+<Parameter Name="errCount" TagType="Base" DataType="DINT" Usage="InOut" Radix="Decimal" Required="true" Visible="true" Constant="false"/>
+</Parameters>
+<LocalTags/>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[err := 0;]]>
+</Line>
+<Line Number="1">
+<![CDATA[if(Msg.ER) then]]>
+</Line>
+<Line Number="2">
+<![CDATA[	if(errCount > 3) then]]>
+</Line>
+<Line Number="3">
+<![CDATA[		//что-то делаем при ошибке отправки	]]>
+</Line>
+<Line Number="4">
+<![CDATA[		//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
+</Line>
+<Line Number="5">
+<![CDATA[		if(Msg.EXERR = 16#0000_0036 ]]>
+</Line>
+<Line Number="6">
+<![CDATA[			or Msg.EXERR = 16#0000_0033 ) then //Обрыв связи]]>
+</Line>
+<Line Number="7">
+<![CDATA[			err := 1;			]]>
+</Line>
+<Line Number="8">
+<![CDATA[		else]]>
+</Line>
+<Line Number="9">
+<![CDATA[			err := 10;]]>
+</Line>
+<Line Number="10">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="11">
+<![CDATA[		//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)		]]>
+</Line>
+<Line Number="12">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="13">
+<![CDATA[else]]>
+</Line>
+<Line Number="14">
+<![CDATA[	errCount := 0;]]>
+</Line>
+<Line Number="15">
+<![CDATA[end_if;]]>
+</Line>
+</STContent>
+</Routine>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+<Tags Use="Context">
+<Tag Name="Sock_Accept_Timeout" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>90 65 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="26000"/>
+</Data>
+</Tag>
+<Tag Name="Log_enable" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Get_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0007" LocalIndex="0" DestinationTag="SockTimeout"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="SockTimeout" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Conn_Accept_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0050" ObjectType="16#0342" TargetObject="484" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Sock_Accept_Timeout"
+ DestinationTag="Sock_Accept_Resp" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="CLOCK" TagType="Base" DataType="DINT" Dimensions="7" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>CE 07 00 00 01 00 00 00 0C 00 00 00 16 00 00 00 
+0B 00 00 00 0D 00 00 00 5E CA 08 00</Data>
+<Data Format="Decorated">
+<Array DataType="DINT" Dimensions="7" Radix="Decimal">
+<Element Index="[0]" Value="1998"/>
+<Element Index="[1]" Value="1"/>
+<Element Index="[2]" Value="12"/>
+<Element Index="[3]" Value="22"/>
+<Element Index="[4]" Value="11"/>
+<Element Index="[5]" Value="13"/>
+<Element Index="[6]" Value="576094"/>
+</Array>
+</Data>
+</Tag>
+<Tag Name="Change_Log_Msg" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" LocalElement="Log_enable"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Instance" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>E4 01 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="484"/>
+</Data>
+</Tag>
+<Tag Name="Write_Data_Out" TagType="Base" DataType="WRT_DATA" Constant="false" ExternalAccess="Read/Write">
+<Data>20 4E 00 00 02 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="WRT_DATA">
+<DataValueMember Name="Timeout" DataType="DINT" Radix="Decimal" Value="20000"/>
+<StructureMember Name="ToAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="2"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Buffer" DataType="TFastRetroBuf">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="PacketSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<ArrayMember Name="Data" DataType="REAL" Dimensions="109" Radix="Float">
+<Element Index="[0]" Value="0.0"/>
+<Element Index="[1]" Value="0.0"/>
+<Element Index="[2]" Value="0.0"/>
+<Element Index="[3]" Value="0.0"/>
+<Element Index="[4]" Value="0.0"/>
+<Element Index="[5]" Value="0.0"/>
+<Element Index="[6]" Value="0.0"/>
+<Element Index="[7]" Value="0.0"/>
+<Element Index="[8]" Value="0.0"/>
+<Element Index="[9]" Value="0.0"/>
+<Element Index="[10]" Value="0.0"/>
+<Element Index="[11]" Value="0.0"/>
+<Element Index="[12]" Value="0.0"/>
+<Element Index="[13]" Value="0.0"/>
+<Element Index="[14]" Value="0.0"/>
+<Element Index="[15]" Value="0.0"/>
+<Element Index="[16]" Value="0.0"/>
+<Element Index="[17]" Value="0.0"/>
+<Element Index="[18]" Value="0.0"/>
+<Element Index="[19]" Value="0.0"/>
+<Element Index="[20]" Value="0.0"/>
+<Element Index="[21]" Value="0.0"/>
+<Element Index="[22]" Value="0.0"/>
+<Element Index="[23]" Value="0.0"/>
+<Element Index="[24]" Value="0.0"/>
+<Element Index="[25]" Value="0.0"/>
+<Element Index="[26]" Value="0.0"/>
+<Element Index="[27]" Value="0.0"/>
+<Element Index="[28]" Value="0.0"/>
+<Element Index="[29]" Value="0.0"/>
+<Element Index="[30]" Value="0.0"/>
+<Element Index="[31]" Value="0.0"/>
+<Element Index="[32]" Value="0.0"/>
+<Element Index="[33]" Value="0.0"/>
+<Element Index="[34]" Value="0.0"/>
+<Element Index="[35]" Value="0.0"/>
+<Element Index="[36]" Value="0.0"/>
+<Element Index="[37]" Value="0.0"/>
+<Element Index="[38]" Value="0.0"/>
+<Element Index="[39]" Value="0.0"/>
+<Element Index="[40]" Value="0.0"/>
+<Element Index="[41]" Value="0.0"/>
+<Element Index="[42]" Value="0.0"/>
+<Element Index="[43]" Value="0.0"/>
+<Element Index="[44]" Value="0.0"/>
+<Element Index="[45]" Value="0.0"/>
+<Element Index="[46]" Value="0.0"/>
+<Element Index="[47]" Value="0.0"/>
+<Element Index="[48]" Value="0.0"/>
+<Element Index="[49]" Value="0.0"/>
+<Element Index="[50]" Value="0.0"/>
+<Element Index="[51]" Value="0.0"/>
+<Element Index="[52]" Value="0.0"/>
+<Element Index="[53]" Value="0.0"/>
+<Element Index="[54]" Value="0.0"/>
+<Element Index="[55]" Value="0.0"/>
+<Element Index="[56]" Value="0.0"/>
+<Element Index="[57]" Value="0.0"/>
+<Element Index="[58]" Value="0.0"/>
+<Element Index="[59]" Value="0.0"/>
+<Element Index="[60]" Value="0.0"/>
+<Element Index="[61]" Value="0.0"/>
+<Element Index="[62]" Value="0.0"/>
+<Element Index="[63]" Value="0.0"/>
+<Element Index="[64]" Value="0.0"/>
+<Element Index="[65]" Value="0.0"/>
+<Element Index="[66]" Value="0.0"/>
+<Element Index="[67]" Value="0.0"/>
+<Element Index="[68]" Value="0.0"/>
+<Element Index="[69]" Value="0.0"/>
+<Element Index="[70]" Value="0.0"/>
+<Element Index="[71]" Value="0.0"/>
+<Element Index="[72]" Value="0.0"/>
+<Element Index="[73]" Value="0.0"/>
+<Element Index="[74]" Value="0.0"/>
+<Element Index="[75]" Value="0.0"/>
+<Element Index="[76]" Value="0.0"/>
+<Element Index="[77]" Value="0.0"/>
+<Element Index="[78]" Value="0.0"/>
+<Element Index="[79]" Value="0.0"/>
+<Element Index="[80]" Value="0.0"/>
+<Element Index="[81]" Value="0.0"/>
+<Element Index="[82]" Value="0.0"/>
+<Element Index="[83]" Value="0.0"/>
+<Element Index="[84]" Value="0.0"/>
+<Element Index="[85]" Value="0.0"/>
+<Element Index="[86]" Value="0.0"/>
+<Element Index="[87]" Value="0.0"/>
+<Element Index="[88]" Value="0.0"/>
+<Element Index="[89]" Value="0.0"/>
+<Element Index="[90]" Value="0.0"/>
+<Element Index="[91]" Value="0.0"/>
+<Element Index="[92]" Value="0.0"/>
+<Element Index="[93]" Value="0.0"/>
+<Element Index="[94]" Value="0.0"/>
+<Element Index="[95]" Value="0.0"/>
+<Element Index="[96]" Value="0.0"/>
+<Element Index="[97]" Value="0.0"/>
+<Element Index="[98]" Value="0.0"/>
+<Element Index="[99]" Value="0.0"/>
+<Element Index="[100]" Value="0.0"/>
+<Element Index="[101]" Value="0.0"/>
+<Element Index="[102]" Value="0.0"/>
+<Element Index="[103]" Value="0.0"/>
+<Element Index="[104]" Value="0.0"/>
+<Element Index="[105]" Value="0.0"/>
+<Element Index="[106]" Value="0.0"/>
+<Element Index="[107]" Value="0.0"/>
+<Element Index="[108]" Value="0.0"/>
+</ArrayMember>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Delete_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004f" ObjectType="16#0342" TargetObject="3557" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
+/>
+</Data>
+</Tag>
+<Tag Name="Write_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="24" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="25268" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
+ DestinationTag="BufLenSent" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Read_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="8" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004d" ObjectType="16#0342" TargetObject="4805" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Read_Data_Req"
+ DestinationTag="Read_Response" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Socket_Object_Class_Response" TagType="Base" DataType="SINT" Dimensions="10" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 14 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Array DataType="SINT" Dimensions="10" Radix="Decimal">
+<Element Index="[0]" Value="1"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="20"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+</Array>
+</Data>
+</Tag>
+<Tag Name="Set_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="18598" AttributeNumber="16#0007" LocalIndex="0" LocalElement="SockTimeout"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Read_Response" TagType="Base" DataType="READ_RESP" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00 00 00 00 00 18 00 00 00 30 37 3A 35 
+30 3A 31 32 30 37 3A 35 30 3A 31 33 30 37 3A 35 
+30 3A 31 34 31 35 3A 30 35 3A 30 36 31 35 3A 30 
+35 3A 30 37 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="READ_RESP">
+<StructureMember Name="FromAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="READ_BUFF" DataType="STR_4096">
+<DataValueMember Name="LEN" DataType="DINT" Radix="Decimal" Value="24"/>
+<DataValueMember Name="DATA" DataType="STR_4096" Radix="ASCII">
+<![CDATA['07:50:1207:50:1307:50:14']]>
+</DataValueMember>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="BufLenSent" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>07 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="7"/>
+</Data>
+</Tag>
+<Tag Name="_EWEB_PATH" TagType="Base" DataType="STRING" Constant="false" ExternalAccess="Read/Write">
+<Data>02 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00</Data>
+<Data Format="String" Length="2">
+<![CDATA['$01$01']]>
+</Data>
+</Tag>
+<Tag Name="Sock_Accept_Resp" TagType="Base" DataType="AcceptResponse" Constant="false" ExternalAccess="Read/Write">
+<Data>C5 12 00 00 02 00 A4 04 01 5A 64 64</Data>
+<Data Format="Decorated">
+<Structure DataType="AcceptResponse">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="4805"/>
+<StructureMember Name="Addr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="2"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="1188"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="1684298241"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Log_old" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Enable_Log_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" DestinationTag="Log_enable"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Anpar" TagType="Base" DataType="Anpars" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="Anpars">
+<StructureMember Name="Tg_inN1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_inAVO1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_outAVO1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_outN1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_inN2" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_inAVO2" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_outAVO2" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Tg_outN2" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_aftKr4" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_outSep21" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_aftKr6" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_aftKr16" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_outSep22" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="Pg_aftKr18" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_Kr1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_Sep11" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_Kr3" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_AVO1" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_Sep21" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="dPg_Kr13" DataType="TAnpar">
+<DataValueMember Name="Sys" DataType="REAL" Radix="Float" Value="0.0"/>
+<DataValueMember Name="Params" DataType="INT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="AcceptReqTimer" TagType="Base" DataType="FBD_TIMER" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="FBD_TIMER">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="TimerEnable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+<DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PresetInv" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Create_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="12" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004b" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Socket"
+ DestinationTag="Instance" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Read_Data_Req" TagType="Base" DataType="READ_DATA_REQ" Constant="false" ExternalAccess="Read/Write">
+<Data>E8 03 00 00 64 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="READ_DATA_REQ">
+<DataValueMember Name="Timeout" DataType="DINT" Radix="Decimal" Value="1000"/>
+<DataValueMember Name="BufLen" DataType="DINT" Radix="Decimal" Value="100"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Delete_All_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#0051" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
+/>
+</Data>
+</Tag>
+<Tag Name="Write_Data_MSG_RED" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="1" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="354" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
+ DestinationTag="BufLenSent" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Get_Sock_Object_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0001" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" DestinationTag="Socket_Object_Class_Response[0]"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Socket" TagType="Base" DataType="REQUEST_PARAMETERS" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 00 00 02 00 10 27 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="REQUEST_PARAMETERS">
+<DataValueMember Name="Type" DataType="DINT" Radix="Decimal" Value="1"/>
+<StructureMember Name="Addr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="2"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="10000"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Programs Use="Context">
+<Program Use="Target" Name="MainProgram" TestEdits="false" MainRoutineName="TCP_Server" Disabled="false" SynchronizeRedundancyDataAfterExecution="true">
+<Tags>
+<Tag Name="Accept" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.2" ExternalAccess="Read/Write"/>
+<Tag Name="Accept_Request" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Toggle this Bit to Accept Incoming Connection]]>
+</Description>
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Attrubute" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.6" ExternalAccess="Read/Write"/>
+<Tag Name="ClientsId" TagType="Base" DataType="SocketData" Dimensions="10" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Array DataType="SocketData" Dimensions="10">
+<Element Index="[0]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[1]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[2]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[3]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[4]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[5]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[6]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[7]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[8]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+<Element Index="[9]">
+<Structure DataType="SocketData">
+<DataValueMember Name="Instance" DataType="DINT" Radix="Decimal" Value="0"/>
+<StructureMember Name="Attr" DataType="SocketInstAttr">
+<StructureMember Name="LocalAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<StructureMember Name="RemoteAddr" DataType="SockAddr">
+<DataValueMember Name="Family" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Port" DataType="INT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+<DataValueMember Name="SendBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="RcvBufSize" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPKeepAlive" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="TCPNoDelay" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="InactivityTimeout" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="MulticastTTL" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="UDPBroadcast" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="LingerOnOff" DataType="DINT" Radix="Decimal" Value="0"/>
+</StructureMember>
+</Structure>
+</Element>
+</Array>
+</Data>
+</Tag>
+<Tag Name="ClientsIdSize" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="CommonErrors" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ConnCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Create" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.0" ExternalAccess="Read/Write"/>
+<Tag Name="CreatedPacketsCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Create_Socket_Req" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="CurStatusFlagsWrite" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="CycleNumber" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Delete" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.5" ExternalAccess="Read/Write"/>
+<Tag Name="Delete_All_Request" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Delete_Sockets_Req" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="ElementsCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Enable_Log_Req" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="errCntWriteMain" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="errCntWriteRed" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="errCode" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Код ошибки]]>
+</Description>
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Errors" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.7" ExternalAccess="Read/Write"/>
+<Tag Name="Err_Write_Red" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="FirstPacketSendMain" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="FirstPacketSendRed" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="frontSend" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Get_SocketTimeout" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Get_Socket_Instance_Req" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Get_Socket_Object_Req" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="increment" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="isCurSockMain" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="it" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="iter" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Log_Enable" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>FF 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="255"/>
+</Data>
+</Tag>
+<Tag Name="loseCyclesCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="MainMsg" TagType="Base" DataType="DINT" Radix="Decimal" Constant="true" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Константа = 0]]>
+</Description>
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="MaxCyclesCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="needToResend" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Nothing" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>01</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="1"/>
+</Data>
+</Tag>
+<Tag Name="Open" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.1" ExternalAccess="Read/Write"/>
+<Tag Name="ParCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="point" TagType="Base" DataType="REAL" Radix="Float" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="REAL" Radix="Float" Value="0.0"/>
+</Data>
+</Tag>
+<Tag Name="Read" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.3" ExternalAccess="Read/Write"/>
+<Tag Name="Read_Data_Request" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Description>
+<![CDATA[Toggle This Bit to Read Incoming Data]]>
+</Description>
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="RedMsg" TagType="Base" DataType="DINT" Radix="Decimal" Constant="true" ExternalAccess="Read Only">
+<Description>
+<![CDATA[Константа = 1]]>
+</Description>
+<Data>01 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="1"/>
+</Data>
+</Tag>
+<Tag Name="SendPacketsCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="serverState" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Set_SocketTimeout" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="SockInstance" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="systemDataCount" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="tcpserverInit" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="TempBuffer" TagType="Base" DataType="REAL" Dimensions="400" Radix="Float" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Array DataType="REAL" Dimensions="400" Radix="Float">
+<Element Index="[0]" Value="0.0"/>
+<Element Index="[1]" Value="0.0"/>
+<Element Index="[2]" Value="0.0"/>
+<Element Index="[3]" Value="0.0"/>
+<Element Index="[4]" Value="0.0"/>
+<Element Index="[5]" Value="0.0"/>
+<Element Index="[6]" Value="0.0"/>
+<Element Index="[7]" Value="0.0"/>
+<Element Index="[8]" Value="0.0"/>
+<Element Index="[9]" Value="0.0"/>
+<Element Index="[10]" Value="0.0"/>
+<Element Index="[11]" Value="0.0"/>
+<Element Index="[12]" Value="0.0"/>
+<Element Index="[13]" Value="0.0"/>
+<Element Index="[14]" Value="0.0"/>
+<Element Index="[15]" Value="0.0"/>
+<Element Index="[16]" Value="0.0"/>
+<Element Index="[17]" Value="0.0"/>
+<Element Index="[18]" Value="0.0"/>
+<Element Index="[19]" Value="0.0"/>
+<Element Index="[20]" Value="0.0"/>
+<Element Index="[21]" Value="0.0"/>
+<Element Index="[22]" Value="0.0"/>
+<Element Index="[23]" Value="0.0"/>
+<Element Index="[24]" Value="0.0"/>
+<Element Index="[25]" Value="0.0"/>
+<Element Index="[26]" Value="0.0"/>
+<Element Index="[27]" Value="0.0"/>
+<Element Index="[28]" Value="0.0"/>
+<Element Index="[29]" Value="0.0"/>
+<Element Index="[30]" Value="0.0"/>
+<Element Index="[31]" Value="0.0"/>
+<Element Index="[32]" Value="0.0"/>
+<Element Index="[33]" Value="0.0"/>
+<Element Index="[34]" Value="0.0"/>
+<Element Index="[35]" Value="0.0"/>
+<Element Index="[36]" Value="0.0"/>
+<Element Index="[37]" Value="0.0"/>
+<Element Index="[38]" Value="0.0"/>
+<Element Index="[39]" Value="0.0"/>
+<Element Index="[40]" Value="0.0"/>
+<Element Index="[41]" Value="0.0"/>
+<Element Index="[42]" Value="0.0"/>
+<Element Index="[43]" Value="0.0"/>
+<Element Index="[44]" Value="0.0"/>
+<Element Index="[45]" Value="0.0"/>
+<Element Index="[46]" Value="0.0"/>
+<Element Index="[47]" Value="0.0"/>
+<Element Index="[48]" Value="0.0"/>
+<Element Index="[49]" Value="0.0"/>
+<Element Index="[50]" Value="0.0"/>
+<Element Index="[51]" Value="0.0"/>
+<Element Index="[52]" Value="0.0"/>
+<Element Index="[53]" Value="0.0"/>
+<Element Index="[54]" Value="0.0"/>
+<Element Index="[55]" Value="0.0"/>
+<Element Index="[56]" Value="0.0"/>
+<Element Index="[57]" Value="0.0"/>
+<Element Index="[58]" Value="0.0"/>
+<Element Index="[59]" Value="0.0"/>
+<Element Index="[60]" Value="0.0"/>
+<Element Index="[61]" Value="0.0"/>
+<Element Index="[62]" Value="0.0"/>
+<Element Index="[63]" Value="0.0"/>
+<Element Index="[64]" Value="0.0"/>
+<Element Index="[65]" Value="0.0"/>
+<Element Index="[66]" Value="0.0"/>
+<Element Index="[67]" Value="0.0"/>
+<Element Index="[68]" Value="0.0"/>
+<Element Index="[69]" Value="0.0"/>
+<Element Index="[70]" Value="0.0"/>
+<Element Index="[71]" Value="0.0"/>
+<Element Index="[72]" Value="0.0"/>
+<Element Index="[73]" Value="0.0"/>
+<Element Index="[74]" Value="0.0"/>
+<Element Index="[75]" Value="0.0"/>
+<Element Index="[76]" Value="0.0"/>
+<Element Index="[77]" Value="0.0"/>
+<Element Index="[78]" Value="0.0"/>
+<Element Index="[79]" Value="0.0"/>
+<Element Index="[80]" Value="0.0"/>
+<Element Index="[81]" Value="0.0"/>
+<Element Index="[82]" Value="0.0"/>
+<Element Index="[83]" Value="0.0"/>
+<Element Index="[84]" Value="0.0"/>
+<Element Index="[85]" Value="0.0"/>
+<Element Index="[86]" Value="0.0"/>
+<Element Index="[87]" Value="0.0"/>
+<Element Index="[88]" Value="0.0"/>
+<Element Index="[89]" Value="0.0"/>
+<Element Index="[90]" Value="0.0"/>
+<Element Index="[91]" Value="0.0"/>
+<Element Index="[92]" Value="0.0"/>
+<Element Index="[93]" Value="0.0"/>
+<Element Index="[94]" Value="0.0"/>
+<Element Index="[95]" Value="0.0"/>
+<Element Index="[96]" Value="0.0"/>
+<Element Index="[97]" Value="0.0"/>
+<Element Index="[98]" Value="0.0"/>
+<Element Index="[99]" Value="0.0"/>
+<Element Index="[100]" Value="0.0"/>
+<Element Index="[101]" Value="0.0"/>
+<Element Index="[102]" Value="0.0"/>
+<Element Index="[103]" Value="0.0"/>
+<Element Index="[104]" Value="0.0"/>
+<Element Index="[105]" Value="0.0"/>
+<Element Index="[106]" Value="0.0"/>
+<Element Index="[107]" Value="0.0"/>
+<Element Index="[108]" Value="0.0"/>
+<Element Index="[109]" Value="0.0"/>
+<Element Index="[110]" Value="0.0"/>
+<Element Index="[111]" Value="0.0"/>
+<Element Index="[112]" Value="0.0"/>
+<Element Index="[113]" Value="0.0"/>
+<Element Index="[114]" Value="0.0"/>
+<Element Index="[115]" Value="0.0"/>
+<Element Index="[116]" Value="0.0"/>
+<Element Index="[117]" Value="0.0"/>
+<Element Index="[118]" Value="0.0"/>
+<Element Index="[119]" Value="0.0"/>
+<Element Index="[120]" Value="0.0"/>
+<Element Index="[121]" Value="0.0"/>
+<Element Index="[122]" Value="0.0"/>
+<Element Index="[123]" Value="0.0"/>
+<Element Index="[124]" Value="0.0"/>
+<Element Index="[125]" Value="0.0"/>
+<Element Index="[126]" Value="0.0"/>
+<Element Index="[127]" Value="0.0"/>
+<Element Index="[128]" Value="0.0"/>
+<Element Index="[129]" Value="0.0"/>
+<Element Index="[130]" Value="0.0"/>
+<Element Index="[131]" Value="0.0"/>
+<Element Index="[132]" Value="0.0"/>
+<Element Index="[133]" Value="0.0"/>
+<Element Index="[134]" Value="0.0"/>
+<Element Index="[135]" Value="0.0"/>
+<Element Index="[136]" Value="0.0"/>
+<Element Index="[137]" Value="0.0"/>
+<Element Index="[138]" Value="0.0"/>
+<Element Index="[139]" Value="0.0"/>
+<Element Index="[140]" Value="0.0"/>
+<Element Index="[141]" Value="0.0"/>
+<Element Index="[142]" Value="0.0"/>
+<Element Index="[143]" Value="0.0"/>
+<Element Index="[144]" Value="0.0"/>
+<Element Index="[145]" Value="0.0"/>
+<Element Index="[146]" Value="0.0"/>
+<Element Index="[147]" Value="0.0"/>
+<Element Index="[148]" Value="0.0"/>
+<Element Index="[149]" Value="0.0"/>
+<Element Index="[150]" Value="0.0"/>
+<Element Index="[151]" Value="0.0"/>
+<Element Index="[152]" Value="0.0"/>
+<Element Index="[153]" Value="0.0"/>
+<Element Index="[154]" Value="0.0"/>
+<Element Index="[155]" Value="0.0"/>
+<Element Index="[156]" Value="0.0"/>
+<Element Index="[157]" Value="0.0"/>
+<Element Index="[158]" Value="0.0"/>
+<Element Index="[159]" Value="0.0"/>
+<Element Index="[160]" Value="0.0"/>
+<Element Index="[161]" Value="0.0"/>
+<Element Index="[162]" Value="0.0"/>
+<Element Index="[163]" Value="0.0"/>
+<Element Index="[164]" Value="0.0"/>
+<Element Index="[165]" Value="0.0"/>
+<Element Index="[166]" Value="0.0"/>
+<Element Index="[167]" Value="0.0"/>
+<Element Index="[168]" Value="0.0"/>
+<Element Index="[169]" Value="0.0"/>
+<Element Index="[170]" Value="0.0"/>
+<Element Index="[171]" Value="0.0"/>
+<Element Index="[172]" Value="0.0"/>
+<Element Index="[173]" Value="0.0"/>
+<Element Index="[174]" Value="0.0"/>
+<Element Index="[175]" Value="0.0"/>
+<Element Index="[176]" Value="0.0"/>
+<Element Index="[177]" Value="0.0"/>
+<Element Index="[178]" Value="0.0"/>
+<Element Index="[179]" Value="0.0"/>
+<Element Index="[180]" Value="0.0"/>
+<Element Index="[181]" Value="0.0"/>
+<Element Index="[182]" Value="0.0"/>
+<Element Index="[183]" Value="0.0"/>
+<Element Index="[184]" Value="0.0"/>
+<Element Index="[185]" Value="0.0"/>
+<Element Index="[186]" Value="0.0"/>
+<Element Index="[187]" Value="0.0"/>
+<Element Index="[188]" Value="0.0"/>
+<Element Index="[189]" Value="0.0"/>
+<Element Index="[190]" Value="0.0"/>
+<Element Index="[191]" Value="0.0"/>
+<Element Index="[192]" Value="0.0"/>
+<Element Index="[193]" Value="0.0"/>
+<Element Index="[194]" Value="0.0"/>
+<Element Index="[195]" Value="0.0"/>
+<Element Index="[196]" Value="0.0"/>
+<Element Index="[197]" Value="0.0"/>
+<Element Index="[198]" Value="0.0"/>
+<Element Index="[199]" Value="0.0"/>
+<Element Index="[200]" Value="0.0"/>
+<Element Index="[201]" Value="0.0"/>
+<Element Index="[202]" Value="0.0"/>
+<Element Index="[203]" Value="0.0"/>
+<Element Index="[204]" Value="0.0"/>
+<Element Index="[205]" Value="0.0"/>
+<Element Index="[206]" Value="0.0"/>
+<Element Index="[207]" Value="0.0"/>
+<Element Index="[208]" Value="0.0"/>
+<Element Index="[209]" Value="0.0"/>
+<Element Index="[210]" Value="0.0"/>
+<Element Index="[211]" Value="0.0"/>
+<Element Index="[212]" Value="0.0"/>
+<Element Index="[213]" Value="0.0"/>
+<Element Index="[214]" Value="0.0"/>
+<Element Index="[215]" Value="0.0"/>
+<Element Index="[216]" Value="0.0"/>
+<Element Index="[217]" Value="0.0"/>
+<Element Index="[218]" Value="0.0"/>
+<Element Index="[219]" Value="0.0"/>
+<Element Index="[220]" Value="0.0"/>
+<Element Index="[221]" Value="0.0"/>
+<Element Index="[222]" Value="0.0"/>
+<Element Index="[223]" Value="0.0"/>
+<Element Index="[224]" Value="0.0"/>
+<Element Index="[225]" Value="0.0"/>
+<Element Index="[226]" Value="0.0"/>
+<Element Index="[227]" Value="0.0"/>
+<Element Index="[228]" Value="0.0"/>
+<Element Index="[229]" Value="0.0"/>
+<Element Index="[230]" Value="0.0"/>
+<Element Index="[231]" Value="0.0"/>
+<Element Index="[232]" Value="0.0"/>
+<Element Index="[233]" Value="0.0"/>
+<Element Index="[234]" Value="0.0"/>
+<Element Index="[235]" Value="0.0"/>
+<Element Index="[236]" Value="0.0"/>
+<Element Index="[237]" Value="0.0"/>
+<Element Index="[238]" Value="0.0"/>
+<Element Index="[239]" Value="0.0"/>
+<Element Index="[240]" Value="0.0"/>
+<Element Index="[241]" Value="0.0"/>
+<Element Index="[242]" Value="0.0"/>
+<Element Index="[243]" Value="0.0"/>
+<Element Index="[244]" Value="0.0"/>
+<Element Index="[245]" Value="0.0"/>
+<Element Index="[246]" Value="0.0"/>
+<Element Index="[247]" Value="0.0"/>
+<Element Index="[248]" Value="0.0"/>
+<Element Index="[249]" Value="0.0"/>
+<Element Index="[250]" Value="0.0"/>
+<Element Index="[251]" Value="0.0"/>
+<Element Index="[252]" Value="0.0"/>
+<Element Index="[253]" Value="0.0"/>
+<Element Index="[254]" Value="0.0"/>
+<Element Index="[255]" Value="0.0"/>
+<Element Index="[256]" Value="0.0"/>
+<Element Index="[257]" Value="0.0"/>
+<Element Index="[258]" Value="0.0"/>
+<Element Index="[259]" Value="0.0"/>
+<Element Index="[260]" Value="0.0"/>
+<Element Index="[261]" Value="0.0"/>
+<Element Index="[262]" Value="0.0"/>
+<Element Index="[263]" Value="0.0"/>
+<Element Index="[264]" Value="0.0"/>
+<Element Index="[265]" Value="0.0"/>
+<Element Index="[266]" Value="0.0"/>
+<Element Index="[267]" Value="0.0"/>
+<Element Index="[268]" Value="0.0"/>
+<Element Index="[269]" Value="0.0"/>
+<Element Index="[270]" Value="0.0"/>
+<Element Index="[271]" Value="0.0"/>
+<Element Index="[272]" Value="0.0"/>
+<Element Index="[273]" Value="0.0"/>
+<Element Index="[274]" Value="0.0"/>
+<Element Index="[275]" Value="0.0"/>
+<Element Index="[276]" Value="0.0"/>
+<Element Index="[277]" Value="0.0"/>
+<Element Index="[278]" Value="0.0"/>
+<Element Index="[279]" Value="0.0"/>
+<Element Index="[280]" Value="0.0"/>
+<Element Index="[281]" Value="0.0"/>
+<Element Index="[282]" Value="0.0"/>
+<Element Index="[283]" Value="0.0"/>
+<Element Index="[284]" Value="0.0"/>
+<Element Index="[285]" Value="0.0"/>
+<Element Index="[286]" Value="0.0"/>
+<Element Index="[287]" Value="0.0"/>
+<Element Index="[288]" Value="0.0"/>
+<Element Index="[289]" Value="0.0"/>
+<Element Index="[290]" Value="0.0"/>
+<Element Index="[291]" Value="0.0"/>
+<Element Index="[292]" Value="0.0"/>
+<Element Index="[293]" Value="0.0"/>
+<Element Index="[294]" Value="0.0"/>
+<Element Index="[295]" Value="0.0"/>
+<Element Index="[296]" Value="0.0"/>
+<Element Index="[297]" Value="0.0"/>
+<Element Index="[298]" Value="0.0"/>
+<Element Index="[299]" Value="0.0"/>
+<Element Index="[300]" Value="0.0"/>
+<Element Index="[301]" Value="0.0"/>
+<Element Index="[302]" Value="0.0"/>
+<Element Index="[303]" Value="0.0"/>
+<Element Index="[304]" Value="0.0"/>
+<Element Index="[305]" Value="0.0"/>
+<Element Index="[306]" Value="0.0"/>
+<Element Index="[307]" Value="0.0"/>
+<Element Index="[308]" Value="0.0"/>
+<Element Index="[309]" Value="0.0"/>
+<Element Index="[310]" Value="0.0"/>
+<Element Index="[311]" Value="0.0"/>
+<Element Index="[312]" Value="0.0"/>
+<Element Index="[313]" Value="0.0"/>
+<Element Index="[314]" Value="0.0"/>
+<Element Index="[315]" Value="0.0"/>
+<Element Index="[316]" Value="0.0"/>
+<Element Index="[317]" Value="0.0"/>
+<Element Index="[318]" Value="0.0"/>
+<Element Index="[319]" Value="0.0"/>
+<Element Index="[320]" Value="0.0"/>
+<Element Index="[321]" Value="0.0"/>
+<Element Index="[322]" Value="0.0"/>
+<Element Index="[323]" Value="0.0"/>
+<Element Index="[324]" Value="0.0"/>
+<Element Index="[325]" Value="0.0"/>
+<Element Index="[326]" Value="0.0"/>
+<Element Index="[327]" Value="0.0"/>
+<Element Index="[328]" Value="0.0"/>
+<Element Index="[329]" Value="0.0"/>
+<Element Index="[330]" Value="0.0"/>
+<Element Index="[331]" Value="0.0"/>
+<Element Index="[332]" Value="0.0"/>
+<Element Index="[333]" Value="0.0"/>
+<Element Index="[334]" Value="0.0"/>
+<Element Index="[335]" Value="0.0"/>
+<Element Index="[336]" Value="0.0"/>
+<Element Index="[337]" Value="0.0"/>
+<Element Index="[338]" Value="0.0"/>
+<Element Index="[339]" Value="0.0"/>
+<Element Index="[340]" Value="0.0"/>
+<Element Index="[341]" Value="0.0"/>
+<Element Index="[342]" Value="0.0"/>
+<Element Index="[343]" Value="0.0"/>
+<Element Index="[344]" Value="0.0"/>
+<Element Index="[345]" Value="0.0"/>
+<Element Index="[346]" Value="0.0"/>
+<Element Index="[347]" Value="0.0"/>
+<Element Index="[348]" Value="0.0"/>
+<Element Index="[349]" Value="0.0"/>
+<Element Index="[350]" Value="0.0"/>
+<Element Index="[351]" Value="0.0"/>
+<Element Index="[352]" Value="0.0"/>
+<Element Index="[353]" Value="0.0"/>
+<Element Index="[354]" Value="0.0"/>
+<Element Index="[355]" Value="0.0"/>
+<Element Index="[356]" Value="0.0"/>
+<Element Index="[357]" Value="0.0"/>
+<Element Index="[358]" Value="0.0"/>
+<Element Index="[359]" Value="0.0"/>
+<Element Index="[360]" Value="0.0"/>
+<Element Index="[361]" Value="0.0"/>
+<Element Index="[362]" Value="0.0"/>
+<Element Index="[363]" Value="0.0"/>
+<Element Index="[364]" Value="0.0"/>
+<Element Index="[365]" Value="0.0"/>
+<Element Index="[366]" Value="0.0"/>
+<Element Index="[367]" Value="0.0"/>
+<Element Index="[368]" Value="0.0"/>
+<Element Index="[369]" Value="0.0"/>
+<Element Index="[370]" Value="0.0"/>
+<Element Index="[371]" Value="0.0"/>
+<Element Index="[372]" Value="0.0"/>
+<Element Index="[373]" Value="0.0"/>
+<Element Index="[374]" Value="0.0"/>
+<Element Index="[375]" Value="0.0"/>
+<Element Index="[376]" Value="0.0"/>
+<Element Index="[377]" Value="0.0"/>
+<Element Index="[378]" Value="0.0"/>
+<Element Index="[379]" Value="0.0"/>
+<Element Index="[380]" Value="0.0"/>
+<Element Index="[381]" Value="0.0"/>
+<Element Index="[382]" Value="0.0"/>
+<Element Index="[383]" Value="0.0"/>
+<Element Index="[384]" Value="0.0"/>
+<Element Index="[385]" Value="0.0"/>
+<Element Index="[386]" Value="0.0"/>
+<Element Index="[387]" Value="0.0"/>
+<Element Index="[388]" Value="0.0"/>
+<Element Index="[389]" Value="0.0"/>
+<Element Index="[390]" Value="0.0"/>
+<Element Index="[391]" Value="0.0"/>
+<Element Index="[392]" Value="0.0"/>
+<Element Index="[393]" Value="0.0"/>
+<Element Index="[394]" Value="0.0"/>
+<Element Index="[395]" Value="0.0"/>
+<Element Index="[396]" Value="0.0"/>
+<Element Index="[397]" Value="0.0"/>
+<Element Index="[398]" Value="0.0"/>
+<Element Index="[399]" Value="0.0"/>
+</Array>
+</Data>
+</Tag>
+<Tag Name="Write" TagType="Alias" Radix="Decimal" AliasFor="Log_Enable.4" ExternalAccess="Read/Write"/>
+<Tag Name="Write_Request" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00</Data>
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="_FastRetro_checkErr" TagType="Base" DataType="_FastRetro_checkErr" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="_FastRetro_checkErr">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="err" DataType="DINT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+</Tags>
+<Routines>
+<Routine Name="Exchange" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[//Обрабатывается, когда сервер находится в состояниях 2-3]]>
+</Line>
+<Line Number="1">
+<![CDATA[]]>
+</Line>
+<Line Number="2">
+<![CDATA[//Write_Data_Out.Buffer.LEN]]>
+</Line>
+<Line Number="3">
+<![CDATA[GSV(WALLCLOCKTIME,,DateTime,CLOCK[0]);]]>
+</Line>
+<Line Number="4">
+<![CDATA[]]>
+</Line>
+<Line Number="5">
+<![CDATA[//на первом цикле заполняем служебный заголовок пакета]]>
+</Line>
+<Line Number="6">
+<![CDATA[if(CycleNumber=0) then]]>
+</Line>
+<Line Number="7">
+<![CDATA[	//дата - год месяц число]]>
+</Line>
+<Line Number="8">
+<![CDATA[	TempBuffer[0]:= CLOCK[0];]]>
+</Line>
+<Line Number="9">
+<![CDATA[	TempBuffer[1]:= CLOCK[1];]]>
+</Line>
+<Line Number="10">
+<![CDATA[	TempBuffer[2]:= CLOCK[2];]]>
+</Line>
+<Line Number="11">
+<![CDATA[	//время - часы минуты секунды микросекунды]]>
+</Line>
+<Line Number="12">
+<![CDATA[	TempBuffer[3]:= CLOCK[3];]]>
+</Line>
+<Line Number="13">
+<![CDATA[	TempBuffer[4]:= CLOCK[4];]]>
+</Line>
+<Line Number="14">
+<![CDATA[	TempBuffer[5]:= CLOCK[5];]]>
+</Line>
+<Line Number="15">
+<![CDATA[	TempBuffer[6]:= CLOCK[6];]]>
+</Line>
+<Line Number="16">
+<![CDATA[	//кол-во параметров]]>
+</Line>
+<Line Number="17">
+<![CDATA[	TempBuffer[7]:= ParCount;]]>
+</Line>
+<Line Number="18">
+<![CDATA[	//кол-во циклов для сбора данных]]>
+</Line>
+<Line Number="19">
+<![CDATA[	TempBuffer[8]:= MaxCyclesCount;]]>
+</Line>
+<Line Number="20">
+<![CDATA[	(*]]>
+</Line>
+<Line Number="21">
+<![CDATA[	//дата - год месяц число]]>
+</Line>
+<Line Number="22">
+<![CDATA[	Write_Data_Out.Buffer.Data[0]:= CLOCK[0];]]>
+</Line>
+<Line Number="23">
+<![CDATA[	Write_Data_Out.Buffer.Data[1]:= CLOCK[1];]]>
+</Line>
+<Line Number="24">
+<![CDATA[	Write_Data_Out.Buffer.Data[2]:= CLOCK[2];]]>
+</Line>
+<Line Number="25">
+<![CDATA[	//время - часы минуты секунды микросекунды]]>
+</Line>
+<Line Number="26">
+<![CDATA[	Write_Data_Out.Buffer.Data[3]:= CLOCK[3];]]>
+</Line>
+<Line Number="27">
+<![CDATA[	Write_Data_Out.Buffer.Data[4]:= CLOCK[4];]]>
+</Line>
+<Line Number="28">
+<![CDATA[	Write_Data_Out.Buffer.Data[5]:= CLOCK[5];]]>
+</Line>
+<Line Number="29">
+<![CDATA[	Write_Data_Out.Buffer.Data[6]:= CLOCK[6];]]>
+</Line>
+<Line Number="30">
+<![CDATA[	Write_Data_Out.Buffer.Data[7]:= ParCount;]]>
+</Line>
+<Line Number="31">
+<![CDATA[	Write_Data_Out.Buffer.Data[8]:= MaxCyclesCount;]]>
+</Line>
+<Line Number="32">
+<![CDATA[	*)]]>
+</Line>
+<Line Number="33">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="34">
+<![CDATA[]]>
+</Line>
+<Line Number="35">
+<![CDATA[if(CycleNumber<5 and ParCount<=20) then]]>
+</Line>
+<Line Number="36">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+1+systemDataCount] := Anpar.Tg_inN1.Sys;]]>
+</Line>
+<Line Number="37">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+2+systemDataCount] := Anpar.Tg_inAVO1.Sys;]]>
+</Line>
+<Line Number="38">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+3+systemDataCount] := Anpar.Tg_outAVO1.Sys;]]>
+</Line>
+<Line Number="39">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+4+systemDataCount] := Anpar.Tg_outN1.Sys;]]>
+</Line>
+<Line Number="40">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+5+systemDataCount] := Anpar.Tg_inN2.Sys;]]>
+</Line>
+<Line Number="41">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+6+systemDataCount] := Anpar.Tg_inAVO2.Sys;]]>
+</Line>
+<Line Number="42">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+7+systemDataCount] := Anpar.Tg_outAVO2.Sys;]]>
+</Line>
+<Line Number="43">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+8+systemDataCount] := Anpar.Tg_outN2.Sys;]]>
+</Line>
+<Line Number="44">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+9+systemDataCount] := Anpar.Pg_aftKr4.Sys;]]>
+</Line>
+<Line Number="45">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+10+systemDataCount] := Anpar.Pg_outSep21.Sys;]]>
+</Line>
+<Line Number="46">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+11+systemDataCount] := Anpar.Pg_aftKr6.Sys;]]>
+</Line>
+<Line Number="47">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+12+systemDataCount] := Anpar.Pg_aftKr16.Sys;]]>
+</Line>
+<Line Number="48">
+<![CDATA[	/*]]>
+</Line>
+<Line Number="49">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+13+systemDataCount] := Anpar.Pg_outSep22.Sys;]]>
+</Line>
+<Line Number="50">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+14+systemDataCount] := Anpar.Pg_aftKr18.Sys;]]>
+</Line>
+<Line Number="51">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+15+systemDataCount] := Anpar.dPg_Kr1.Sys;]]>
+</Line>
+<Line Number="52">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+16+systemDataCount] := Anpar.dPg_Sep11.Sys;]]>
+</Line>
+<Line Number="53">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+17+systemDataCount] := Anpar.dPg_Kr3.Sys;]]>
+</Line>
+<Line Number="54">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+18+systemDataCount] := Anpar.dPg_AVO1.Sys;]]>
+</Line>
+<Line Number="55">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+19+systemDataCount] := Anpar.dPg_Sep21.Sys;]]>
+</Line>
+<Line Number="56">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+20+systemDataCount] := Anpar.dPg_Kr13.Sys;]]>
+</Line>
+<Line Number="57">
+<![CDATA[	*/]]>
+</Line>
+<Line Number="58">
+<![CDATA[(*]]>
+</Line>
+<Line Number="59">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+1+systemDataCount] := Anpar.Tg_inN1.Sys;]]>
+</Line>
+<Line Number="60">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+2+systemDataCount] := Anpar.Tg_inAVO1.Sys;]]>
+</Line>
+<Line Number="61">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+3+systemDataCount] := Anpar.Tg_outAVO1.Sys;]]>
+</Line>
+<Line Number="62">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+4+systemDataCount] := Anpar.Tg_outN1.Sys;]]>
+</Line>
+<Line Number="63">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+5+systemDataCount] := Anpar.Tg_inN2.Sys;]]>
+</Line>
+<Line Number="64">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+6+systemDataCount] := Anpar.Tg_inAVO2.Sys;]]>
+</Line>
+<Line Number="65">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+7+systemDataCount] := Anpar.Tg_outAVO2.Sys;]]>
+</Line>
+<Line Number="66">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+8+systemDataCount] := Anpar.Tg_outN2.Sys;]]>
+</Line>
+<Line Number="67">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+9+systemDataCount] := Anpar.Pg_aftKr4.Sys;]]>
+</Line>
+<Line Number="68">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+10+systemDataCount] := Anpar.Pg_outSep21.Sys;]]>
+</Line>
+<Line Number="69">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+11+systemDataCount] := Anpar.Pg_aftKr6.Sys;]]>
+</Line>
+<Line Number="70">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+12+systemDataCount] := Anpar.Pg_aftKr16.Sys;]]>
+</Line>
+<Line Number="71">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+13+systemDataCount] := Anpar.Pg_outSep22.Sys;]]>
+</Line>
+<Line Number="72">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+14+systemDataCount] := Anpar.Pg_aftKr18.Sys;]]>
+</Line>
+<Line Number="73">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+15+systemDataCount] := Anpar.dPg_Kr1.Sys;]]>
+</Line>
+<Line Number="74">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+16+systemDataCount] := Anpar.dPg_Sep11.Sys;]]>
+</Line>
+<Line Number="75">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+17+systemDataCount] := Anpar.dPg_Kr3.Sys;]]>
+</Line>
+<Line Number="76">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+18+systemDataCount] := Anpar.dPg_AVO1.Sys;]]>
+</Line>
+<Line Number="77">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+19+systemDataCount] := Anpar.dPg_Sep21.Sys;]]>
+</Line>
+<Line Number="78">
+<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+20+systemDataCount] := Anpar.dPg_Kr13.Sys;]]>
+</Line>
+<Line Number="79">
+<![CDATA[*)	]]>
+</Line>
+<Line Number="80">
+<![CDATA[else]]>
+</Line>
+<Line Number="81">
+<![CDATA[	loseCyclesCount := loseCyclesCount + 1;]]>
+</Line>
+<Line Number="82">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="83">
+<![CDATA[]]>
+</Line>
+<Line Number="84">
+<![CDATA[if(CycleNumber < (MaxCyclesCount + 5)) then]]>
+</Line>
+<Line Number="85">
+<![CDATA[	CycleNumber := CycleNumber + 1;]]>
+</Line>
+<Line Number="86">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="87">
+<![CDATA[]]>
+</Line>
+</STContent>
+</Routine>
+<Routine Name="SendMessage" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[COP(TempBuffer[0],Write_Data_Out.Buffer.Data[0],ElementsCount);]]>
+</Line>
+<Line Number="1">
+<![CDATA[//количество сформированных пакетов]]>
+</Line>
+<Line Number="2">
+<![CDATA[//CreatedPacketsCount := CreatedPacketsCount + 1;]]>
+</Line>
+<Line Number="3">
+<![CDATA[if(Write_Data_MSG.ER and (ClientsId[MainMsg].Instance>0)) then]]>
+</Line>
+<Line Number="4">
+<![CDATA[	errCntWriteMain := errCntWriteMain + 1;]]>
+</Line>
+<Line Number="5">
+<![CDATA[elsif(Write_Data_MSG_RED.ER and (ClientsId[RedMsg].Instance>0)) then]]>
+</Line>
+<Line Number="6">
+<![CDATA[	errCntWriteRed := errCntWriteRed + 1;]]>
+</Line>
+<Line Number="7">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="8">
+<![CDATA[if(ClientsId[MainMsg].Instance>0) then]]>
+</Line>
+<Line Number="9">
+<![CDATA[	FirstPacketSendMain := 1;]]>
+</Line>
+<Line Number="10">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="11">
+<![CDATA[if(ClientsId[RedMsg].Instance>0) then]]>
+</Line>
+<Line Number="12">
+<![CDATA[	FirstPacketSendRed := 1;]]>
+</Line>
+<Line Number="13">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="14">
+<![CDATA[]]>
+</Line>
+<Line Number="15">
+<![CDATA[Write_Request := 1; ]]>
+</Line>
+<Line Number="16">
+<![CDATA[CycleNumber := 0;]]>
+</Line>
+<Line Number="17">
+<![CDATA[//NeedToSend.TimerEnable := 0;]]>
+</Line>
+<Line Number="18">
+<![CDATA[needToResend := 0;]]>
+</Line>
+</STContent>
+</Routine>
+<Routine Name="SocketInit" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[if(isCurSockMain) then]]>
+</Line>
+<Line Number="1">
+<![CDATA[	SockInstance := ClientsId[MainMsg].Instance;]]>
+</Line>
+<Line Number="2">
+<![CDATA[else]]>
+</Line>
+<Line Number="3">
+<![CDATA[	SockInstance := ClientsId[RedMsg].Instance;]]>
+</Line>
+<Line Number="4">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="5">
+<![CDATA[]]>
+</Line>
+<Line Number="6">
+<![CDATA[//по умолчанию ставим 30 секунд таймаут безактивности]]>
+</Line>
+<Line Number="7">
+<![CDATA[SockTimeout := 30000;]]>
+</Line>
+<Line Number="8">
+<![CDATA[Set_SocketTimeout := 1;]]>
+</Line>
+<Line Number="9">
+<![CDATA[]]>
+</Line>
+<Line Number="10">
+<![CDATA[JSR(_SOCKET_ATTR);]]>
+</Line>
+<Line Number="11">
+<![CDATA[]]>
+</Line>
+<Line Number="12">
+<![CDATA[Set_SocketTimeout := 0;]]>
+</Line>
+<Line Number="13">
+<![CDATA[]]>
+</Line>
+<Line Number="14">
+<![CDATA[Get_SocketTimeout := 1;]]>
+</Line>
+<Line Number="15">
+<![CDATA[JSR(_SOCKET_ATTR);]]>
+</Line>
+<Line Number="16">
+<![CDATA[Get_SocketTimeout := 0;]]>
+</Line>
+</STContent>
+</Routine>
+<Routine Name="TCP_Server" Type="ST">
+<STContent>
+<Line Number="0">
+<![CDATA[/*]]>
+</Line>
+<Line Number="1">
+<![CDATA[	serverState :=  0 - Инициализация сокета]]>
+</Line>
+<Line Number="2">
+<![CDATA[					1 - Сокет создан, открываем на прослушку]]>
+</Line>
+<Line Number="3">
+<![CDATA[					2 - Слушаем]]>
+</Line>
+<Line Number="4">
+<![CDATA[					3]]>
+</Line>
+<Line Number="5">
+<![CDATA[					4]]>
+</Line>
+<Line Number="6">
+<![CDATA[					5]]>
+</Line>
+<Line Number="7">
+<![CDATA[					10 - Сокет не в норме (рестарт)]]>
+</Line>
+<Line Number="8">
+<![CDATA[					//15 - Ошибка отправки сообщения]]>
+</Line>
+<Line Number="9">
+<![CDATA[*/]]>
+</Line>
+<Line Number="10">
+<![CDATA[/*]]>
+</Line>
+<Line Number="11">
+<![CDATA[ClientsId[0] - handle сокета MSG]]>
+</Line>
+<Line Number="12">
+<![CDATA[ClientsId[1] - handle сокета MSG_RED]]>
+</Line>
+<Line Number="13">
+<![CDATA[*/]]>
+</Line>
+<Line Number="14">
+<![CDATA[]]>
+</Line>
+<Line Number="15">
+<![CDATA[/*]]>
+</Line>
+<Line Number="16">
+<![CDATA[	отправка сообщений асинхронная, поэтому копируем флаги в начале цикла:]]>
+</Line>
+<Line Number="17">
+<![CDATA[	.2 - .EW]]>
+</Line>
+<Line Number="18">
+<![CDATA[	.4 - .ER]]>
+</Line>
+<Line Number="19">
+<![CDATA[	.5 - .DN]]>
+</Line>
+<Line Number="20">
+<![CDATA[	.6 - .ST]]>
+</Line>
+<Line Number="21">
+<![CDATA[	.7 - .EN]]>
+</Line>
+<Line Number="22">
+<![CDATA[	.8 - .TO]]>
+</Line>
+<Line Number="23">
+<![CDATA[	.9 - .EN_CC]]>
+</Line>
+<Line Number="24">
+<![CDATA[*/]]>
+</Line>
+<Line Number="25">
+<![CDATA[CurStatusFlagsWrite := Write_Data_MSG.Flags;]]>
+</Line>
+<Line Number="26">
+<![CDATA[]]>
+</Line>
+<Line Number="27">
+<![CDATA[//инициализационные параметры.]]>
+</Line>
+<Line Number="28">
+<![CDATA[if (not tcpserverInit) then]]>
+</Line>
+<Line Number="29">
+<![CDATA[]]>
+</Line>
+<Line Number="30">
+<![CDATA[//! заполняются пользователем ]]>
+</Line>
+<Line Number="31">
+<![CDATA[]]>
+</Line>
+<Line Number="32">
+<![CDATA[	//количество параметров]]>
+</Line>
+<Line Number="33">
+<![CDATA[	ParCount := 12;]]>
+</Line>
+<Line Number="34">
+<![CDATA[//! ]]>
+</Line>
+<Line Number="35">
+<![CDATA[	/*]]>
+</Line>
+<Line Number="36">
+<![CDATA[		Кол-во циклов в посылке для текущего шага дискретизации. ]]>
+</Line>
+<Line Number="37">
+<![CDATA[		Рекоммендуется отправлять посылки не чаще 100мс, то есть для 20мс цикла вызова задачи значение MaxCyclesCount = 5]]>
+</Line>
+<Line Number="38">
+<![CDATA[	*/]]>
+</Line>
+<Line Number="39">
+<![CDATA[	MaxCyclesCount := 5;]]>
+</Line>
+<Line Number="40">
+<![CDATA[	//размер служебных данных пакета, см. Exchange]]>
+</Line>
+<Line Number="41">
+<![CDATA[	systemDataCount := 8;]]>
+</Line>
+<Line Number="42">
+<![CDATA[	//включаем лог]]>
+</Line>
+<Line Number="43">
+<![CDATA[	Enable_Log_Req := 1;]]>
+</Line>
+<Line Number="44">
+<![CDATA[	//таймер пересброса ожидания подключения]]>
+</Line>
+<Line Number="45">
+<![CDATA[	AcceptReqTimer.PRE := 1000;]]>
+</Line>
+<Line Number="46">
+<![CDATA[]]>
+</Line>
+<Line Number="47">
+<![CDATA[	SIZE(Write_Data_Out.Buffer.Data,0,ElementsCount);]]>
+</Line>
+<Line Number="48">
+<![CDATA[]]>
+</Line>
+<Line Number="49">
+<![CDATA[	//размер посылки данных = (кол-во элементов+служ.параметр) * размер REAL]]>
+</Line>
+<Line Number="50">
+<![CDATA[	Write_Data_Out.Buffer.LEN := 4*(ElementsCount + 1);]]>
+</Line>
+<Line Number="51">
+<![CDATA[	Write_Data_Out.Buffer.PacketSize := Write_Data_Out.Buffer.LEN;]]>
+</Line>
+<Line Number="52">
+<![CDATA[	]]>
+</Line>
+<Line Number="53">
+<![CDATA[	//по клиентам]]>
+</Line>
+<Line Number="54">
+<![CDATA[	SIZE(ClientsId,0,ClientsIdSize);]]>
+</Line>
+<Line Number="55">
+<![CDATA[	]]>
+</Line>
+<Line Number="56">
+<![CDATA[	//начальное состояние сервера - создание сокета]]>
+</Line>
+<Line Number="57">
+<![CDATA[	serverState := 0;]]>
+</Line>
+<Line Number="58">
+<![CDATA[	tcpserverInit := 1;]]>
+</Line>
+<Line Number="59">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="60">
+<![CDATA[]]>
+</Line>
+<Line Number="61">
+<![CDATA[TONR(AcceptReqTimer);]]>
+</Line>
+<Line Number="62">
+<![CDATA[]]>
+</Line>
+<Line Number="63">
+<![CDATA[if(increment>10000) then increment:=0; end_if;]]>
+</Line>
+<Line Number="64">
+<![CDATA[]]>
+</Line>
+<Line Number="65">
+<![CDATA[CASE serverState OF]]>
+</Line>
+<Line Number="66">
+<![CDATA[]]>
+</Line>
+<Line Number="67">
+<![CDATA[0: ]]>
+</Line>
+<Line Number="68">
+<![CDATA[	if(not Create_Socket_Req) then]]>
+</Line>
+<Line Number="69">
+<![CDATA[		Create_Socket_Req := 1; ]]>
+</Line>
+<Line Number="70">
+<![CDATA[	elsif(Create_Sock_MSG.EN) then]]>
+</Line>
+<Line Number="71">
+<![CDATA[	  if(Create_Sock_MSG.DN) then]]>
+</Line>
+<Line Number="72">
+<![CDATA[		Create_Socket_Req := 0;]]>
+</Line>
+<Line Number="73">
+<![CDATA[		ConnCount := 0;]]>
+</Line>
+<Line Number="74">
+<![CDATA[		serverState := 1;]]>
+</Line>
+<Line Number="75">
+<![CDATA[	  elsif(Create_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="76">
+<![CDATA[	  	Create_Socket_Req := 0;]]>
+</Line>
+<Line Number="77">
+<![CDATA[		if(Create_Sock_MSG.EXERR = 16#0000_0030) then ]]>
+</Line>
+<Line Number="78">
+<![CDATA[			//повторное создание сокета, попробуем пересоздать]]>
+</Line>
+<Line Number="79">
+<![CDATA[			serverState := 10;]]>
+</Line>
+<Line Number="80">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="81">
+<![CDATA[	  end_if;]]>
+</Line>
+<Line Number="82">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="83">
+<![CDATA[]]>
+</Line>
+<Line Number="84">
+<![CDATA[1:]]>
+</Line>
+<Line Number="85">
+<![CDATA[	loseCyclesCount := 0;]]>
+</Line>
+<Line Number="86">
+<![CDATA[	CreatedPacketsCount := 0;]]>
+</Line>
+<Line Number="87">
+<![CDATA[	SendPacketsCount := 0;]]>
+</Line>
+<Line Number="88">
+<![CDATA[	errCntWriteMain := 0;]]>
+</Line>
+<Line Number="89">
+<![CDATA[	errCntWriteRed := 0;]]>
+</Line>
+<Line Number="90">
+<![CDATA[	CommonErrors := 0;]]>
+</Line>
+<Line Number="91">
+<![CDATA[	FirstPacketSendRed := 0;]]>
+</Line>
+<Line Number="92">
+<![CDATA[	FirstPacketSendMain := 0;]]>
+</Line>
+<Line Number="93">
+<![CDATA[ ]]>
+</Line>
+<Line Number="94">
+<![CDATA[	if(not Accept_Request ) then]]>
+</Line>
+<Line Number="95">
+<![CDATA[		AcceptReqTimer.TimerEnable := 1;]]>
+</Line>
+<Line Number="96">
+<![CDATA[		Accept_Request := AcceptReqTimer.DN;]]>
+</Line>
+<Line Number="97">
+<![CDATA[	elsif( Conn_Accept_MSG.DN) then]]>
+</Line>
+<Line Number="98">
+<![CDATA[		FOR iter := 0 TO ClientsIdSize-1 DO]]>
+</Line>
+<Line Number="99">
+<![CDATA[			ClientsId[iter].Instance := 0;]]>
+</Line>
+<Line Number="100">
+<![CDATA[		END_FOR;]]>
+</Line>
+<Line Number="101">
+<![CDATA[		ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="102">
+<![CDATA[		Accept_Request := 0;]]>
+</Line>
+<Line Number="103">
+<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
+</Line>
+<Line Number="104">
+<![CDATA[		serverState := 2;]]>
+</Line>
+<Line Number="105">
+<![CDATA[		isCurSockMain := 1;]]>
+</Line>
+<Line Number="106">
+<![CDATA[		JSR(SocketInit);]]>
+</Line>
+<Line Number="107">
+<![CDATA[	elsif(/*Conn_Accept_MSG.EN and*/ Conn_Accept_MSG.ER) then]]>
+</Line>
+<Line Number="108">
+<![CDATA[		Accept_Request := 0;]]>
+</Line>
+<Line Number="109">
+<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
+</Line>
+<Line Number="110">
+<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
+</Line>
+<Line Number="111">
+<![CDATA[			serverState := 0;]]>
+</Line>
+<Line Number="112">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="113">
+<![CDATA[	//	point := point + 1;]]>
+</Line>
+<Line Number="114">
+<![CDATA[	//else]]>
+</Line>
+<Line Number="115">
+<![CDATA[		//point := point + 10;]]>
+</Line>
+<Line Number="116">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="117">
+<![CDATA[2:]]>
+</Line>
+<Line Number="118">
+<![CDATA[	//обработка подключения резервного клиента]]>
+</Line>
+<Line Number="119">
+<![CDATA[	if(not Accept_Request ) then]]>
+</Line>
+<Line Number="120">
+<![CDATA[		AcceptReqTimer.TimerEnable := 1;]]>
+</Line>
+<Line Number="121">
+<![CDATA[		Accept_Request := AcceptReqTimer.DN;]]>
+</Line>
+<Line Number="122">
+<![CDATA[	elsif( Conn_Accept_MSG.DN) then]]>
+</Line>
+<Line Number="123">
+<![CDATA[		if(ClientsId[RedMsg].Instance = 0) then]]>
+</Line>
+<Line Number="124">
+<![CDATA[			ClientsId[RedMsg].Instance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="125">
+<![CDATA[			serverState := 3;]]>
+</Line>
+<Line Number="126">
+<![CDATA[			isCurSockMain := 0;]]>
+</Line>
+<Line Number="127">
+<![CDATA[			JSR(SocketInit);]]>
+</Line>
+<Line Number="128">
+<![CDATA[		elsif(ClientsId[MainMsg].Instance = 0) then]]>
+</Line>
+<Line Number="129">
+<![CDATA[			ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="130">
+<![CDATA[			serverState := 3;]]>
+</Line>
+<Line Number="131">
+<![CDATA[			isCurSockMain := 1;]]>
+</Line>
+<Line Number="132">
+<![CDATA[			JSR(SocketInit);]]>
+</Line>
+<Line Number="133">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="134">
+<![CDATA[		Accept_Request := 0;]]>
+</Line>
+<Line Number="135">
+<![CDATA[	elsif(Conn_Accept_MSG.ER) then]]>
+</Line>
+<Line Number="136">
+<![CDATA[		Accept_Request := 0;]]>
+</Line>
+<Line Number="137">
+<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
+</Line>
+<Line Number="138">
+<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
+</Line>
+<Line Number="139">
+<![CDATA[			serverState := 0;]]>
+</Line>
+<Line Number="140">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="141">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="142">
+<![CDATA[	]]>
+</Line>
+<Line Number="143">
+<![CDATA[	if((ClientsId[MainMsg].Instance>0) and (ClientsId[RedMsg].Instance>0)) then]]>
+</Line>
+<Line Number="144">
+<![CDATA[		serverState := 3;]]>
+</Line>
+<Line Number="145">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="146">
+<![CDATA[	if(CycleNumber>=MaxCyclesCount or needToResend) then]]>
+</Line>
+<Line Number="147">
+<![CDATA[		//отправляем пакет...	]]>
+</Line>
+<Line Number="148">
+<![CDATA[		JSR(SendMessage);]]>
+</Line>
+<Line Number="149">
+<![CDATA[	else]]>
+</Line>
+<Line Number="150">
+<![CDATA[		Write_Request := 0;]]>
+</Line>
+<Line Number="151">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="152">
+<![CDATA[]]>
+</Line>
+<Line Number="153">
+<![CDATA[	JSR(Exchange);]]>
+</Line>
+<Line Number="154">
+<![CDATA[]]>
+</Line>
+<Line Number="155">
+<![CDATA[	if((ClientsId[MainMsg].Instance>0) and FirstPacketSendMain) then]]>
+</Line>
+<Line Number="156">
+<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
+</Line>
+<Line Number="157">
+<![CDATA[		if(errCode > 0) then]]>
+</Line>
+<Line Number="158">
+<![CDATA[			point := point + 1;]]>
+</Line>
+<Line Number="159">
+<![CDATA[			FirstPacketSendMain := 0;]]>
+</Line>
+<Line Number="160">
+<![CDATA[			SockInstance := Write_Data_MSG.Instance;]]>
+</Line>
+<Line Number="161">
+<![CDATA[			ClientsId[MainMsg].Instance := 0;]]>
+</Line>
+<Line Number="162">
+<![CDATA[			serverState := 12;]]>
+</Line>
+<Line Number="163">
+<![CDATA[		else]]>
+</Line>
+<Line Number="164">
+<![CDATA[			;//needToResend := 1;]]>
+</Line>
+<Line Number="165">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="166">
+<![CDATA[	/*]]>
+</Line>
+<Line Number="167">
+<![CDATA[		if(Err_Write > 3) then]]>
+</Line>
+<Line Number="168">
+<![CDATA[			//что-то делаем при ошибке отправки	]]>
+</Line>
+<Line Number="169">
+<![CDATA[			//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
+</Line>
+<Line Number="170">
+<![CDATA[			if(Write_Data_MSG.EXERR = 16#0000_0036 ]]>
+</Line>
+<Line Number="171">
+<![CDATA[				or Write_Data_MSG.EXERR = 16#0000_0033 ) then //Обрыв связи]]>
+</Line>
+<Line Number="172">
+<![CDATA[				FirstPacketSend := 0;]]>
+</Line>
+<Line Number="173">
+<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
+</Line>
+<Line Number="174">
+<![CDATA[				//ClientsId[0] := 0;]]>
+</Line>
+<Line Number="175">
+<![CDATA[				serverState := 12;]]>
+</Line>
+<Line Number="176">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="177">
+<![CDATA[			//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="178">
+<![CDATA[			if(ClientsId[0] = SockInstance) then]]>
+</Line>
+<Line Number="179">
+<![CDATA[				ClientsId[0] := 0;]]>
+</Line>
+<Line Number="180">
+<![CDATA[			elsif(ClientsId[1] = SockInstance) then]]>
+</Line>
+<Line Number="181">
+<![CDATA[				ClientsId[1] := 0;]]>
+</Line>
+<Line Number="182">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="183">
+<![CDATA[		else]]>
+</Line>
+<Line Number="184">
+<![CDATA[			needToResend := 1;]]>
+</Line>
+<Line Number="185">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="186">
+<![CDATA[	else]]>
+</Line>
+<Line Number="187">
+<![CDATA[		Err_Write := 0;]]>
+</Line>
+<Line Number="188">
+<![CDATA[	*/]]>
+</Line>
+<Line Number="189">
+<![CDATA[		]]>
+</Line>
+<Line Number="190">
+<![CDATA[	elsif((ClientsId[RedMsg].Instance>0) and FirstPacketSendRed) then]]>
+</Line>
+<Line Number="191">
+<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
+</Line>
+<Line Number="192">
+<![CDATA[		if(errCode > 0) then]]>
+</Line>
+<Line Number="193">
+<![CDATA[			FirstPacketSendRed := 0;]]>
+</Line>
+<Line Number="194">
+<![CDATA[			SockInstance := Write_Data_MSG_RED.Instance;]]>
+</Line>
+<Line Number="195">
+<![CDATA[			ClientsId[RedMsg].Instance := 0;]]>
+</Line>
+<Line Number="196">
+<![CDATA[			serverState := 12;]]>
+</Line>
+<Line Number="197">
+<![CDATA[		else]]>
+</Line>
+<Line Number="198">
+<![CDATA[			;//needToResend := 1;]]>
+</Line>
+<Line Number="199">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="200">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="201">
+<![CDATA[]]>
+</Line>
+<Line Number="202">
+<![CDATA[3:	//Работает и основное и резервное соединение]]>
+</Line>
+<Line Number="203">
+<![CDATA[	if(CycleNumber>=MaxCyclesCount or needToResend) then]]>
+</Line>
+<Line Number="204">
+<![CDATA[		//отправляем пакет...	]]>
+</Line>
+<Line Number="205">
+<![CDATA[		JSR(SendMessage);]]>
+</Line>
+<Line Number="206">
+<![CDATA[	else]]>
+</Line>
+<Line Number="207">
+<![CDATA[		Write_Request := 0;]]>
+</Line>
+<Line Number="208">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="209">
+<![CDATA[]]>
+</Line>
+<Line Number="210">
+<![CDATA[	JSR(Exchange);]]>
+</Line>
+<Line Number="211">
+<![CDATA[]]>
+</Line>
+<Line Number="212">
+<![CDATA[	if(Write_Data_MSG.ER and FirstPacketSendMain or Write_Data_MSG_RED.ER and FirstPacketSendRed) then]]>
+</Line>
+<Line Number="213">
+<![CDATA[		//если ошибка при отправке основного сообщения]]>
+</Line>
+<Line Number="214">
+<![CDATA[		if((errCntWriteMain > 3) and (ClientsId[MainMsg].Instance>0)) then]]>
+</Line>
+<Line Number="215">
+<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
+</Line>
+<Line Number="216">
+<![CDATA[			if(errCode > 0) then]]>
+</Line>
+<Line Number="217">
+<![CDATA[				FirstPacketSendMain := 0;]]>
+</Line>
+<Line Number="218">
+<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
+</Line>
+<Line Number="219">
+<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="220">
+<![CDATA[				ClientsId[MainMsg].Instance := 0;]]>
+</Line>
+<Line Number="221">
+<![CDATA[				serverState := 13;]]>
+</Line>
+<Line Number="222">
+<![CDATA[			else]]>
+</Line>
+<Line Number="223">
+<![CDATA[				;//needToResend := 1;]]>
+</Line>
+<Line Number="224">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="225">
+<![CDATA[		elsif((errCntWriteRed > 3) and (ClientsId[RedMsg].Instance>0)) then]]>
+</Line>
+<Line Number="226">
+<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
+</Line>
+<Line Number="227">
+<![CDATA[			if(errCode > 0) then]]>
+</Line>
+<Line Number="228">
+<![CDATA[				FirstPacketSendRed := 0;]]>
+</Line>
+<Line Number="229">
+<![CDATA[				SockInstance := Write_Data_MSG_RED.Instance;]]>
+</Line>
+<Line Number="230">
+<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="231">
+<![CDATA[				ClientsId[RedMsg].Instance := 0;]]>
+</Line>
+<Line Number="232">
+<![CDATA[				serverState := 13;]]>
+</Line>
+<Line Number="233">
+<![CDATA[			else]]>
+</Line>
+<Line Number="234">
+<![CDATA[				;//needToResend := 1;]]>
+</Line>
+<Line Number="235">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="236">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="237">
+<![CDATA[			//что-то делаем при ошибке отправки	]]>
+</Line>
+<Line Number="238">
+<![CDATA[			//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
+</Line>
+<Line Number="239">
+<![CDATA[			/*]]>
+</Line>
+<Line Number="240">
+<![CDATA[			FirstPacketSend := 0;]]>
+</Line>
+<Line Number="241">
+<![CDATA[			if(Write_Data_MSG.EXERR = 16#0000_0036 ]]>
+</Line>
+<Line Number="242">
+<![CDATA[				or Write_Data_MSG.EXERR = 16#0000_0033 or Write_Data_MSG.ERR > 16#0000) then //Обрыв связи]]>
+</Line>
+<Line Number="243">
+<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
+</Line>
+<Line Number="244">
+<![CDATA[				]]>
+</Line>
+<Line Number="245">
+<![CDATA[				//переход в состояние, где удаляется текущий инстанс и дальнейший переход в состояние 2]]>
+</Line>
+<Line Number="246">
+<![CDATA[				serverState := 13;						]]>
+</Line>
+<Line Number="247">
+<![CDATA[			elsif(Write_Data_MSG_RED.EXERR = 16#0000_0036 ]]>
+</Line>
+<Line Number="248">
+<![CDATA[				or Write_Data_MSG_RED.EXERR = 16#0000_0033 or Write_Data_MSG_RED.ERR > 16#0000) then //Обрыв связи]]>
+</Line>
+<Line Number="249">
+<![CDATA[				SockInstance := Write_Data_MSG_RED.Instance;]]>
+</Line>
+<Line Number="250">
+<![CDATA[				serverState := 13;]]>
+</Line>
+<Line Number="251">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="252">
+<![CDATA[			//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="253">
+<![CDATA[			if(ClientsId[0] = SockInstance) then]]>
+</Line>
+<Line Number="254">
+<![CDATA[				ClientsId[0] := 0;]]>
+</Line>
+<Line Number="255">
+<![CDATA[			elsif(ClientsId[1] = SockInstance) then]]>
+</Line>
+<Line Number="256">
+<![CDATA[				ClientsId[1] := 0;]]>
+</Line>
+<Line Number="257">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="258">
+<![CDATA[			]]>
+</Line>
+<Line Number="259">
+<![CDATA[			else]]>
+</Line>
+<Line Number="260">
+<![CDATA[				needToResend := 1;]]>
+</Line>
+<Line Number="261">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="262">
+<![CDATA[			*/]]>
+</Line>
+<Line Number="263">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="264">
+<![CDATA[				 ]]>
+</Line>
+<Line Number="265">
+<![CDATA[10:]]>
+</Line>
+<Line Number="266">
+<![CDATA[	if(not Delete_All_Request) then]]>
+</Line>
+<Line Number="267">
+<![CDATA[		Delete_All_Request := 1;]]>
+</Line>
+<Line Number="268">
+<![CDATA[	elsif(Delete_All_MSG.DN) then]]>
+</Line>
+<Line Number="269">
+<![CDATA[		Delete_All_Request := 0;]]>
+</Line>
+<Line Number="270">
+<![CDATA[		serverState := 0;]]>
+</Line>
+<Line Number="271">
+<![CDATA[	elsif(Delete_All_MSG.ER) then]]>
+</Line>
+<Line Number="272">
+<![CDATA[		Delete_All_Request := 0;]]>
+</Line>
+<Line Number="273">
+<![CDATA[		serverState := 11;]]>
+</Line>
+<Line Number="274">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="275">
+<![CDATA[]]>
+</Line>
+<Line Number="276">
+<![CDATA[11:	]]>
+</Line>
+<Line Number="277">
+<![CDATA[	SockInstance := Instance;]]>
+</Line>
+<Line Number="278">
+<![CDATA[	if(not Delete_Sockets_Req) then]]>
+</Line>
+<Line Number="279">
+<![CDATA[		Delete_Sockets_Req := 1;]]>
+</Line>
+<Line Number="280">
+<![CDATA[	elsif(Delete_Sock_MSG.DN) then]]>
+</Line>
+<Line Number="281">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="282">
+<![CDATA[		serverState := 10;]]>
+</Line>
+<Line Number="283">
+<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="284">
+<![CDATA[		if(Delete_Sock_MSG.ERR = 16#0005) then]]>
+</Line>
+<Line Number="285">
+<![CDATA[			serverState := 0;	]]>
+</Line>
+<Line Number="286">
+<![CDATA[		else]]>
+</Line>
+<Line Number="287">
+<![CDATA[			Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="288">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="289">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="290">
+<![CDATA[]]>
+</Line>
+<Line Number="291">
+<![CDATA[12:	]]>
+</Line>
+<Line Number="292">
+<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="293">
+<![CDATA[	if(not Delete_Sockets_Req) then]]>
+</Line>
+<Line Number="294">
+<![CDATA[		Delete_Sockets_Req := 1;]]>
+</Line>
+<Line Number="295">
+<![CDATA[	elsif(Delete_Sock_MSG.DN or (Delete_Sock_MSG.ERR = 16#0005)) then]]>
+</Line>
+<Line Number="296">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="297">
+<![CDATA[		serverState := 1;]]>
+</Line>
+<Line Number="298">
+<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="299">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="300">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="301">
+<![CDATA[13:	]]>
+</Line>
+<Line Number="302">
+<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="303">
+<![CDATA[	if(not Delete_Sockets_Req) then]]>
+</Line>
+<Line Number="304">
+<![CDATA[		Delete_Sockets_Req := 1;]]>
+</Line>
+<Line Number="305">
+<![CDATA[	elsif(Delete_Sock_MSG.DN) then]]>
+</Line>
+<Line Number="306">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="307">
+<![CDATA[		serverState := 2;]]>
+</Line>
+<Line Number="308">
+<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="309">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="310">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="311">
+<![CDATA[]]>
+</Line>
+<Line Number="312">
+<![CDATA[END_CASE;]]>
+</Line>
+<Line Number="313">
+<![CDATA[]]>
+</Line>
+<Line Number="314">
+<![CDATA[]]>
+</Line>
+<Line Number="315">
+<![CDATA[//обработка сокета]]>
+</Line>
+<Line Number="316">
+<![CDATA[JSR(_SOCKET_TCP_SERV);]]>
+</Line>
+<Line Number="317">
+<![CDATA[]]>
+</Line>
+<Line Number="318">
+<![CDATA[if(ClientsId[MainMsg].Instance>0) then]]>
+</Line>
+<Line Number="319">
+<![CDATA[	Write_Data_MSG.Instance := ClientsId[MainMsg].Instance;]]>
+</Line>
+<Line Number="320">
+<![CDATA[	JSR(_SOCKET_WRITE_MAIN);]]>
+</Line>
+<Line Number="321">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="322">
+<![CDATA[if(ClientsId[RedMsg].Instance>0) then]]>
+</Line>
+<Line Number="323">
+<![CDATA[	Write_Data_MSG_RED.Instance := ClientsId[RedMsg].Instance;]]>
+</Line>
+<Line Number="324">
+<![CDATA[	JSR(_SOCKET_WRITE_RED);]]>
+</Line>
+<Line Number="325">
+<![CDATA[end_IF;]]>
+</Line>
+<Line Number="326">
+<![CDATA[]]>
+</Line>
+<Line Number="327">
+<![CDATA[]]>
+</Line>
+<Line Number="328">
+<![CDATA[	]]>
+</Line>
+<Line Number="329">
+<![CDATA[	]]>
+</Line>
+<Line Number="330">
+<![CDATA[ ]]>
+</Line>
+</STContent>
+</Routine>
+<Routine Name="_SOCKET_ATTR" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[Get Specific Socket Instance System Data]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Set_SocketTimeout)MOV(SockInstance,Set_SockTimeout_MSG.Instance)MSG(Set_SockTimeout_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Comment>
+<![CDATA[Get Specific Socket Instance System Data]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Get_SocketTimeout)MOV(SockInstance,Get_SockTimeout_MSG.Instance)MSG(Get_SockTimeout_MSG);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+<Routine Name="_SOCKET_STATS" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[Check if logging enabled]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Enable_Log_Req)MSG(Enable_Log_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Comment>
+<![CDATA[Get Socket Object Data]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Get_Socket_Object_Req)MSG(Get_Sock_Object_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="2" Type="N">
+<Text>
+<![CDATA[[COP(_EWEB_PATH,Change_Log_Msg.Path,1) COP(_EWEB_PATH,Create_Sock_MSG.Path,1) COP(_EWEB_PATH,Delete_All_MSG.Path,1) ,COP(_EWEB_PATH,Delete_Sock_MSG.Path,1) COP(_EWEB_PATH,Enable_Log_MSG.Path,1) COP(_EWEB_PATH,Set_SockTimeout_MSG.Path,1) ,COP(_EWEB_PATH,Get_Sock_Object_MSG.Path,1) COP(_EWEB_PATH,Read_Data_MSG.Path,1) COP(_EWEB_PATH,Write_Data_MSG.Path,1) ,COP(_EWEB_PATH,Conn_Accept_MSG.Path,1) ];]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+<Routine Name="_SOCKET_TCP_SERV" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[Version 2.00
+
+This TCP ServerAccepts TCP Connection  from a TCP client and 
+writes/reads ASCII strings to the remote port
+
+IMPORTANT! It is necessary to specify correct path to EWEB module in the _EWEB_PATH tag.
+
+Local TCP port (this EWEB) specified in Socket.Addr.Port  ex:10000
+ 
+Remote IP and Remote IP will be coming from a client as result 
+of Accept Connection Message in Sock_Accept_Resp
+]]>
+</Comment>
+<Text>
+<![CDATA[NOP();]]>
+</Text>
+</Rung>
+<Rung Number="1" Type="N">
+<Comment>
+<![CDATA[This rung will enable Webpage Log]]>
+</Comment>
+<Text>
+<![CDATA[[XIC(Create) XIC(Open) XIC(Accept) XIC(Read) ,XIC(Write) XIC(Delete) XIC(Attrubute) XIC(Errors) ]OTE(Nothing);]]>
+</Text>
+</Rung>
+<Rung Number="2" Type="N">
+<Text>
+<![CDATA[NEQ(Log_Enable,Log_old)MOV(Log_Enable,Log_old)MSG(Change_Log_Msg);]]>
+</Text>
+</Rung>
+<Rung Number="3" Type="N">
+<Comment>
+<![CDATA[Delete All Sockets
+]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Delete_All_Request)MSG(Delete_All_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="4" Type="N">
+<Text>
+<![CDATA[XIC(Create_Socket_Req)MSG(Create_Sock_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="5" Type="N">
+<Text>
+<![CDATA[XIC(Accept_Request)MOV(Instance,Conn_Accept_MSG.Instance)MSG(Conn_Accept_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="6" Type="N">
+<Comment>
+<![CDATA[This Rung will read incoming TCP message. Make sure timeout for read set less than MSG timeout (default 30 sec!!!)
+This example uses: 
+Read Timeout Read_Data_Req.Timeout =1 sec]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Read_Data_Request)MOV(Sock_Accept_Resp.Instance,Read_Data_MSG.Instance)MSG(Read_Data_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="7" Type="N">
+<Comment>
+<![CDATA[This Rung will delete read socket instance
+Socket will be deleted automatically after 5 minutes of inactivity (300 000 ms)]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Delete_Sockets_Req)MOV(SockInstance,Delete_Sock_MSG.Instance)MSG(Delete_Sock_MSG);]]>
+</Text>
+</Rung>
+<Rung Number="8" Type="N">
+<Text>
+<![CDATA[JSR(_SOCKET_STATS,0);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+<Routine Name="_SOCKET_WRITE_MAIN" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[This Rung will send PLC clock value out every time Write_Request bit set. 
+TIME string prepared in the demo_CLOCK routine]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Write_Request)ADD(Write_Data_Out.Buffer.LEN,16,Write_Data_MSG.REQ_LEN)MSG(Write_Data_MSG);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+<Routine Name="_SOCKET_WRITE_RED" Type="RLL">
+<RLLContent>
+<Rung Number="0" Type="N">
+<Comment>
+<![CDATA[This Rung will send PLC clock value out every time Write_Request bit set. 
+TIME string prepared in the demo_CLOCK routine]]>
+</Comment>
+<Text>
+<![CDATA[XIC(Write_Request)ADD(Write_Data_Out.Buffer.LEN,16,Write_Data_MSG_RED.REQ_LEN)MSG(Write_Data_MSG_RED);]]>
+</Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

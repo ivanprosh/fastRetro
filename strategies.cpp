@@ -3,6 +3,7 @@
 //#include <QSqlError>
 #include "strategies.h"
 #include "global.h"
+#include "logger.h"
 
 namespace {
     const QString _DBConnectionString("DRIVER={SQL Server};SERVER=%1;DATABASE=RUNTIME;UID=fastRetroUser;PWD=1;Trusted_Connection=no; WSID=.");
@@ -180,6 +181,12 @@ void Native::scanFolder()
             emit errorChange(curError.data());
             errCount++;
         } else {
+#ifdef DEBUGLOG
+        curError->setFirstItem(GlobalError::Debug);
+        curError->setFrom(name);
+        curError->setSecondItem("Файл скопирован на сервер, размер " + QString::number(info.size()));
+        emit errorChange(curError.data());;
+#endif
             //для сличения
             //QFile::copy(backupFolder.path() + "/" + name, "/" + name );
 
@@ -192,10 +199,15 @@ void Native::scanFolder()
             }
         }
     }
-    if(errCount > 100) {
+    if(errCount > 50) {
+        //очищаем каталог
+        foreach (QString name, filesNames)
+            QFile::remove(backupFolder.path() + "/" + name);
+        /* ничего не делаем, чтобы при появлении сервера в сети скопировать сегменты
         curError->setFirstItem(GlobalError::Configuration);
         curError->setSecondItem("Проверьте права приложения на удаление/копирование файлов и доступность сервера Hist.");
         emit errorChange(curError.data());
+        */
     }
 }
 void Native::setBackupPath(const QString &path)

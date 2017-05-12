@@ -23,11 +23,16 @@ void ConnectionManager::addConnection(QSharedPointer<PLCSocketClient> client)
     //initializeConnection(client);
 }
 
-void ConnectionManager::removeConnection(QSharedPointer<PLCSocketClient> client)
+void ConnectionManager::removeConnection(PLCSocketClient* client)
 {
     qDebug() << "ConnectionManager::removeConnection() " << client->getServer()->address;
-    closeConnection(client.data());
-    connections.remove(client);
+    closeConnection(client);
+    //closeConnection(client.data());
+    foreach (QSharedPointer<PLCSocketClient> sock, connections) {
+        if(sock.data() == client)
+            connections.remove(sock);
+    }
+    //connections.remove(client);
 }
 
 
@@ -74,6 +79,7 @@ void ConnectionManager::errorHandler(PLCSocketClient* curClient,QAbstractSocket:
 void ConnectionManager::closeConnection(PLCSocketClient *curClient)
 {
     curClient->stopReconnectTimer();
+    curClient->queReceivePackets.clear();
     curClient->closeConnection();
 }
 

@@ -7,6 +7,7 @@
 
 #include "plcsocketclient.h"
 #include "global.h"
+#include "logger.h"
 
 #pragma	 comment (lib,"ws2_32.lib")
 
@@ -20,7 +21,7 @@ namespace {
     //const int reconnectDelay = 5000;
 }
 
-int Packet::count = 0;
+//int Packet::count = 0;
 
 PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
     QTcpSocket(parent),
@@ -31,10 +32,6 @@ PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
     //timeoutTimer = startTimer(ConnectTimeout);
     sockIdString = Id;
 
-/*
-    DWORD dwBytesRet = 0;
-    DWORD dwRet;
-*/
     setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 /*
     int descriptor = socketDescriptor();
@@ -44,16 +41,19 @@ PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
     reconnectTimer = QSharedPointer<QTimer>(new QTimer());
     reconnectTimer->setInterval(reconnectDelay);
     reconnectTimer->setSingleShot(true);
-/*
+
     keepAliveTimer = QSharedPointer<QTimer>(new QTimer());
-    keepAliveTimer->setInterval(reconnectDelay);
+    keepAliveTimer->setInterval(5000);
     keepAliveTimer->setSingleShot(true);
-*/
+
     connect(this, SIGNAL(readyRead()),SLOT(newDataAvailable()));
     connect(this, SIGNAL(connected()), SLOT(connectEstablished()));
     connect(this, SIGNAL(disconnected()), SLOT(closeConnection()));
     connect(reconnectTimer.data(), SIGNAL(timeout()), this, SLOT(reconnect()));
 
+#ifdef DEBUGLOG
+    connect(keepAliveTimer.data(), SIGNAL(timeout()), this, SLOT(isAlive()));
+#endif
     //connect(this, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(error()));
 
     //connect(this, SIGNAL(readyRead()), this, SIGNAL(readyToTransfer()));
@@ -79,20 +79,7 @@ PLCSocketClient::~PLCSocketClient(){
     this->disconnect();
     qDebug() << "~SockClient";
 }
-//void PLCSocketClient::timerEvent(QTimerEvent *event)
-//{
-//    if (event->timerId() == timeoutTimer) {
-//        // Disconnect if we timed out; otherwise the timeout is
-//        // restarted.
-//        if (invalidateTimeout) {
-//            invalidateTimeout = false;
-//        } else {
-//            qDebug() << "timeoutTimer finish!"
-//            //abort();
-//        }
-//    }
-//    QTcpSocket::timerEvent(event);
-//}
+
 void PLCSocketClient::setServer(const QSharedPointer<PLCServer>& plc)
 {
     _plcServer = plc;
@@ -119,50 +106,67 @@ void PLCSocketClient::newDataAvailable()
         quint32 size;
         in >> size;
         nextBlockSize = qFromBigEndian(size);
-        //qDebug() << "Size is " << nextBlockSize;
+        //nextBlockSize = size;
+        //if(nextBlockSize != 440 && nextBlockSize != 72)
+            qDebug() << "Size is " << nextBlockSize;
     }
 
     if (this->bytesAvailable() < (nextBlockSize - sizeof(quint32))){
         qDebug() << "low bytes available: " << this->bytesAvailable();
         return;
     }
-    //if(nextBlockSize != 440)
-        //qDebug() << this->bytesAvailable();
-
 
     if(nextBlockSize < MaxPacketSize && nextBlockSize > 0) {
 
         //создаем структуру для хранения одного пакета данных
-        QSharedPointer<Packet> curPacket(new Packet(nextBlockSize - sizeof(quint32)));
+        QSharedPointer<Packet> curPacket(new Packet(nextBlockSize));
 
         in.startTransaction();
 
         this->_plcServer->lastVisited = QDateTime::currentDateTime().toTime_t();
+        //резервный инт для выравнивания до четного числа INT'ов.
+        quint16 reserv;
+        //считываем заголовочные параметры
+        in >> curPacket->Year >> curPacket->Month >> curPacket->Day >>
+              curPacket->Hour >> curPacket->Minute >> curPacket->Second >> curPacket->MSecond >>
+              curPacket->ParCount >> curPacket->CyclesCount >> reserv;
+        //конвертация из BigEndian (применяется, так как AB передает данные в этом формате, а переворачивать проще здесь)
+        curPacket->Year = qFromBigEndian(curPacket->Year);
+        curPacket->Month = qFromBigEndian(curPacket->Month);
+        curPacket->Day = qFromBigEndian(curPacket->Day);
+        curPacket->Hour = qFromBigEndian(curPacket->Hour);
+        curPacket->Minute = qFromBigEndian(curPacket->Minute);
+        curPacket->Second = qFromBigEndian(curPacket->Second);
+        curPacket->MSecond = qFromBigEndian(curPacket->MSecond);
+        curPacket->ParCount = qFromBigEndian(curPacket->ParCount);
+        curPacket->CyclesCount = qFromBigEndian(curPacket->CyclesCount);
 
-        //qDebug() << "before read " << this->bytesAvailable();
+        qDebug() << "Packet:: parCount, Cycles " << curPacket->ParCount << " " << curPacket->CyclesCount;
         //считывание потока в контейнер
-        for(int it=0;it<(nextBlockSize-sizeof(quint32))*0.25;it++){
+        for(int it=0;it<curPacket->getDataSize();it++){
             in >> curPacket->data[it].u;
             curPacket->data[it].u = qFromBigEndian(curPacket->data[it].u);
-            //qDebug() << curPacket->data[it].f;
         }
-        //qDebug() << "after read " << this->bytesAvailable();
+
         if(!in.commitTransaction()) {
             //qDebug() << "Transaction fault! Status:" << in.status();
             return;
         }
-        //curPacket->setTime((int)curPacket->getValue(0),(int)curPacket->getValue(1),(int)curPacket->getValue(2),(int)(curPacket->getValue(3)/1000));
+#ifdef DEBUGLOG
+        if(!keepAliveTimer.data()->isActive())
+             keepAliveTimer.data()->start();
+#endif
         curPacket->setTime();
         curPacket->setDate();
 
-        //nextBlockSizeUint = 0;
+        qDebug() << curPacket->getDateTime().toString();
+
+        qDebug() << this->bytesAvailable();
+
         nextBlockSize = 0;
-        //добавляем пакет в очередь
-        //if(!queReceivePackets.isEmpty()) queReceivePackets.pop_front();
+
 
         queReceivePackets.enqueue(curPacket);
-
-        //qDebug() << this->bytesAvailable();
         emit newDataReceived();
     } else {
         qDebug() << "PLCSocketClient:: Wrong Packet Size!";
@@ -209,14 +213,20 @@ void PLCSocketClient::stopReconnectTimer()
 
 bool PLCSocketClient::isActive()
 {
-    //if(reconnectTimer.data())
     return (reconnectTimer.data()->isActive() || this->isOpen());
-    //return this->isOpen();
-    //return true;
 }
 void PLCSocketClient::reconnect()
 {
     qDebug() << "PLCSocketClient:: Try to reconnect number " << reconnectCount;
     this->connectToHost(_plcServer->address, _plcServer->port);
     reconnectDelay = GLOBAL::Fib(++reconnectCount)*1000;
+}
+void PLCSocketClient::isAlive()
+{
+    keepAliveTimer->stop();
+    QScopedPointer<GlobalError> curError(new GlobalError());
+    curError->setFirstItem(GlobalError::Debug);
+    curError->setFrom(this->server()->address);
+    curError->setSecondItem("Идет обмен данными на уровне сокета, формирование пакета");
+    Logger::instance()->addEntryInFile(curError.data());
 }

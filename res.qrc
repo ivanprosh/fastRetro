@@ -14,5 +14,6 @@
         <file>images/restore.svg</file>
         <file>LogView.qml</file>
         <file>Filedialog.qml</file>
+        <file>images/send.svg</file>
     </qresource>
 </RCC>

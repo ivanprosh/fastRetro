@@ -15,14 +15,14 @@ class GlobalError : public QObject
     Q_ENUMS(ErrorRoles)
 
 public:
-    enum ErrorRoles {Socket=1,Configuration,Historian,System,Logger,None=10};
+    enum ErrorRoles {Socket=1,Configuration,Historian,System,Logger,Debug,None=10};
 
     QStringList ErrorCodes;//QStringList() << "Socket" << "Configuration" << "Historian" << "System"
     //GlobalError(QObject *parent = 0):pair(),QObject(parent){}
     GlobalError(ErrorRoles role = None,const QString& val = QString("Ok"), QObject *parent = 0):
         QObject(parent),pair(role,val),_from(""),_plcIdFrom(-1){
         eventDateTime = QDateTime::currentDateTime();
-        ErrorCodes << "" << "сокет" << "конфигурация" << "архиватор" << "общие" << "лог";
+        ErrorCodes << "" << "сокет" << "конфигурация" << "архиватор" << "общие" << "лог" << "отладка";
     }
 
     ErrorRoles firstItem() {return pair.first;}

@@ -48,6 +48,7 @@ void DataAnalizator::newDataReceived()
         return;
     }
     if(it>0 && PLCtoParNames.value(client->getServer()->id).size() != client->queReceivePackets.first()->getParCount() + 1){
+        qDebug() << "Кол-во пар. в конфе:" << PLCtoParNames.value(client->getServer()->id).size() - 1;
         errorHandler(GlobalError::Configuration,
                      "Проверьте идентичность количества параметров в контроллере и конф. файле (значение параметра ParCount в ПЛК)",
                      PLCtoParNames.value(client->getServer()->id).first(),
@@ -58,7 +59,7 @@ void DataAnalizator::newDataReceived()
     //если накопилось достаточно данных
     if(it>_segmentInterval*10) {
 
-        qDebug() << "New data available in DataAnalizator";
+        //qDebug() << "New data available in DataAnalizator";
         QString stream;
 
         if(_isRedundant){
@@ -139,10 +140,10 @@ void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QShare
         correctDTime(_prepareDTime,cycleIndex,server->cycleStep,curPacket->getDateTime());
         while (curPar < curPacket->getParCount()) {
             QString TagName = PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1);
-            float Value = curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount());
+            //float Value = curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount());
+            float Value = curPacket->getValue(curPar + cycleIndex*curPacket->getParCount());
             stream.append(QString("%1,%2,%3,%4,%5,192\n").arg(TagName).arg(QString::number(0)).arg(_prepareDTime).arg(QString::number(0)).arg(Value));
-            //stream.append(_prepareQuery.arg(PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1))
-            //             .arg(curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount())));
+
             curPar++;
         }
         cycleIndex++;
@@ -221,7 +222,6 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
 
     GLOBAL::globalMutex.lock();
 
-    //QScopedPointer<QFile> outputFile(new QFile(filepath.append("/"+fileName +".csv")));
     QScopedPointer<QFile> outputFile(new QFile(filepath.append("\\"+fileName +".csv")));
     QTextStream out(outputFile.data());
 

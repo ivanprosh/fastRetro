@@ -51,38 +51,53 @@ class Packet{
         //float operator [](int i){return f;}
     };
     contain* data;
-    const int size;
+    int dataSize;
 public:
-    enum index {Year=0,Month,Day,Hour=3,Minute,Second,MicroSecond,ParCount = 7, CyclesCount, startData};
-    static int count;
+    const int headerParCount = 11;
+    //static int count;
+    quint16 Year,
+            Month,
+            Day,
+            Hour,
+            Minute,
+            Second,
+            MSecond,
+            ParCount,
+            CyclesCount,
+            Reserv; //необходим из-за выравнивания структур в AB
+
     QDateTime datetime;
     //QDate date;
-    Packet(const int _size):size(_size){
-        count++;
-        data= new contain[_size];
+    Packet(const int _size){
+        //размер буфера данных (за вычетом размера служебных параметров)
+        dataSize = (_size - headerParCount*sizeof(quint16))/sizeof(quint32);
+        //count++;
+        data= new contain[dataSize];
     }
     ~Packet() {
         //qDebug() << "~Packet()";
         delete[] data;
     }
-    static void initCount(int _count){count = _count;}
+    //static void initCount(int _count){count = _count;}
     contain* getData() const {return data;}
 
     QTime getTime() const{return datetime.time();}
     void setTime() {
-        datetime.setTime(QTime((int)getValue(Hour),(int)getValue(Minute),(int)getValue(index::Second),(int)getValue(index::MicroSecond)/1000));
+        //datetime.setTime(QTime((int)getValue(Hour),(int)getValue(Minute),(int)getValue(index::Second),(int)getValue(index::MicroSecond)/1000));
+        datetime.setTime(QTime(Hour,Minute,Second,MSecond));
     }
 
     QDate getDate() const{return datetime.date();}
     void setDate() {
-        datetime.setDate(QDate((int)getValue(index::Year),(int)getValue(index::Month),(int)getValue(index::Day)));
+        datetime.setDate(QDate(Year,Month,Day));
     }
 
     QDateTime getDateTime() const {return datetime;}
 
-    int getParCount() const {return (int)getValue(index::ParCount);}
-    int getCyclesCount() const {return (int)getValue(index::CyclesCount);}
-    float getValue(int index) const { return (index<size) ?  data[index].f : float(0);
+    int getParCount() const {return ParCount;}
+    int getDataSize() const {return dataSize;}
+    int getCyclesCount() const {return CyclesCount;}
+    float getValue(int index) const { return (index<dataSize) ?  data[index].f : float(0);
     }
 };
 /*
@@ -121,6 +136,7 @@ public slots:
     void newDataAvailable();
     void closeConnection();
     void reconnect();
+    void isAlive();
 
 private:
     // Timeout handling
@@ -134,7 +150,7 @@ private:
     // Data waiting to be read/written
     QByteArray incomingBuffer;
     QByteArray outgoingBuffer;
-    quint32 nextBlockSize;
+    quint16 nextBlockSize;
 
     QSharedPointer<PLCServer> _plcServer;
     QByteArray sockIdString;

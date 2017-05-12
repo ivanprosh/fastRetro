@@ -22,7 +22,7 @@ Dialog {
         anchors.right: parent.right;
         anchors.top: parent.top;
         anchors.bottom: footer.top;
-        //contentWidth:
+        anchors.margins: 4
 
         model: errorFile ? errorModel : MainClass.logger.entries;
 

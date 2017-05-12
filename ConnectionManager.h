@@ -15,7 +15,7 @@ public:
 
     bool canAddConnection() const;
     void addConnection(QSharedPointer<PLCSocketClient> connection);
-    void removeConnection(QSharedPointer<PLCSocketClient> connection);
+    void removeConnection(PLCSocketClient *connection);
     int maxConnections() const;
     QByteArray clientId() const;
     void errorHandler(PLCSocketClient *curClient, QAbstractSocket::SocketError);

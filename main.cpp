@@ -1,24 +1,28 @@
-#include <QGUIApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtQml>
+#include <QIcon>
 
 #include "addresstable.h"
 #include "mainwindow.h"
 #include "connectionManager.h"
 #include "dataanalizator.h"
 #include "global.h"
+#include "systemtray.h"
 
 QMutex GLOBAL::globalMutex(QMutex::NonRecursive);
 QString GLOBAL::ThreadCheck("");
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     app.setApplicationName(app.translate("main", "FastRetroApp"));
     //app.setWindowIcon(QIcon(":/icon.png"));
     app.setOrganizationName("System Service Ltd.");
     app.setOrganizationDomain("systserv.spb.su");
+    app.setWindowIcon(QIcon(":/images/send.svg"));
+
     qRegisterMetaType<GlobalError*>();
 
     //инициализация объекта работы с DB
@@ -32,10 +36,12 @@ int main(int argc, char *argv[])
     //QAbstractTableModel* AppAddressTable = new QAbstractTableModel();
     MainWindow* MainClass = new MainWindow(AppAddressTable);
 
-    //QTimer::singleShot(0, MainClass, SLOT(initializeSettings()));
-
     QQmlApplicationEngine engine;
 
+    // Объявляем и инициализируем объекта класса для работы с системным треем
+    SystemTray * systemTray = new SystemTray();
+
+    engine.rootContext()->setContextProperty("systemTray", systemTray);
     engine.rootContext()->setContextProperty("AppAddressTable", AppAddressTable);
     engine.rootContext()->setContextProperty("MainClass", MainClass);
 

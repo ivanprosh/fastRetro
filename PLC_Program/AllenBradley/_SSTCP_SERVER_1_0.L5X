@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="20.00" TargetName="MainProgram" TargetType="Program" ContainsContext="true" Owner="user, ss" ExportDate="Wed May 03 16:04:59 2017" ExportOptions="References DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="20.00" TargetName="MainProgram" TargetType="Program" ContainsContext="true" Owner="user, ss" ExportDate="Fri May 05 09:02:50 2017" ExportOptions="References DecoratedData Context Dependencies ForceProtectedEncoding AllProjDocTrans">
 <Controller Use="Context" Name="SOCK">
 <DataTypes Use="Context">
 <DataType Name="WRT_DATA" Family="NoFamily" Class="User">
@@ -256,28 +256,22 @@
 <DataValue DataType="DINT" Radix="Decimal" Value="26000"/>
 </Data>
 </Tag>
-<Tag Name="Log_enable" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-<Data>00 00 00 00</Data>
-<Data Format="Decorated">
-<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-</Data>
-</Tag>
-<Tag Name="Get_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Tag Name="Enable_Log_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
 <Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0007" LocalIndex="0" DestinationTag="SockTimeout"
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" DestinationTag="Log_enable"
  LargePacketUsage="false"/>
 </Data>
 </Tag>
-<Tag Name="SockTimeout" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-<Data>00 00 00 00</Data>
-<Data Format="Decorated">
-<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+<Tag Name="Delete_All_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#0051" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
+/>
 </Data>
 </Tag>
-<Tag Name="Conn_Accept_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Tag Name="Change_Log_Msg" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
 <Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0050" ObjectType="16#0342" TargetObject="484" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Sock_Accept_Timeout"
- DestinationTag="Sock_Accept_Resp" LargePacketUsage="false"/>
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" LocalElement="Log_enable"
+ LargePacketUsage="false"/>
 </Data>
 </Tag>
 <Tag Name="CLOCK" TagType="Base" DataType="DINT" Dimensions="7" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
@@ -295,16 +289,69 @@
 </Array>
 </Data>
 </Tag>
-<Tag Name="Change_Log_Msg" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Tag Name="Log_enable" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+<Tag Name="Conn_Accept_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
 <Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" LocalElement="Log_enable"
- LargePacketUsage="false"/>
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0050" ObjectType="16#0342" TargetObject="484" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Sock_Accept_Timeout"
+ DestinationTag="Sock_Accept_Resp" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Log_old" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
 </Data>
 </Tag>
 <Tag Name="Instance" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
 <Data>E4 01 00 00</Data>
 <Data Format="Decorated">
 <DataValue DataType="DINT" Radix="Decimal" Value="484"/>
+</Data>
+</Tag>
+<Tag Name="Write_Data_MSG_RED" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="1" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="354" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
+ DestinationTag="BufLenSent" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Get_Sock_Object_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0001" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" DestinationTag="Socket_Object_Class_Response[0]"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Create_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="12" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004b" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Socket"
+ DestinationTag="Instance" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Read_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="8" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004d" ObjectType="16#0342" TargetObject="4805" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Read_Data_Req"
+ DestinationTag="Read_Response" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="Socket_Object_Class_Response" TagType="Base" DataType="SINT" Dimensions="10" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 14 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Array DataType="SINT" Dimensions="10" Radix="Decimal">
+<Element Index="[0]" Value="1"/>
+<Element Index="[1]" Value="0"/>
+<Element Index="[2]" Value="20"/>
+<Element Index="[3]" Value="0"/>
+<Element Index="[4]" Value="0"/>
+<Element Index="[5]" Value="0"/>
+<Element Index="[6]" Value="0"/>
+<Element Index="[7]" Value="0"/>
+<Element Index="[8]" Value="0"/>
+<Element Index="[9]" Value="0"/>
+</Array>
 </Data>
 </Tag>
 <Tag Name="Write_Data_Out" TagType="Base" DataType="WRT_DATA" Constant="false" ExternalAccess="Read/Write">
@@ -461,47 +508,6 @@
 </ArrayMember>
 </StructureMember>
 </Structure>
-</Data>
-</Tag>
-<Tag Name="Delete_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004f" ObjectType="16#0342" TargetObject="3557" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
-/>
-</Data>
-</Tag>
-<Tag Name="Write_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="24" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="25268" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
- DestinationTag="BufLenSent" LargePacketUsage="false"/>
-</Data>
-</Tag>
-<Tag Name="Read_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="8" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004d" ObjectType="16#0342" TargetObject="4805" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Read_Data_Req"
- DestinationTag="Read_Response" LargePacketUsage="false"/>
-</Data>
-</Tag>
-<Tag Name="Socket_Object_Class_Response" TagType="Base" DataType="SINT" Dimensions="10" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-<Data>01 00 14 00 00 00 00 00 00 00</Data>
-<Data Format="Decorated">
-<Array DataType="SINT" Dimensions="10" Radix="Decimal">
-<Element Index="[0]" Value="1"/>
-<Element Index="[1]" Value="0"/>
-<Element Index="[2]" Value="20"/>
-<Element Index="[3]" Value="0"/>
-<Element Index="[4]" Value="0"/>
-<Element Index="[5]" Value="0"/>
-<Element Index="[6]" Value="0"/>
-<Element Index="[7]" Value="0"/>
-<Element Index="[8]" Value="0"/>
-<Element Index="[9]" Value="0"/>
-</Array>
-</Data>
-</Tag>
-<Tag Name="Set_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="18598" AttributeNumber="16#0007" LocalIndex="0" LocalElement="SockTimeout"
- LargePacketUsage="false"/>
 </Data>
 </Tag>
 <Tag Name="Read_Response" TagType="Base" DataType="READ_RESP" Constant="false" ExternalAccess="Read/Write">
@@ -784,6 +790,48 @@
 <DataValue DataType="DINT" Radix="Decimal" Value="7"/>
 </Data>
 </Tag>
+<Tag Name="Read_Data_Req" TagType="Base" DataType="READ_DATA_REQ" Constant="false" ExternalAccess="Read/Write">
+<Data>E8 03 00 00 64 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="READ_DATA_REQ">
+<DataValueMember Name="Timeout" DataType="DINT" Radix="Decimal" Value="1000"/>
+<DataValueMember Name="BufLen" DataType="DINT" Radix="Decimal" Value="100"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Write_Data_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="24" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="25268" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
+ DestinationTag="BufLenSent" LargePacketUsage="false"/>
+</Data>
+</Tag>
+<Tag Name="AcceptReqTimer" TagType="Base" DataType="FBD_TIMER" Constant="false" ExternalAccess="Read/Write">
+<Data>01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00</Data>
+<Data Format="Decorated">
+<Structure DataType="FBD_TIMER">
+<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
+<DataValueMember Name="TimerEnable" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
+<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
+<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
+<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
+<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
+<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
+<DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
+<DataValueMember Name="PresetInv" DataType="BOOL" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="Get_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Data Format="Message">
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0007" LocalIndex="0" DestinationTag="SockTimeout"
+ LargePacketUsage="false"/>
+</Data>
+</Tag>
 <Tag Name="_EWEB_PATH" TagType="Base" DataType="STRING" Constant="false" ExternalAccess="Read/Write">
 <Data>02 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -806,18 +854,6 @@
 <DataValueMember Name="Addr" DataType="DINT" Radix="Decimal" Value="1684298241"/>
 </StructureMember>
 </Structure>
-</Data>
-</Tag>
-<Tag Name="Log_old" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
-<Data>00 00 00 00</Data>
-<Data Format="Decorated">
-<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
-</Data>
-</Tag>
-<Tag Name="Enable_Log_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#000e" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0008" LocalIndex="0" DestinationTag="Log_enable"
- LargePacketUsage="false"/>
 </Data>
 </Tag>
 <Tag Name="Anpar" TagType="Base" DataType="Anpars" Constant="false" ExternalAccess="Read/Write">
@@ -916,58 +952,22 @@
 </Structure>
 </Data>
 </Tag>
-<Tag Name="AcceptReqTimer" TagType="Base" DataType="FBD_TIMER" Constant="false" ExternalAccess="Read/Write">
-<Data>01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-00 00 00 00 04 00 00 00 00 00 00 00 00 00 00 00</Data>
-<Data Format="Decorated">
-<Structure DataType="FBD_TIMER">
-<DataValueMember Name="EnableIn" DataType="BOOL" Value="1"/>
-<DataValueMember Name="TimerEnable" DataType="BOOL" Value="0"/>
-<DataValueMember Name="PRE" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="Reset" DataType="BOOL" Value="0"/>
-<DataValueMember Name="EnableOut" DataType="BOOL" Value="0"/>
-<DataValueMember Name="ACC" DataType="DINT" Radix="Decimal" Value="0"/>
-<DataValueMember Name="EN" DataType="BOOL" Value="0"/>
-<DataValueMember Name="TT" DataType="BOOL" Value="0"/>
-<DataValueMember Name="DN" DataType="BOOL" Value="0"/>
-<DataValueMember Name="Status" DataType="DINT" Radix="Hex" Value="16#0000_0000"/>
-<DataValueMember Name="InstructFault" DataType="BOOL" Value="0"/>
-<DataValueMember Name="PresetInv" DataType="BOOL" Value="0"/>
-</Structure>
-</Data>
-</Tag>
-<Tag Name="Create_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Tag Name="Set_SockTimeout_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
 <Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="12" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#004b" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Socket"
- DestinationTag="Instance" LargePacketUsage="false"/>
+<MessageParameters MessageType="CIP Generic" RequestedLength="4" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0010" ObjectType="16#0342" TargetObject="18598" AttributeNumber="16#0007" LocalIndex="0" LocalElement="SockTimeout"
+ LargePacketUsage="false"/>
 </Data>
 </Tag>
-<Tag Name="Read_Data_Req" TagType="Base" DataType="READ_DATA_REQ" Constant="false" ExternalAccess="Read/Write">
-<Data>E8 03 00 00 64 00 00 00</Data>
-<Data Format="Decorated">
-<Structure DataType="READ_DATA_REQ">
-<DataValueMember Name="Timeout" DataType="DINT" Radix="Decimal" Value="1000"/>
-<DataValueMember Name="BufLen" DataType="DINT" Radix="Decimal" Value="100"/>
-</Structure>
-</Data>
-</Tag>
-<Tag Name="Delete_All_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
+<Tag Name="Delete_Sock_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
 <Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#0051" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
+<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004f" ObjectType="16#0342" TargetObject="3557" AttributeNumber="16#0000" LocalIndex="0" LargePacketUsage="false"
 />
 </Data>
 </Tag>
-<Tag Name="Write_Data_MSG_RED" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="1" ConnectedFlag="2" ConnectionPath="A1_AD2" CommTypeCode="0" ServiceCode="16#004e" ObjectType="16#0342" TargetObject="354" AttributeNumber="16#0000" LocalIndex="0" LocalElement="Write_Data_Out"
- DestinationTag="BufLenSent" LargePacketUsage="false"/>
-</Data>
-</Tag>
-<Tag Name="Get_Sock_Object_MSG" TagType="Base" DataType="MESSAGE" ExternalAccess="Read/Write">
-<Data Format="Message">
-<MessageParameters MessageType="CIP Generic" RequestedLength="0" ConnectedFlag="2" ConnectionPath="1, 3" CommTypeCode="0" ServiceCode="16#0001" ObjectType="16#0342" TargetObject="0" AttributeNumber="16#0000" LocalIndex="0" DestinationTag="Socket_Object_Class_Response[0]"
- LargePacketUsage="false"/>
+<Tag Name="SockTimeout" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data>00 00 00 00</Data>
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
 </Data>
 </Tag>
 <Tag Name="Socket" TagType="Base" DataType="REQUEST_PARAMETERS" Constant="false" ExternalAccess="Read/Write">
@@ -2084,261 +2084,219 @@
 <![CDATA[]]>
 </Line>
 <Line Number="2">
-<![CDATA[//Write_Data_Out.Buffer.LEN]]>
+<![CDATA[/*]]>
 </Line>
 <Line Number="3">
-<![CDATA[GSV(WALLCLOCKTIME,,DateTime,CLOCK[0]);]]>
+<![CDATA[	Заполнение данных в буфер передачи]]>
 </Line>
 <Line Number="4">
-<![CDATA[]]>
+<![CDATA[*/]]>
 </Line>
 <Line Number="5">
-<![CDATA[//на первом цикле заполняем служебный заголовок пакета]]>
+<![CDATA[GSV(WALLCLOCKTIME,,DateTime,CLOCK[0]);]]>
 </Line>
 <Line Number="6">
-<![CDATA[if(CycleNumber=0) then]]>
+<![CDATA[]]>
 </Line>
 <Line Number="7">
-<![CDATA[	//дата - год месяц число]]>
+<![CDATA[//на первом цикле заполняем служебный заголовок пакета]]>
 </Line>
 <Line Number="8">
-<![CDATA[	TempBuffer[0]:= CLOCK[0];]]>
+<![CDATA[if(CycleNumber=0) then]]>
 </Line>
 <Line Number="9">
-<![CDATA[	TempBuffer[1]:= CLOCK[1];]]>
-</Line>
-<Line Number="10">
-<![CDATA[	TempBuffer[2]:= CLOCK[2];]]>
-</Line>
-<Line Number="11">
-<![CDATA[	//время - часы минуты секунды микросекунды]]>
-</Line>
-<Line Number="12">
-<![CDATA[	TempBuffer[3]:= CLOCK[3];]]>
-</Line>
-<Line Number="13">
-<![CDATA[	TempBuffer[4]:= CLOCK[4];]]>
-</Line>
-<Line Number="14">
-<![CDATA[	TempBuffer[5]:= CLOCK[5];]]>
-</Line>
-<Line Number="15">
-<![CDATA[	TempBuffer[6]:= CLOCK[6];]]>
-</Line>
-<Line Number="16">
-<![CDATA[	//кол-во параметров]]>
-</Line>
-<Line Number="17">
-<![CDATA[	TempBuffer[7]:= ParCount;]]>
-</Line>
-<Line Number="18">
-<![CDATA[	//кол-во циклов для сбора данных]]>
-</Line>
-<Line Number="19">
-<![CDATA[	TempBuffer[8]:= MaxCyclesCount;]]>
-</Line>
-<Line Number="20">
-<![CDATA[	(*]]>
-</Line>
-<Line Number="21">
 <![CDATA[	//дата - год месяц число]]>
 </Line>
-<Line Number="22">
-<![CDATA[	Write_Data_Out.Buffer.Data[0]:= CLOCK[0];]]>
+<Line Number="10">
+<![CDATA[	TempBuffer[0]:= CLOCK[0];]]>
 </Line>
-<Line Number="23">
-<![CDATA[	Write_Data_Out.Buffer.Data[1]:= CLOCK[1];]]>
+<Line Number="11">
+<![CDATA[	TempBuffer[1]:= CLOCK[1];]]>
 </Line>
-<Line Number="24">
-<![CDATA[	Write_Data_Out.Buffer.Data[2]:= CLOCK[2];]]>
+<Line Number="12">
+<![CDATA[	TempBuffer[2]:= CLOCK[2];]]>
 </Line>
-<Line Number="25">
+<Line Number="13">
 <![CDATA[	//время - часы минуты секунды микросекунды]]>
 </Line>
+<Line Number="14">
+<![CDATA[	TempBuffer[3]:= CLOCK[3];]]>
+</Line>
+<Line Number="15">
+<![CDATA[	TempBuffer[4]:= CLOCK[4];]]>
+</Line>
+<Line Number="16">
+<![CDATA[	TempBuffer[5]:= CLOCK[5];]]>
+</Line>
+<Line Number="17">
+<![CDATA[	TempBuffer[6]:= CLOCK[6];]]>
+</Line>
+<Line Number="18">
+<![CDATA[	//кол-во параметров]]>
+</Line>
+<Line Number="19">
+<![CDATA[	TempBuffer[7]:= ParCount;]]>
+</Line>
+<Line Number="20">
+<![CDATA[	//кол-во циклов для сбора данных]]>
+</Line>
+<Line Number="21">
+<![CDATA[	TempBuffer[8]:= MaxCyclesCount;]]>
+</Line>
+<Line Number="22">
+<![CDATA[	(*]]>
+</Line>
+<Line Number="23">
+<![CDATA[	//дата - год месяц число]]>
+</Line>
+<Line Number="24">
+<![CDATA[	Write_Data_Out.Buffer.Data[0]:= CLOCK[0];]]>
+</Line>
+<Line Number="25">
+<![CDATA[	Write_Data_Out.Buffer.Data[1]:= CLOCK[1];]]>
+</Line>
 <Line Number="26">
-<![CDATA[	Write_Data_Out.Buffer.Data[3]:= CLOCK[3];]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[2]:= CLOCK[2];]]>
 </Line>
 <Line Number="27">
-<![CDATA[	Write_Data_Out.Buffer.Data[4]:= CLOCK[4];]]>
+<![CDATA[	//время - часы минуты секунды микросекунды]]>
 </Line>
 <Line Number="28">
-<![CDATA[	Write_Data_Out.Buffer.Data[5]:= CLOCK[5];]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[3]:= CLOCK[3];]]>
 </Line>
 <Line Number="29">
-<![CDATA[	Write_Data_Out.Buffer.Data[6]:= CLOCK[6];]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[4]:= CLOCK[4];]]>
 </Line>
 <Line Number="30">
-<![CDATA[	Write_Data_Out.Buffer.Data[7]:= ParCount;]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[5]:= CLOCK[5];]]>
 </Line>
 <Line Number="31">
-<![CDATA[	Write_Data_Out.Buffer.Data[8]:= MaxCyclesCount;]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[6]:= CLOCK[6];]]>
 </Line>
 <Line Number="32">
-<![CDATA[	*)]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[7]:= ParCount;]]>
 </Line>
 <Line Number="33">
-<![CDATA[end_if;]]>
+<![CDATA[	Write_Data_Out.Buffer.Data[8]:= MaxCyclesCount;]]>
 </Line>
 <Line Number="34">
-<![CDATA[]]>
+<![CDATA[	*)]]>
 </Line>
 <Line Number="35">
-<![CDATA[if(CycleNumber<5 and ParCount<=20) then]]>
+<![CDATA[end_if;]]>
 </Line>
 <Line Number="36">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+1+systemDataCount] := Anpar.Tg_inN1.Sys;]]>
-</Line>
-<Line Number="37">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+2+systemDataCount] := Anpar.Tg_inAVO1.Sys;]]>
-</Line>
-<Line Number="38">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+3+systemDataCount] := Anpar.Tg_outAVO1.Sys;]]>
-</Line>
-<Line Number="39">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+4+systemDataCount] := Anpar.Tg_outN1.Sys;]]>
-</Line>
-<Line Number="40">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+5+systemDataCount] := Anpar.Tg_inN2.Sys;]]>
-</Line>
-<Line Number="41">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+6+systemDataCount] := Anpar.Tg_inAVO2.Sys;]]>
-</Line>
-<Line Number="42">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+7+systemDataCount] := Anpar.Tg_outAVO2.Sys;]]>
-</Line>
-<Line Number="43">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+8+systemDataCount] := Anpar.Tg_outN2.Sys;]]>
-</Line>
-<Line Number="44">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+9+systemDataCount] := Anpar.Pg_aftKr4.Sys;]]>
-</Line>
-<Line Number="45">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+10+systemDataCount] := Anpar.Pg_outSep21.Sys;]]>
-</Line>
-<Line Number="46">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+11+systemDataCount] := Anpar.Pg_aftKr6.Sys;]]>
-</Line>
-<Line Number="47">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+12+systemDataCount] := Anpar.Pg_aftKr16.Sys;]]>
-</Line>
-<Line Number="48">
-<![CDATA[	/*]]>
-</Line>
-<Line Number="49">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+13+systemDataCount] := Anpar.Pg_outSep22.Sys;]]>
-</Line>
-<Line Number="50">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+14+systemDataCount] := Anpar.Pg_aftKr18.Sys;]]>
-</Line>
-<Line Number="51">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+15+systemDataCount] := Anpar.dPg_Kr1.Sys;]]>
-</Line>
-<Line Number="52">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+16+systemDataCount] := Anpar.dPg_Sep11.Sys;]]>
-</Line>
-<Line Number="53">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+17+systemDataCount] := Anpar.dPg_Kr3.Sys;]]>
-</Line>
-<Line Number="54">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+18+systemDataCount] := Anpar.dPg_AVO1.Sys;]]>
-</Line>
-<Line Number="55">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+19+systemDataCount] := Anpar.dPg_Sep21.Sys;]]>
-</Line>
-<Line Number="56">
-<![CDATA[	TempBuffer[ParCount*CycleNumber+20+systemDataCount] := Anpar.dPg_Kr13.Sys;]]>
-</Line>
-<Line Number="57">
-<![CDATA[	*/]]>
-</Line>
-<Line Number="58">
-<![CDATA[(*]]>
-</Line>
-<Line Number="59">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+1+systemDataCount] := Anpar.Tg_inN1.Sys;]]>
-</Line>
-<Line Number="60">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+2+systemDataCount] := Anpar.Tg_inAVO1.Sys;]]>
-</Line>
-<Line Number="61">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+3+systemDataCount] := Anpar.Tg_outAVO1.Sys;]]>
-</Line>
-<Line Number="62">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+4+systemDataCount] := Anpar.Tg_outN1.Sys;]]>
-</Line>
-<Line Number="63">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+5+systemDataCount] := Anpar.Tg_inN2.Sys;]]>
-</Line>
-<Line Number="64">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+6+systemDataCount] := Anpar.Tg_inAVO2.Sys;]]>
-</Line>
-<Line Number="65">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+7+systemDataCount] := Anpar.Tg_outAVO2.Sys;]]>
-</Line>
-<Line Number="66">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+8+systemDataCount] := Anpar.Tg_outN2.Sys;]]>
-</Line>
-<Line Number="67">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+9+systemDataCount] := Anpar.Pg_aftKr4.Sys;]]>
-</Line>
-<Line Number="68">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+10+systemDataCount] := Anpar.Pg_outSep21.Sys;]]>
-</Line>
-<Line Number="69">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+11+systemDataCount] := Anpar.Pg_aftKr6.Sys;]]>
-</Line>
-<Line Number="70">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+12+systemDataCount] := Anpar.Pg_aftKr16.Sys;]]>
-</Line>
-<Line Number="71">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+13+systemDataCount] := Anpar.Pg_outSep22.Sys;]]>
-</Line>
-<Line Number="72">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+14+systemDataCount] := Anpar.Pg_aftKr18.Sys;]]>
-</Line>
-<Line Number="73">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+15+systemDataCount] := Anpar.dPg_Kr1.Sys;]]>
-</Line>
-<Line Number="74">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+16+systemDataCount] := Anpar.dPg_Sep11.Sys;]]>
-</Line>
-<Line Number="75">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+17+systemDataCount] := Anpar.dPg_Kr3.Sys;]]>
-</Line>
-<Line Number="76">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+18+systemDataCount] := Anpar.dPg_AVO1.Sys;]]>
-</Line>
-<Line Number="77">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+19+systemDataCount] := Anpar.dPg_Sep21.Sys;]]>
-</Line>
-<Line Number="78">
-<![CDATA[	Write_Data_Out.Buffer.Data[ParCount*CycleNumber+20+systemDataCount] := Anpar.dPg_Kr13.Sys;]]>
-</Line>
-<Line Number="79">
-<![CDATA[*)	]]>
-</Line>
-<Line Number="80">
-<![CDATA[else]]>
-</Line>
-<Line Number="81">
-<![CDATA[	loseCyclesCount := loseCyclesCount + 1;]]>
-</Line>
-<Line Number="82">
-<![CDATA[end_if;]]>
-</Line>
-<Line Number="83">
 <![CDATA[]]>
 </Line>
-<Line Number="84">
-<![CDATA[if(CycleNumber < (MaxCyclesCount + 5)) then]]>
+<Line Number="37">
+<![CDATA[/*]]>
 </Line>
-<Line Number="85">
-<![CDATA[	CycleNumber := CycleNumber + 1;]]>
+<Line Number="38">
+<![CDATA[! 	Заполняется пользователем ( правая часть, после := )]]>
 </Line>
-<Line Number="86">
+<Line Number="39">
+<![CDATA[	Порядок следования параметров должен совпадать с описанными в signals.ini (идет в комплекте с FastRetroApp)]]>
+</Line>
+<Line Number="40">
+<![CDATA[*/]]>
+</Line>
+<Line Number="41">
+<![CDATA[if(CycleNumber<5 and ParCount<=20) then]]>
+</Line>
+<Line Number="42">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+1+systemDataCount] := Anpar.Tg_inN1.Sys;]]>
+</Line>
+<Line Number="43">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+2+systemDataCount] := Anpar.Tg_inAVO1.Sys;]]>
+</Line>
+<Line Number="44">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+3+systemDataCount] := Anpar.Tg_outAVO1.Sys;]]>
+</Line>
+<Line Number="45">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+4+systemDataCount] := Anpar.Tg_outN1.Sys;]]>
+</Line>
+<Line Number="46">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+5+systemDataCount] := Anpar.Tg_inN2.Sys;]]>
+</Line>
+<Line Number="47">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+6+systemDataCount] := Anpar.Tg_inAVO2.Sys;]]>
+</Line>
+<Line Number="48">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+7+systemDataCount] := Anpar.Tg_outAVO2.Sys;]]>
+</Line>
+<Line Number="49">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+8+systemDataCount] := Anpar.Tg_outN2.Sys;]]>
+</Line>
+<Line Number="50">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+9+systemDataCount] := Anpar.Pg_aftKr4.Sys;]]>
+</Line>
+<Line Number="51">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+10+systemDataCount] := Anpar.Pg_outSep21.Sys;]]>
+</Line>
+<Line Number="52">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+11+systemDataCount] := Anpar.Pg_aftKr6.Sys;]]>
+</Line>
+<Line Number="53">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+12+systemDataCount] := Anpar.Pg_aftKr16.Sys;]]>
+</Line>
+<Line Number="54">
+<![CDATA[	/*]]>
+</Line>
+<Line Number="55">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+13+systemDataCount] := Anpar.Pg_outSep22.Sys;]]>
+</Line>
+<Line Number="56">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+14+systemDataCount] := Anpar.Pg_aftKr18.Sys;]]>
+</Line>
+<Line Number="57">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+15+systemDataCount] := Anpar.dPg_Kr1.Sys;]]>
+</Line>
+<Line Number="58">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+16+systemDataCount] := Anpar.dPg_Sep11.Sys;]]>
+</Line>
+<Line Number="59">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+17+systemDataCount] := Anpar.dPg_Kr3.Sys;]]>
+</Line>
+<Line Number="60">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+18+systemDataCount] := Anpar.dPg_AVO1.Sys;]]>
+</Line>
+<Line Number="61">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+19+systemDataCount] := Anpar.dPg_Sep21.Sys;]]>
+</Line>
+<Line Number="62">
+<![CDATA[	TempBuffer[ParCount*CycleNumber+20+systemDataCount] := Anpar.dPg_Kr13.Sys;]]>
+</Line>
+<Line Number="63">
+<![CDATA[	*/]]>
+</Line>
+<Line Number="64">
+<![CDATA[else]]>
+</Line>
+<Line Number="65">
+<![CDATA[	//исп. для отладки]]>
+</Line>
+<Line Number="66">
+<![CDATA[	loseCyclesCount := loseCyclesCount + 1;]]>
+</Line>
+<Line Number="67">
 <![CDATA[end_if;]]>
 </Line>
-<Line Number="87">
+<Line Number="68">
+<![CDATA[]]>
+</Line>
+<Line Number="69">
+<![CDATA[//чтобы предотвратить бесконечный рост CycleNumber]]>
+</Line>
+<Line Number="70">
+<![CDATA[if(CycleNumber < (MaxCyclesCount + 5)) then]]>
+</Line>
+<Line Number="71">
+<![CDATA[	CycleNumber := CycleNumber + 1;]]>
+</Line>
+<Line Number="72">
+<![CDATA[end_if;]]>
+</Line>
+<Line Number="73">
 <![CDATA[]]>
 </Line>
 </STContent>
@@ -2462,199 +2420,199 @@
 <Routine Name="TCP_Server" Type="ST">
 <STContent>
 <Line Number="0">
-<![CDATA[/*]]>
+<![CDATA[// 	версия 1.0]]>
 </Line>
 <Line Number="1">
-<![CDATA[	serverState :=  0 - Инициализация сокета]]>
+<![CDATA[/*]]>
 </Line>
 <Line Number="2">
-<![CDATA[					1 - Сокет создан, открываем на прослушку]]>
+<![CDATA[	отправка сообщений асинхронная, поэтому флаги актуально ]]>
 </Line>
 <Line Number="3">
-<![CDATA[					2 - Слушаем]]>
+<![CDATA[	копировать в переменную в начале цикла:]]>
 </Line>
 <Line Number="4">
-<![CDATA[					3]]>
-</Line>
-<Line Number="5">
-<![CDATA[					4]]>
-</Line>
-<Line Number="6">
-<![CDATA[					5]]>
-</Line>
-<Line Number="7">
-<![CDATA[					10 - Сокет не в норме (рестарт)]]>
-</Line>
-<Line Number="8">
-<![CDATA[					//15 - Ошибка отправки сообщения]]>
-</Line>
-<Line Number="9">
-<![CDATA[*/]]>
-</Line>
-<Line Number="10">
-<![CDATA[/*]]>
-</Line>
-<Line Number="11">
-<![CDATA[ClientsId[0] - handle сокета MSG]]>
-</Line>
-<Line Number="12">
-<![CDATA[ClientsId[1] - handle сокета MSG_RED]]>
-</Line>
-<Line Number="13">
-<![CDATA[*/]]>
-</Line>
-<Line Number="14">
-<![CDATA[]]>
-</Line>
-<Line Number="15">
-<![CDATA[/*]]>
-</Line>
-<Line Number="16">
-<![CDATA[	отправка сообщений асинхронная, поэтому копируем флаги в начале цикла:]]>
-</Line>
-<Line Number="17">
 <![CDATA[	.2 - .EW]]>
 </Line>
-<Line Number="18">
+<Line Number="5">
 <![CDATA[	.4 - .ER]]>
 </Line>
-<Line Number="19">
+<Line Number="6">
 <![CDATA[	.5 - .DN]]>
 </Line>
-<Line Number="20">
+<Line Number="7">
 <![CDATA[	.6 - .ST]]>
 </Line>
-<Line Number="21">
+<Line Number="8">
 <![CDATA[	.7 - .EN]]>
 </Line>
-<Line Number="22">
+<Line Number="9">
 <![CDATA[	.8 - .TO]]>
 </Line>
-<Line Number="23">
+<Line Number="10">
 <![CDATA[	.9 - .EN_CC]]>
 </Line>
-<Line Number="24">
+<Line Number="11">
 <![CDATA[*/]]>
 </Line>
-<Line Number="25">
+<Line Number="12">
 <![CDATA[CurStatusFlagsWrite := Write_Data_MSG.Flags;]]>
 </Line>
-<Line Number="26">
+<Line Number="13">
 <![CDATA[]]>
 </Line>
-<Line Number="27">
+<Line Number="14">
 <![CDATA[//инициализационные параметры.]]>
 </Line>
-<Line Number="28">
+<Line Number="15">
 <![CDATA[if (not tcpserverInit) then]]>
 </Line>
-<Line Number="29">
+<Line Number="16">
 <![CDATA[]]>
 </Line>
-<Line Number="30">
+<Line Number="17">
 <![CDATA[//! заполняются пользователем ]]>
 </Line>
-<Line Number="31">
+<Line Number="18">
 <![CDATA[]]>
 </Line>
-<Line Number="32">
+<Line Number="19">
 <![CDATA[	//количество параметров]]>
 </Line>
-<Line Number="33">
+<Line Number="20">
 <![CDATA[	ParCount := 12;]]>
 </Line>
-<Line Number="34">
+<Line Number="21">
 <![CDATA[//! ]]>
 </Line>
-<Line Number="35">
+<Line Number="22">
 <![CDATA[	/*]]>
 </Line>
-<Line Number="36">
+<Line Number="23">
 <![CDATA[		Кол-во циклов в посылке для текущего шага дискретизации. ]]>
 </Line>
-<Line Number="37">
+<Line Number="24">
 <![CDATA[		Рекоммендуется отправлять посылки не чаще 100мс, то есть для 20мс цикла вызова задачи значение MaxCyclesCount = 5]]>
 </Line>
-<Line Number="38">
+<Line Number="25">
 <![CDATA[	*/]]>
 </Line>
-<Line Number="39">
+<Line Number="26">
 <![CDATA[	MaxCyclesCount := 5;]]>
 </Line>
-<Line Number="40">
+<Line Number="27">
 <![CDATA[	//размер служебных данных пакета, см. Exchange]]>
 </Line>
-<Line Number="41">
+<Line Number="28">
 <![CDATA[	systemDataCount := 8;]]>
 </Line>
-<Line Number="42">
+<Line Number="29">
 <![CDATA[	//включаем лог]]>
 </Line>
-<Line Number="43">
+<Line Number="30">
 <![CDATA[	Enable_Log_Req := 1;]]>
 </Line>
-<Line Number="44">
+<Line Number="31">
 <![CDATA[	//таймер пересброса ожидания подключения]]>
 </Line>
-<Line Number="45">
+<Line Number="32">
 <![CDATA[	AcceptReqTimer.PRE := 1000;]]>
 </Line>
-<Line Number="46">
+<Line Number="33">
 <![CDATA[]]>
 </Line>
-<Line Number="47">
+<Line Number="34">
 <![CDATA[	SIZE(Write_Data_Out.Buffer.Data,0,ElementsCount);]]>
 </Line>
-<Line Number="48">
+<Line Number="35">
 <![CDATA[]]>
 </Line>
-<Line Number="49">
+<Line Number="36">
 <![CDATA[	//размер посылки данных = (кол-во элементов+служ.параметр) * размер REAL]]>
 </Line>
-<Line Number="50">
+<Line Number="37">
 <![CDATA[	Write_Data_Out.Buffer.LEN := 4*(ElementsCount + 1);]]>
 </Line>
-<Line Number="51">
+<Line Number="38">
 <![CDATA[	Write_Data_Out.Buffer.PacketSize := Write_Data_Out.Buffer.LEN;]]>
 </Line>
-<Line Number="52">
+<Line Number="39">
 <![CDATA[	]]>
 </Line>
-<Line Number="53">
+<Line Number="40">
 <![CDATA[	//по клиентам]]>
 </Line>
-<Line Number="54">
+<Line Number="41">
 <![CDATA[	SIZE(ClientsId,0,ClientsIdSize);]]>
 </Line>
-<Line Number="55">
+<Line Number="42">
 <![CDATA[	]]>
 </Line>
-<Line Number="56">
+<Line Number="43">
 <![CDATA[	//начальное состояние сервера - создание сокета]]>
 </Line>
-<Line Number="57">
+<Line Number="44">
 <![CDATA[	serverState := 0;]]>
 </Line>
-<Line Number="58">
+<Line Number="45">
 <![CDATA[	tcpserverInit := 1;]]>
 </Line>
-<Line Number="59">
+<Line Number="46">
 <![CDATA[end_if;]]>
 </Line>
-<Line Number="60">
+<Line Number="47">
 <![CDATA[]]>
 </Line>
-<Line Number="61">
+<Line Number="48">
 <![CDATA[TONR(AcceptReqTimer);]]>
 </Line>
-<Line Number="62">
+<Line Number="49">
 <![CDATA[]]>
+</Line>
+<Line Number="50">
+<![CDATA[/*]]>
+</Line>
+<Line Number="51">
+<![CDATA[	serverState :=  0 - Инициализация сокета (переход при успехе в 1, иначе в 10)]]>
+</Line>
+<Line Number="52">
+<![CDATA[					1 - Сокет создан, открываем на прослушку (переход при успехе в 2, иначе в 0)]]>
+</Line>
+<Line Number="53">
+<![CDATA[					2 - Соединение установлено (одно подключение)]]>
+</Line>
+<Line Number="54">
+<![CDATA[					3 - Соединение установлено (два подключения)]]>
+</Line>
+<Line Number="55">
+<![CDATA[					4]]>
+</Line>
+<Line Number="56">
+<![CDATA[					5]]>
+</Line>
+<Line Number="57">
+<![CDATA[					10 - Сокет не в норме, очищаем запросы и рестарт (переход при успехе в 0, иначе в 11)]]>
+</Line>
+<Line Number="58">
+<![CDATA[					11 - Удаляем основной сокет (переход при успехе в 10, иначе в 0)]]>
+</Line>
+<Line Number="59">
+<![CDATA[					12 - Удаляем сокет прослушки (переход при успехе в 1, иначе повторить)]]>
+</Line>
+<Line Number="60">
+<![CDATA[					13 - Удаляем сокет прослушки (переход при успехе в 2, иначе повторить)]]>
+</Line>
+<Line Number="61">
+<![CDATA[	]]>
+</Line>
+<Line Number="62">
+<![CDATA[	ClientsId[MainMsg] - handle сокета MSG]]>
 </Line>
 <Line Number="63">
-<![CDATA[if(increment>10000) then increment:=0; end_if;]]>
+<![CDATA[	ClientsId[RedMsg] - handle сокета MSG_RED]]>
 </Line>
 <Line Number="64">
-<![CDATA[]]>
+<![CDATA[*/]]>
 </Line>
 <Line Number="65">
 <![CDATA[CASE serverState OF]]>
@@ -2741,73 +2699,73 @@
 <![CDATA[	FirstPacketSendMain := 0;]]>
 </Line>
 <Line Number="93">
-<![CDATA[ ]]>
+<![CDATA[	]]>
 </Line>
 <Line Number="94">
-<![CDATA[	if(not Accept_Request ) then]]>
+<![CDATA[	//Взводим секундный таймер, по истечение которого начинаем слушать сокет на новые подключения ]]>
 </Line>
 <Line Number="95">
-<![CDATA[		AcceptReqTimer.TimerEnable := 1;]]>
+<![CDATA[	if(not Accept_Request ) then]]>
 </Line>
 <Line Number="96">
-<![CDATA[		Accept_Request := AcceptReqTimer.DN;]]>
+<![CDATA[		AcceptReqTimer.TimerEnable := 1;]]>
 </Line>
 <Line Number="97">
-<![CDATA[	elsif( Conn_Accept_MSG.DN) then]]>
+<![CDATA[		Accept_Request := AcceptReqTimer.DN;]]>
 </Line>
 <Line Number="98">
-<![CDATA[		FOR iter := 0 TO ClientsIdSize-1 DO]]>
+<![CDATA[	elsif( Conn_Accept_MSG.DN) then]]>
 </Line>
 <Line Number="99">
-<![CDATA[			ClientsId[iter].Instance := 0;]]>
+<![CDATA[		//при успешном подключении нового клиента переходим в состояние 2]]>
 </Line>
 <Line Number="100">
-<![CDATA[		END_FOR;]]>
+<![CDATA[		FOR iter := 0 TO ClientsIdSize-1 DO]]>
 </Line>
 <Line Number="101">
-<![CDATA[		ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
+<![CDATA[			ClientsId[iter].Instance := 0;]]>
 </Line>
 <Line Number="102">
-<![CDATA[		Accept_Request := 0;]]>
+<![CDATA[		END_FOR;]]>
 </Line>
 <Line Number="103">
-<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
+<![CDATA[		ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
 </Line>
 <Line Number="104">
-<![CDATA[		serverState := 2;]]>
-</Line>
-<Line Number="105">
-<![CDATA[		isCurSockMain := 1;]]>
-</Line>
-<Line Number="106">
-<![CDATA[		JSR(SocketInit);]]>
-</Line>
-<Line Number="107">
-<![CDATA[	elsif(/*Conn_Accept_MSG.EN and*/ Conn_Accept_MSG.ER) then]]>
-</Line>
-<Line Number="108">
 <![CDATA[		Accept_Request := 0;]]>
 </Line>
-<Line Number="109">
+<Line Number="105">
 <![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
 </Line>
+<Line Number="106">
+<![CDATA[		serverState := 2;]]>
+</Line>
+<Line Number="107">
+<![CDATA[		isCurSockMain := 1;]]>
+</Line>
+<Line Number="108">
+<![CDATA[		//инициализация таймаута инактивности по новому соединению]]>
+</Line>
+<Line Number="109">
+<![CDATA[		JSR(SocketInit);]]>
+</Line>
 <Line Number="110">
-<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
+<![CDATA[	elsif(Conn_Accept_MSG.ER) then]]>
 </Line>
 <Line Number="111">
-<![CDATA[			serverState := 0;]]>
+<![CDATA[		Accept_Request := 0;]]>
 </Line>
 <Line Number="112">
-<![CDATA[		end_if;]]>
+<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
 </Line>
 <Line Number="113">
-<![CDATA[	//	point := point + 1;]]>
+<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
 </Line>
 <Line Number="114">
-<![CDATA[	//else]]>
+<![CDATA[			serverState := 0;]]>
 </Line>
 <Line Number="115">
-<![CDATA[		//point := point + 10;]]>
+<![CDATA[		end_if;]]>
 </Line>
 <Line Number="116">
 <![CDATA[	end_if;]]>
@@ -2831,627 +2789,537 @@
 <![CDATA[	elsif( Conn_Accept_MSG.DN) then]]>
 </Line>
 <Line Number="123">
-<![CDATA[		if(ClientsId[RedMsg].Instance = 0) then]]>
+<![CDATA[		/*]]>
 </Line>
 <Line Number="124">
-<![CDATA[			ClientsId[RedMsg].Instance := Sock_Accept_Resp.Instance;]]>
+<![CDATA[			если подключился второй клиент - запоминаем его Instance в пустую в текущий момент структуру,]]>
 </Line>
 <Line Number="125">
-<![CDATA[			serverState := 3;]]>
+<![CDATA[			т.к. мы точно не знаем, какой из клиентов отвалился, если мы были в state = 3 (основной или резервный)]]>
 </Line>
 <Line Number="126">
-<![CDATA[			isCurSockMain := 0;]]>
+<![CDATA[		*/]]>
 </Line>
 <Line Number="127">
-<![CDATA[			JSR(SocketInit);]]>
+<![CDATA[		if(ClientsId[RedMsg].Instance = 0) then]]>
 </Line>
 <Line Number="128">
-<![CDATA[		elsif(ClientsId[MainMsg].Instance = 0) then]]>
+<![CDATA[			ClientsId[RedMsg].Instance := Sock_Accept_Resp.Instance;]]>
 </Line>
 <Line Number="129">
-<![CDATA[			ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
-</Line>
-<Line Number="130">
 <![CDATA[			serverState := 3;]]>
 </Line>
+<Line Number="130">
+<![CDATA[			//переменная используется в SocketInit]]>
+</Line>
 <Line Number="131">
-<![CDATA[			isCurSockMain := 1;]]>
+<![CDATA[			isCurSockMain := 0;]]>
 </Line>
 <Line Number="132">
 <![CDATA[			JSR(SocketInit);]]>
 </Line>
 <Line Number="133">
-<![CDATA[		end_if;]]>
+<![CDATA[		elsif(ClientsId[MainMsg].Instance = 0) then]]>
 </Line>
 <Line Number="134">
-<![CDATA[		Accept_Request := 0;]]>
+<![CDATA[			ClientsId[MainMsg].Instance := Sock_Accept_Resp.Instance;]]>
 </Line>
 <Line Number="135">
-<![CDATA[	elsif(Conn_Accept_MSG.ER) then]]>
+<![CDATA[			serverState := 3;]]>
 </Line>
 <Line Number="136">
-<![CDATA[		Accept_Request := 0;]]>
+<![CDATA[			isCurSockMain := 1;]]>
 </Line>
 <Line Number="137">
-<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
+<![CDATA[			JSR(SocketInit);]]>
 </Line>
 <Line Number="138">
-<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
+<![CDATA[		end_if;]]>
 </Line>
 <Line Number="139">
-<![CDATA[			serverState := 0;]]>
+<![CDATA[		Accept_Request := 0;]]>
 </Line>
 <Line Number="140">
-<![CDATA[		end_if;]]>
+<![CDATA[	elsif(Conn_Accept_MSG.ER) then]]>
 </Line>
 <Line Number="141">
-<![CDATA[	end_if;]]>
+<![CDATA[		Accept_Request := 0;]]>
 </Line>
 <Line Number="142">
-<![CDATA[	]]>
+<![CDATA[		AcceptReqTimer.TimerEnable := 0;]]>
 </Line>
 <Line Number="143">
-<![CDATA[	if((ClientsId[MainMsg].Instance>0) and (ClientsId[RedMsg].Instance>0)) then]]>
+<![CDATA[		if(Conn_Accept_MSG.ERR = 16#0005) then //сокет был закрыт по неактивности]]>
 </Line>
 <Line Number="144">
-<![CDATA[		serverState := 3;]]>
+<![CDATA[			serverState := 0;]]>
 </Line>
 <Line Number="145">
-<![CDATA[	end_if;]]>
+<![CDATA[		end_if;]]>
 </Line>
 <Line Number="146">
-<![CDATA[	if(CycleNumber>=MaxCyclesCount or needToResend) then]]>
+<![CDATA[	end_if;]]>
 </Line>
 <Line Number="147">
-<![CDATA[		//отправляем пакет...	]]>
+<![CDATA[	]]>
 </Line>
 <Line Number="148">
-<![CDATA[		JSR(SendMessage);]]>
+<![CDATA[	if((ClientsId[MainMsg].Instance>0) and (ClientsId[RedMsg].Instance>0)) then]]>
 </Line>
 <Line Number="149">
-<![CDATA[	else]]>
+<![CDATA[		serverState := 3;]]>
 </Line>
 <Line Number="150">
-<![CDATA[		Write_Request := 0;]]>
+<![CDATA[	end_if;]]>
 </Line>
 <Line Number="151">
-<![CDATA[	end_if;]]>
-</Line>
-<Line Number="152">
-<![CDATA[]]>
-</Line>
-<Line Number="153">
-<![CDATA[	JSR(Exchange);]]>
-</Line>
-<Line Number="154">
-<![CDATA[]]>
-</Line>
-<Line Number="155">
-<![CDATA[	if((ClientsId[MainMsg].Instance>0) and FirstPacketSendMain) then]]>
-</Line>
-<Line Number="156">
-<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
-</Line>
-<Line Number="157">
-<![CDATA[		if(errCode > 0) then]]>
-</Line>
-<Line Number="158">
-<![CDATA[			point := point + 1;]]>
-</Line>
-<Line Number="159">
-<![CDATA[			FirstPacketSendMain := 0;]]>
-</Line>
-<Line Number="160">
-<![CDATA[			SockInstance := Write_Data_MSG.Instance;]]>
-</Line>
-<Line Number="161">
-<![CDATA[			ClientsId[MainMsg].Instance := 0;]]>
-</Line>
-<Line Number="162">
-<![CDATA[			serverState := 12;]]>
-</Line>
-<Line Number="163">
-<![CDATA[		else]]>
-</Line>
-<Line Number="164">
-<![CDATA[			;//needToResend := 1;]]>
-</Line>
-<Line Number="165">
-<![CDATA[		end_if;]]>
-</Line>
-<Line Number="166">
-<![CDATA[	/*]]>
-</Line>
-<Line Number="167">
-<![CDATA[		if(Err_Write > 3) then]]>
-</Line>
-<Line Number="168">
-<![CDATA[			//что-то делаем при ошибке отправки	]]>
-</Line>
-<Line Number="169">
-<![CDATA[			//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
-</Line>
-<Line Number="170">
-<![CDATA[			if(Write_Data_MSG.EXERR = 16#0000_0036 ]]>
-</Line>
-<Line Number="171">
-<![CDATA[				or Write_Data_MSG.EXERR = 16#0000_0033 ) then //Обрыв связи]]>
-</Line>
-<Line Number="172">
-<![CDATA[				FirstPacketSend := 0;]]>
-</Line>
-<Line Number="173">
-<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
-</Line>
-<Line Number="174">
-<![CDATA[				//ClientsId[0] := 0;]]>
-</Line>
-<Line Number="175">
-<![CDATA[				serverState := 12;]]>
-</Line>
-<Line Number="176">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="177">
-<![CDATA[			//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
-</Line>
-<Line Number="178">
-<![CDATA[			if(ClientsId[0] = SockInstance) then]]>
-</Line>
-<Line Number="179">
-<![CDATA[				ClientsId[0] := 0;]]>
-</Line>
-<Line Number="180">
-<![CDATA[			elsif(ClientsId[1] = SockInstance) then]]>
-</Line>
-<Line Number="181">
-<![CDATA[				ClientsId[1] := 0;]]>
-</Line>
-<Line Number="182">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="183">
-<![CDATA[		else]]>
-</Line>
-<Line Number="184">
-<![CDATA[			needToResend := 1;]]>
-</Line>
-<Line Number="185">
-<![CDATA[		end_if;]]>
-</Line>
-<Line Number="186">
-<![CDATA[	else]]>
-</Line>
-<Line Number="187">
-<![CDATA[		Err_Write := 0;]]>
-</Line>
-<Line Number="188">
-<![CDATA[	*/]]>
-</Line>
-<Line Number="189">
-<![CDATA[		]]>
-</Line>
-<Line Number="190">
-<![CDATA[	elsif((ClientsId[RedMsg].Instance>0) and FirstPacketSendRed) then]]>
-</Line>
-<Line Number="191">
-<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
-</Line>
-<Line Number="192">
-<![CDATA[		if(errCode > 0) then]]>
-</Line>
-<Line Number="193">
-<![CDATA[			FirstPacketSendRed := 0;]]>
-</Line>
-<Line Number="194">
-<![CDATA[			SockInstance := Write_Data_MSG_RED.Instance;]]>
-</Line>
-<Line Number="195">
-<![CDATA[			ClientsId[RedMsg].Instance := 0;]]>
-</Line>
-<Line Number="196">
-<![CDATA[			serverState := 12;]]>
-</Line>
-<Line Number="197">
-<![CDATA[		else]]>
-</Line>
-<Line Number="198">
-<![CDATA[			;//needToResend := 1;]]>
-</Line>
-<Line Number="199">
-<![CDATA[		end_if;]]>
-</Line>
-<Line Number="200">
-<![CDATA[	end_if;]]>
-</Line>
-<Line Number="201">
-<![CDATA[]]>
-</Line>
-<Line Number="202">
-<![CDATA[3:	//Работает и основное и резервное соединение]]>
-</Line>
-<Line Number="203">
 <![CDATA[	if(CycleNumber>=MaxCyclesCount or needToResend) then]]>
 </Line>
-<Line Number="204">
+<Line Number="152">
 <![CDATA[		//отправляем пакет...	]]>
 </Line>
-<Line Number="205">
+<Line Number="153">
 <![CDATA[		JSR(SendMessage);]]>
 </Line>
-<Line Number="206">
+<Line Number="154">
 <![CDATA[	else]]>
 </Line>
-<Line Number="207">
+<Line Number="155">
 <![CDATA[		Write_Request := 0;]]>
 </Line>
-<Line Number="208">
+<Line Number="156">
 <![CDATA[	end_if;]]>
 </Line>
-<Line Number="209">
-<![CDATA[]]>
+<Line Number="157">
+<![CDATA[	//обработка обмена]]>
 </Line>
-<Line Number="210">
+<Line Number="158">
 <![CDATA[	JSR(Exchange);]]>
 </Line>
-<Line Number="211">
-<![CDATA[]]>
+<Line Number="159">
+<![CDATA[	]]>
 </Line>
-<Line Number="212">
-<![CDATA[	if(Write_Data_MSG.ER and FirstPacketSendMain or Write_Data_MSG_RED.ER and FirstPacketSendRed) then]]>
+<Line Number="160">
+<![CDATA[	/*]]>
 </Line>
-<Line Number="213">
-<![CDATA[		//если ошибка при отправке основного сообщения]]>
+<Line Number="161">
+<![CDATA[		Обработка ошибок отправки.]]>
 </Line>
-<Line Number="214">
-<![CDATA[		if((errCntWriteMain > 3) and (ClientsId[MainMsg].Instance>0)) then]]>
+<Line Number="162">
+<![CDATA[		1. FirstPacketSendMain (Red) - признак того, что по соответсвующему соединению был отправлен пакет.]]>
 </Line>
-<Line Number="215">
-<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
+<Line Number="163">
+<![CDATA[		Необходимо контролировать, так как, флаг MSG - .ER хранится в неактивном состоянии, и сбрасывается лишь при]]>
 </Line>
-<Line Number="216">
-<![CDATA[			if(errCode > 0) then]]>
+<Line Number="164">
+<![CDATA[		пересбросе флага .EN, то есть контрольного бита управляющей цепочки, в данном случае Write_Request]]>
 </Line>
-<Line Number="217">
-<![CDATA[				FirstPacketSendMain := 0;]]>
+<Line Number="165">
+<![CDATA[		2. needToResend - флаг необходимости повторной отправки сообщения. Не используется, так как возможны зацикливания]]>
 </Line>
-<Line Number="218">
-<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
+<Line Number="166">
+<![CDATA[		системы, если ошибка фундаментальная. Лучше пропустить пакет, чем повесить весь обмен.]]>
 </Line>
-<Line Number="219">
-<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+<Line Number="167">
+<![CDATA[		3._FastRetro_checkErr выдает тип ошибки, если она повторилась опр. число раз (см. код _FastRetro_checkErr)]]>
 </Line>
-<Line Number="220">
-<![CDATA[				ClientsId[MainMsg].Instance := 0;]]>
+<Line Number="168">
+<![CDATA[		]]>
 </Line>
-<Line Number="221">
-<![CDATA[				serverState := 13;]]>
+<Line Number="169">
+<![CDATA[		В общем случае, если код, выданный _FastRetro_checkErr <> 0, то переходим в состояние 12 (пересоздаем текущий локальный сокет)  ]]>
 </Line>
-<Line Number="222">
-<![CDATA[			else]]>
+<Line Number="170">
+<![CDATA[	*/]]>
 </Line>
-<Line Number="223">
-<![CDATA[				;//needToResend := 1;]]>
+<Line Number="171">
+<![CDATA[	if((ClientsId[MainMsg].Instance>0) and FirstPacketSendMain) then]]>
 </Line>
-<Line Number="224">
-<![CDATA[			end_if;]]>
+<Line Number="172">
+<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
 </Line>
-<Line Number="225">
-<![CDATA[		elsif((errCntWriteRed > 3) and (ClientsId[RedMsg].Instance>0)) then]]>
+<Line Number="173">
+<![CDATA[		if(errCode > 0) then]]>
 </Line>
-<Line Number="226">
-<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
+<Line Number="174">
+<![CDATA[			point := point + 1;]]>
 </Line>
-<Line Number="227">
-<![CDATA[			if(errCode > 0) then]]>
+<Line Number="175">
+<![CDATA[			FirstPacketSendMain := 0;]]>
 </Line>
-<Line Number="228">
-<![CDATA[				FirstPacketSendRed := 0;]]>
+<Line Number="176">
+<![CDATA[			SockInstance := Write_Data_MSG.Instance;]]>
 </Line>
-<Line Number="229">
-<![CDATA[				SockInstance := Write_Data_MSG_RED.Instance;]]>
+<Line Number="177">
+<![CDATA[			ClientsId[MainMsg].Instance := 0;]]>
 </Line>
-<Line Number="230">
-<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+<Line Number="178">
+<![CDATA[			serverState := 12;]]>
 </Line>
-<Line Number="231">
-<![CDATA[				ClientsId[RedMsg].Instance := 0;]]>
-</Line>
-<Line Number="232">
-<![CDATA[				serverState := 13;]]>
-</Line>
-<Line Number="233">
-<![CDATA[			else]]>
-</Line>
-<Line Number="234">
-<![CDATA[				;//needToResend := 1;]]>
-</Line>
-<Line Number="235">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="236">
-<![CDATA[		end_if;]]>
-</Line>
-<Line Number="237">
-<![CDATA[			//что-то делаем при ошибке отправки	]]>
-</Line>
-<Line Number="238">
-<![CDATA[			//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
-</Line>
-<Line Number="239">
-<![CDATA[			/*]]>
-</Line>
-<Line Number="240">
-<![CDATA[			FirstPacketSend := 0;]]>
-</Line>
-<Line Number="241">
-<![CDATA[			if(Write_Data_MSG.EXERR = 16#0000_0036 ]]>
-</Line>
-<Line Number="242">
-<![CDATA[				or Write_Data_MSG.EXERR = 16#0000_0033 or Write_Data_MSG.ERR > 16#0000) then //Обрыв связи]]>
-</Line>
-<Line Number="243">
-<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
-</Line>
-<Line Number="244">
-<![CDATA[				]]>
-</Line>
-<Line Number="245">
-<![CDATA[				//переход в состояние, где удаляется текущий инстанс и дальнейший переход в состояние 2]]>
-</Line>
-<Line Number="246">
-<![CDATA[				serverState := 13;						]]>
-</Line>
-<Line Number="247">
-<![CDATA[			elsif(Write_Data_MSG_RED.EXERR = 16#0000_0036 ]]>
-</Line>
-<Line Number="248">
-<![CDATA[				or Write_Data_MSG_RED.EXERR = 16#0000_0033 or Write_Data_MSG_RED.ERR > 16#0000) then //Обрыв связи]]>
-</Line>
-<Line Number="249">
-<![CDATA[				SockInstance := Write_Data_MSG_RED.Instance;]]>
-</Line>
-<Line Number="250">
-<![CDATA[				serverState := 13;]]>
-</Line>
-<Line Number="251">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="252">
-<![CDATA[			//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
-</Line>
-<Line Number="253">
-<![CDATA[			if(ClientsId[0] = SockInstance) then]]>
-</Line>
-<Line Number="254">
-<![CDATA[				ClientsId[0] := 0;]]>
-</Line>
-<Line Number="255">
-<![CDATA[			elsif(ClientsId[1] = SockInstance) then]]>
-</Line>
-<Line Number="256">
-<![CDATA[				ClientsId[1] := 0;]]>
-</Line>
-<Line Number="257">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="258">
-<![CDATA[			]]>
-</Line>
-<Line Number="259">
-<![CDATA[			else]]>
-</Line>
-<Line Number="260">
-<![CDATA[				needToResend := 1;]]>
-</Line>
-<Line Number="261">
-<![CDATA[			end_if;]]>
-</Line>
-<Line Number="262">
-<![CDATA[			*/]]>
-</Line>
-<Line Number="263">
-<![CDATA[	end_if;]]>
-</Line>
-<Line Number="264">
-<![CDATA[				 ]]>
-</Line>
-<Line Number="265">
-<![CDATA[10:]]>
-</Line>
-<Line Number="266">
-<![CDATA[	if(not Delete_All_Request) then]]>
-</Line>
-<Line Number="267">
-<![CDATA[		Delete_All_Request := 1;]]>
-</Line>
-<Line Number="268">
-<![CDATA[	elsif(Delete_All_MSG.DN) then]]>
-</Line>
-<Line Number="269">
-<![CDATA[		Delete_All_Request := 0;]]>
-</Line>
-<Line Number="270">
-<![CDATA[		serverState := 0;]]>
-</Line>
-<Line Number="271">
-<![CDATA[	elsif(Delete_All_MSG.ER) then]]>
-</Line>
-<Line Number="272">
-<![CDATA[		Delete_All_Request := 0;]]>
-</Line>
-<Line Number="273">
-<![CDATA[		serverState := 11;]]>
-</Line>
-<Line Number="274">
-<![CDATA[	end_if;]]>
-</Line>
-<Line Number="275">
-<![CDATA[]]>
-</Line>
-<Line Number="276">
-<![CDATA[11:	]]>
-</Line>
-<Line Number="277">
-<![CDATA[	SockInstance := Instance;]]>
-</Line>
-<Line Number="278">
-<![CDATA[	if(not Delete_Sockets_Req) then]]>
-</Line>
-<Line Number="279">
-<![CDATA[		Delete_Sockets_Req := 1;]]>
-</Line>
-<Line Number="280">
-<![CDATA[	elsif(Delete_Sock_MSG.DN) then]]>
-</Line>
-<Line Number="281">
-<![CDATA[		Delete_Sockets_Req := 0;]]>
-</Line>
-<Line Number="282">
-<![CDATA[		serverState := 10;]]>
-</Line>
-<Line Number="283">
-<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
-</Line>
-<Line Number="284">
-<![CDATA[		if(Delete_Sock_MSG.ERR = 16#0005) then]]>
-</Line>
-<Line Number="285">
-<![CDATA[			serverState := 0;	]]>
-</Line>
-<Line Number="286">
+<Line Number="179">
 <![CDATA[		else]]>
 </Line>
-<Line Number="287">
-<![CDATA[			Delete_Sockets_Req := 0;]]>
+<Line Number="180">
+<![CDATA[			;//needToResend := 1;]]>
 </Line>
-<Line Number="288">
+<Line Number="181">
 <![CDATA[		end_if;]]>
 </Line>
-<Line Number="289">
+<Line Number="182">
+<![CDATA[			]]>
+</Line>
+<Line Number="183">
+<![CDATA[	elsif((ClientsId[RedMsg].Instance>0) and FirstPacketSendRed) then]]>
+</Line>
+<Line Number="184">
+<![CDATA[		_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
+</Line>
+<Line Number="185">
+<![CDATA[		if(errCode > 0) then]]>
+</Line>
+<Line Number="186">
+<![CDATA[			FirstPacketSendRed := 0;]]>
+</Line>
+<Line Number="187">
+<![CDATA[			SockInstance := Write_Data_MSG_RED.Instance;]]>
+</Line>
+<Line Number="188">
+<![CDATA[			ClientsId[RedMsg].Instance := 0;]]>
+</Line>
+<Line Number="189">
+<![CDATA[			serverState := 12;]]>
+</Line>
+<Line Number="190">
+<![CDATA[		else]]>
+</Line>
+<Line Number="191">
+<![CDATA[			;//needToResend := 1;]]>
+</Line>
+<Line Number="192">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="193">
 <![CDATA[	end_if;]]>
 </Line>
-<Line Number="290">
+<Line Number="194">
 <![CDATA[]]>
 </Line>
-<Line Number="291">
-<![CDATA[12:	]]>
+<Line Number="195">
+<![CDATA[3:	//Работает и основное и резервное соединение]]>
 </Line>
-<Line Number="292">
-<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+<Line Number="196">
+<![CDATA[	if(CycleNumber>=MaxCyclesCount or needToResend) then]]>
 </Line>
-<Line Number="293">
-<![CDATA[	if(not Delete_Sockets_Req) then]]>
+<Line Number="197">
+<![CDATA[		//отправляем пакет...	]]>
 </Line>
-<Line Number="294">
-<![CDATA[		Delete_Sockets_Req := 1;]]>
+<Line Number="198">
+<![CDATA[		JSR(SendMessage);]]>
 </Line>
-<Line Number="295">
-<![CDATA[	elsif(Delete_Sock_MSG.DN or (Delete_Sock_MSG.ERR = 16#0005)) then]]>
+<Line Number="199">
+<![CDATA[	else]]>
 </Line>
-<Line Number="296">
-<![CDATA[		Delete_Sockets_Req := 0;]]>
+<Line Number="200">
+<![CDATA[		Write_Request := 0;]]>
 </Line>
-<Line Number="297">
-<![CDATA[		serverState := 1;]]>
-</Line>
-<Line Number="298">
-<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
-</Line>
-<Line Number="299">
-<![CDATA[		Delete_Sockets_Req := 0;]]>
-</Line>
-<Line Number="300">
+<Line Number="201">
 <![CDATA[	end_if;]]>
 </Line>
-<Line Number="301">
-<![CDATA[13:	]]>
+<Line Number="202">
+<![CDATA[]]>
 </Line>
-<Line Number="302">
-<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+<Line Number="203">
+<![CDATA[	JSR(Exchange);]]>
 </Line>
-<Line Number="303">
+<Line Number="204">
+<![CDATA[]]>
+</Line>
+<Line Number="205">
+<![CDATA[	if(Write_Data_MSG.ER and FirstPacketSendMain or Write_Data_MSG_RED.ER and FirstPacketSendRed) then]]>
+</Line>
+<Line Number="206">
+<![CDATA[		//если ошибка при отправке основного сообщения]]>
+</Line>
+<Line Number="207">
+<![CDATA[		if((errCntWriteMain > 3) and (ClientsId[MainMsg].Instance>0)) then]]>
+</Line>
+<Line Number="208">
+<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG,errCode,errCntWriteMain);]]>
+</Line>
+<Line Number="209">
+<![CDATA[			if(errCode > 0) then]]>
+</Line>
+<Line Number="210">
+<![CDATA[				FirstPacketSendMain := 0;]]>
+</Line>
+<Line Number="211">
+<![CDATA[				SockInstance := Write_Data_MSG.Instance;]]>
+</Line>
+<Line Number="212">
+<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="213">
+<![CDATA[				ClientsId[MainMsg].Instance := 0;]]>
+</Line>
+<Line Number="214">
+<![CDATA[				serverState := 13;]]>
+</Line>
+<Line Number="215">
+<![CDATA[			else]]>
+</Line>
+<Line Number="216">
+<![CDATA[				;//needToResend := 1;]]>
+</Line>
+<Line Number="217">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="218">
+<![CDATA[		elsif((errCntWriteRed > 3) and (ClientsId[RedMsg].Instance>0)) then]]>
+</Line>
+<Line Number="219">
+<![CDATA[			_FastRetro_checkErr(_FastRetro_checkErr,Write_Data_MSG_RED,errCode,errCntWriteRed);]]>
+</Line>
+<Line Number="220">
+<![CDATA[			if(errCode > 0) then]]>
+</Line>
+<Line Number="221">
+<![CDATA[				FirstPacketSendRed := 0;]]>
+</Line>
+<Line Number="222">
+<![CDATA[				SockInstance := Write_Data_MSG_RED.Instance;]]>
+</Line>
+<Line Number="223">
+<![CDATA[				//обнуляем хендл соответствующего сокета, так как теперь мы его удаляем (state = 13)]]>
+</Line>
+<Line Number="224">
+<![CDATA[				ClientsId[RedMsg].Instance := 0;]]>
+</Line>
+<Line Number="225">
+<![CDATA[				serverState := 13;]]>
+</Line>
+<Line Number="226">
+<![CDATA[			else]]>
+</Line>
+<Line Number="227">
+<![CDATA[				;//needToResend := 1;]]>
+</Line>
+<Line Number="228">
+<![CDATA[			end_if;]]>
+</Line>
+<Line Number="229">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="230">
+<![CDATA[			//что-то делаем при ошибке отправки	]]>
+</Line>
+<Line Number="231">
+<![CDATA[			//16#0000_0036 - Соединение принудительно закрыто клиентом, рекоммендация - удалить сокет и поробовать восстановить]]>
+</Line>
+<Line Number="232">
+<![CDATA[			]]>
+</Line>
+<Line Number="233">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="234">
+<![CDATA[				 ]]>
+</Line>
+<Line Number="235">
+<![CDATA[10:]]>
+</Line>
+<Line Number="236">
+<![CDATA[	if(not Delete_All_Request) then]]>
+</Line>
+<Line Number="237">
+<![CDATA[		Delete_All_Request := 1;]]>
+</Line>
+<Line Number="238">
+<![CDATA[	elsif(Delete_All_MSG.DN) then]]>
+</Line>
+<Line Number="239">
+<![CDATA[		Delete_All_Request := 0;]]>
+</Line>
+<Line Number="240">
+<![CDATA[		serverState := 0;]]>
+</Line>
+<Line Number="241">
+<![CDATA[	elsif(Delete_All_MSG.ER) then]]>
+</Line>
+<Line Number="242">
+<![CDATA[		Delete_All_Request := 0;]]>
+</Line>
+<Line Number="243">
+<![CDATA[		serverState := 11;]]>
+</Line>
+<Line Number="244">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="245">
+<![CDATA[]]>
+</Line>
+<Line Number="246">
+<![CDATA[11:	]]>
+</Line>
+<Line Number="247">
+<![CDATA[	SockInstance := Instance;]]>
+</Line>
+<Line Number="248">
 <![CDATA[	if(not Delete_Sockets_Req) then]]>
 </Line>
-<Line Number="304">
+<Line Number="249">
 <![CDATA[		Delete_Sockets_Req := 1;]]>
 </Line>
-<Line Number="305">
+<Line Number="250">
 <![CDATA[	elsif(Delete_Sock_MSG.DN) then]]>
 </Line>
-<Line Number="306">
+<Line Number="251">
 <![CDATA[		Delete_Sockets_Req := 0;]]>
 </Line>
-<Line Number="307">
-<![CDATA[		serverState := 2;]]>
+<Line Number="252">
+<![CDATA[		serverState := 10;]]>
 </Line>
-<Line Number="308">
+<Line Number="253">
 <![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
 </Line>
-<Line Number="309">
-<![CDATA[		Delete_Sockets_Req := 0;]]>
+<Line Number="254">
+<![CDATA[		if(Delete_Sock_MSG.ERR = 16#0005) then]]>
 </Line>
-<Line Number="310">
+<Line Number="255">
+<![CDATA[			serverState := 0;	]]>
+</Line>
+<Line Number="256">
+<![CDATA[		else]]>
+</Line>
+<Line Number="257">
+<![CDATA[			Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="258">
+<![CDATA[		end_if;]]>
+</Line>
+<Line Number="259">
 <![CDATA[	end_if;]]>
 </Line>
-<Line Number="311">
+<Line Number="260">
 <![CDATA[]]>
 </Line>
-<Line Number="312">
+<Line Number="261">
+<![CDATA[12:	]]>
+</Line>
+<Line Number="262">
+<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="263">
+<![CDATA[	if(not Delete_Sockets_Req) then]]>
+</Line>
+<Line Number="264">
+<![CDATA[		Delete_Sockets_Req := 1;]]>
+</Line>
+<Line Number="265">
+<![CDATA[	elsif(Delete_Sock_MSG.DN or (Delete_Sock_MSG.ERR = 16#0005)) then]]>
+</Line>
+<Line Number="266">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="267">
+<![CDATA[		serverState := 1;]]>
+</Line>
+<Line Number="268">
+<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="269">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="270">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="271">
+<![CDATA[13:	]]>
+</Line>
+<Line Number="272">
+<![CDATA[	//SockInstance := Sock_Accept_Resp.Instance;]]>
+</Line>
+<Line Number="273">
+<![CDATA[	if(not Delete_Sockets_Req) then]]>
+</Line>
+<Line Number="274">
+<![CDATA[		Delete_Sockets_Req := 1;]]>
+</Line>
+<Line Number="275">
+<![CDATA[	elsif(Delete_Sock_MSG.DN) then]]>
+</Line>
+<Line Number="276">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="277">
+<![CDATA[		serverState := 2;]]>
+</Line>
+<Line Number="278">
+<![CDATA[	elsif(Delete_Sock_MSG.ER) then]]>
+</Line>
+<Line Number="279">
+<![CDATA[		Delete_Sockets_Req := 0;]]>
+</Line>
+<Line Number="280">
+<![CDATA[	end_if;]]>
+</Line>
+<Line Number="281">
+<![CDATA[]]>
+</Line>
+<Line Number="282">
 <![CDATA[END_CASE;]]>
 </Line>
-<Line Number="313">
+<Line Number="283">
 <![CDATA[]]>
 </Line>
-<Line Number="314">
+<Line Number="284">
 <![CDATA[]]>
 </Line>
-<Line Number="315">
+<Line Number="285">
 <![CDATA[//обработка сокета]]>
 </Line>
-<Line Number="316">
+<Line Number="286">
 <![CDATA[JSR(_SOCKET_TCP_SERV);]]>
 </Line>
-<Line Number="317">
+<Line Number="287">
 <![CDATA[]]>
 </Line>
-<Line Number="318">
+<Line Number="288">
 <![CDATA[if(ClientsId[MainMsg].Instance>0) then]]>
 </Line>
-<Line Number="319">
+<Line Number="289">
 <![CDATA[	Write_Data_MSG.Instance := ClientsId[MainMsg].Instance;]]>
 </Line>
-<Line Number="320">
+<Line Number="290">
 <![CDATA[	JSR(_SOCKET_WRITE_MAIN);]]>
 </Line>
-<Line Number="321">
+<Line Number="291">
 <![CDATA[end_if;]]>
 </Line>
-<Line Number="322">
+<Line Number="292">
 <![CDATA[if(ClientsId[RedMsg].Instance>0) then]]>
 </Line>
-<Line Number="323">
+<Line Number="293">
 <![CDATA[	Write_Data_MSG_RED.Instance := ClientsId[RedMsg].Instance;]]>
 </Line>
-<Line Number="324">
+<Line Number="294">
 <![CDATA[	JSR(_SOCKET_WRITE_RED);]]>
 </Line>
-<Line Number="325">
+<Line Number="295">
 <![CDATA[end_IF;]]>
 </Line>
-<Line Number="326">
+<Line Number="296">
 <![CDATA[]]>
 </Line>
-<Line Number="327">
+<Line Number="297">
 <![CDATA[]]>
 </Line>
-<Line Number="328">
+<Line Number="298">
 <![CDATA[	]]>
 </Line>
-<Line Number="329">
+<Line Number="299">
 <![CDATA[	]]>
 </Line>
-<Line Number="330">
+<Line Number="300">
 <![CDATA[ ]]>
 </Line>
 </STContent>

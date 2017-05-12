@@ -79,7 +79,7 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
                 //смотрим, была ли уже запись о клиенте
                 PLCSocketClient* curClient = ConnectionManager::instance()->findClient(index.row());
                 if(curClient){
-                    ConnectionManager::instance()->removeConnection(QSharedPointer<PLCSocketClient>(curClient));
+                    ConnectionManager::instance()->removeConnection(curClient);
                 }
 
                 items[index.row()].first = value.toString();

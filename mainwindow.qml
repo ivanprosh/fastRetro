@@ -268,13 +268,7 @@ ApplicationWindow {
                         target: loaderEditor.item
                         onEditingFinished: {
                             AppAddressTable.ipChange(styleData.row,styleData.column, loaderEditor.item.text)
-                            /*
-                            if(loaderEditor.item.text !== "")
-                                PLCList[styleData.row] = true;
-                            else
-                                PLCList[styleData.row] = false;
-                            */
-                            //historianName.forceActiveFocus();
+                            console.log("ipChange row:" + styleData.row);
                         }
                     }
                     sourceComponent: (styleData.selected) ? editor : null
@@ -394,4 +388,42 @@ ApplicationWindow {
 
     }
 
+    /* С помощью объекта Connections
+         * Устанавливаем соединение с классом системного трея
+         * */
+    Connections {
+        target: systemTray
+        // Сигнал - показать окно
+        onSignalShow: {
+            window.show();
+        }
+
+        // Сигнал - закрыть приложения игнорируя чек-бокс
+        onSignalQuit: {
+            Qt.quit();
+        }
+
+        // Свернуть/развернуть окно через клик по системному трею
+        onSignalIconActivated: {
+            if(window.visibility === Window.Hidden) {
+                window.show()
+            } else {
+                window.hide()
+            }
+        }
+        Component.onCompleted: {
+            window.show()
+        }
+    }
+
+
+    // Обработчик события закрытия окна
+    onClosing: {
+        /* Если чекбокс не должен игнорироваться и он активен,
+             * то скрываем приложение.
+             * В противном случае закрываем приложение
+             * */
+
+        window.hide()
+    }
 }

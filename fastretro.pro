@@ -1,5 +1,5 @@
 TEMPLATE      = app
-QT           += gui network qml quick
+QT           += gui network qml quick widgets
 CONFIG += c++11
 
 HEADERS       = \
@@ -13,7 +13,8 @@ HEADERS       = \
     globalerror.h \
     logger.h \
     circlequeue.h \
-    strategies.h
+    strategies.h \
+    systemtray.h
 SOURCES       = main.cpp \
     addresstable.cpp \
     plcsocketclient.cpp \
@@ -23,7 +24,8 @@ SOURCES       = main.cpp \
     global.cpp \
     logger.cpp \
     strategies.cpp \
-    workthread.cpp
+    workthread.cpp \
+    systemtray.cpp
 #FORMS         = fastretro.ui
 
 deployment.path = $$OUT_PWD/
@@ -40,8 +42,10 @@ DISTFILES += \
 
 #Файлы QML при определении данного дефайна берутся из каталога QML, а не линкуются статически
 #в составе исп. файла
-DEFINES += QML_DEBUG
+# DEFINES += QML_DEBUG
 DEFINES += PRO_FILE_PWD=$$sprintf("\"\\\"%1\\\"\"", $$_PRO_FILE_PWD_)
+#выыод отладочной информации в лог
+DEFINES += DEBUGLOG
 
 #Вариант стратегий: FORWARD (напрямую insert'ом), NATIVE (родной метод через csv)
 DEFINES += NATIVE

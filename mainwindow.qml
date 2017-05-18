@@ -171,6 +171,13 @@ ApplicationWindow {
             id: editableDelegate
             Item {
                 id: delegateItem
+/*
+                signal editorStateChanged(string newState);
+
+                onEditorStateChanged: {
+                    //console.log("editorStateChanged sending " + state);
+                }
+*/
                 function setColor(data, color){
                     //if(data == "Подключение")
                     //    return "green"
@@ -188,7 +195,8 @@ ApplicationWindow {
                         state = "empty";
                     else
                         state = "stopByUser";
-                    console.log("state is " + state);
+                    //console.log("delegateItem: state is " + state);
+                    //editorStateChanged(state);
                 }
 
                 Text {
@@ -263,61 +271,98 @@ ApplicationWindow {
                 Loader {
                     id: loaderEditor
                     anchors.fill: parent
+                    //visible: active
+                    //active: false
+                    onLoaded: {
+                        //console.log("Loaded row: " + styleData.row);
+                        item.curState = delegateItem.state;
+                        //console.log("Loaded item.curState: " + item.curState);
+                    }
+
                     anchors.margins: 4
                     Connections {
                         target: loaderEditor.item
                         onEditingFinished: {
                             AppAddressTable.ipChange(styleData.row,styleData.column, loaderEditor.item.text)
                             console.log("ipChange row:" + styleData.row);
+                            //active = false;
                         }
                     }
+
                     sourceComponent: (styleData.selected) ? editor : null
+
                     Component {
                         id: editor
+
                         TextInput {
                             id: textinput
                             color: styleData.textColor
                             text: styleData.value
-                            enabled: (styleData.column === 0) && (delegateItem.state=="stopByUser" || delegateItem.state=="empty")
+                            enabled: (styleData.column === 0) && ((curState == "stopByUser") || (curState == "empty"))
+
+                            property string curState: "empty"
+
+                            /*
+                                попытки изменения разрешения редактирования с уровня QML за счет использования
+                                соединения сигнала делегата stateChanged и функции в самом редакторе ниже
+                                не удачны, поэтому проверка осуществляется в C++-коде. (в ipChange)
+                                Возможно, проблема в том, что компонент удаляется при смене выделенной ячейки
+                                (см. loaderEditor.sourceComponent)
+                            */
+                            function stateChanged(newState){
+                                //console.log("In editor, state: " + newState);
+                                curState = newState;
+                                //enabled = (styleData.column === 0) && ((delegateItem.state == "stopByUser") || (delegateItem.state == "empty"));
+                            }
+
                             MouseArea {
                                 id: mouseArea
-                                //enabled: styleData.column === 0
+                                enabled: (styleData.column === 0) && ((curState == "stopByUser") || (curState == "empty"))
                                 anchors.fill: parent
                                 hoverEnabled: true
-                                enabled: MainClass.startPermit
-                                onClicked: textinput.forceActiveFocus()
+                                //enabled: MainClass.startPermit
+                                onClicked: {
+                                    //console.log("curState is " + textinput.curState);
+                                    if((textinput.curState == "stopByUser") || (textinput.curState == "empty"))
+                                        textinput.forceActiveFocus();
+                                }
+                            }
+                            Component.onCompleted: {
+                                delegateItem.stateChanged.connect(stateChanged);
                             }
                         }
+
                     }
                 }
+
                 states: [
                     State {
                         name: "connecting"
                         PropertyChanges { target: forceStopConnectIcon; visible: styleData.column === 1 }
                         PropertyChanges { target: forceStartConnectIcon; visible: false }
                         PropertyChanges { target: forceReconnectIcon; visible: false }
-                        //PropertyChanges { target: textinput; enabled: false }
+                        //PropertyChanges { target: loaderEditor; active: false }
                     },
                     State {
                         name: "disconnect"
                         PropertyChanges { target: forceStopConnectIcon; visible: false }
                         PropertyChanges { target: forceStartConnectIcon; visible: false }
                         PropertyChanges { target: forceReconnectIcon; visible: styleData.column === 1 }
-                        //PropertyChanges { target: textinput; enabled: false}
+                        //PropertyChanges { target: loaderEditor; active: false }
                     },
                     State {
                         name: "stopByUser"
                         PropertyChanges { target: forceStopConnectIcon; visible: false }
                         PropertyChanges { target: forceStartConnectIcon; visible: styleData.column === 1 }
                         PropertyChanges { target: forceReconnectIcon; visible: false }
-                        //PropertyChanges { target: textinput; enabled: true}
+                        //PropertyChanges { target: loaderEditor; active: true }
                     },
                     State {
                         name: "empty"
                         PropertyChanges { target: forceStopConnectIcon; visible: false }
                         PropertyChanges { target: forceStartConnectIcon; visible: false }
                         PropertyChanges { target: forceReconnectIcon; visible: false }
-                        //PropertyChanges { target: textinput; enabled: false}
+                        //PropertyChanges { target: loaderEditor; active: true }
                     }
                 ]
                 Component.onCompleted: {
@@ -400,6 +445,7 @@ ApplicationWindow {
 
         // Сигнал - закрыть приложения игнорируя чек-бокс
         onSignalQuit: {
+            //window.close();
             Qt.quit();
         }
 

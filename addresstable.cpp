@@ -42,10 +42,13 @@ void AddressTable::clear()
     initialize();
 }
 
+//вызывается при смене адреса в таблице (через интерфейс QML)
 void AddressTable::ipChange(const int curRow, const int curColumn, const QVariant &value)
 {
-//    qDebug() << "row " << curRow << "column " << curColumn << "role " <<  Qt::UserRole+curColumn;
-//    qDebug() << value.toString();
+    if(data(index(curRow,curColumn),ipRole) == value)
+        return;
+    if(ConnectionManager::instance()->isConnectActive(ConnectionManager::instance()->findClient(curRow)))
+        return;
 
     QRegExp correctIp("^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\:(\\d+)");
 
@@ -63,7 +66,9 @@ void AddressTable::ipChange(const int curRow, const int curColumn, const QVarian
     }
 
 }
-
+/*
+ * изменение табличных данных. создание соединений происходит здесь же
+ */
 bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && (role == Qt::EditRole || role >= Qt::UserRole)) {
@@ -79,13 +84,14 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
                 //смотрим, была ли уже запись о клиенте
                 PLCSocketClient* curClient = ConnectionManager::instance()->findClient(index.row());
                 if(curClient){
+                    //удаляем клиента
                     ConnectionManager::instance()->removeConnection(curClient);
                 }
 
                 items[index.row()].first = value.toString();
 
                 if(items.at(index.row()).first.isEmpty()){
-                    //удаляем клиента
+                    //если получили пустышку, значит было удаление сервера
                     return true;
                 }
 
@@ -114,7 +120,7 @@ bool AddressTable::setData(const QModelIndex &index, const QVariant &value, int 
                 return false;
             }
         //}
-
+        //обязательно вызываем, чтобы уведомить интерфейс об изменениях
         emit dataChanged(index, index);
         return true;
     }

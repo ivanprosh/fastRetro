@@ -147,18 +147,18 @@ Native::Native(QObject *parent):AbstractStrategy(parent)
             this,SLOT(backupDirectoryChanged(QString)));
 
 }
-
+//метод вызывается по событию - есть новые файлы в каталоге
 void Native::scanFolder()
 {
     if(!componentReady()){
-        curError->setFirstItem(GlobalError::Configuration);
+        curError->setFirstItem(GlobalError::Historian);
         curError->setSecondItem("Не задан(не доступен) каталог копирования файлов на сервере Historian");
         emit errorChange(curError.data());
         return;
     }
     int errCount = 0;
 
-    //чтобы не было копирования пустых файлов
+    //чтобы не было копирования файлов, которые заполняются в текущий момент DataAnalizator'ом
     GLOBAL::globalMutex.lock();
         QStringList filesNames = backupFolder.entryList(QStringList("*.csv"),QDir::Files,QDir::Name);
     GLOBAL::globalMutex.unlock();

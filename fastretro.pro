@@ -1,6 +1,6 @@
 TEMPLATE      = app
-QT           += gui network qml quick widgets
-CONFIG += c++11
+QT           += network quick widgets #qml
+CONFIG       += c++11
 
 HEADERS       = \
     addresstable.h \
@@ -44,8 +44,12 @@ DISTFILES += \
 #в составе исп. файла
 # DEFINES += QML_DEBUG
 DEFINES += PRO_FILE_PWD=$$sprintf("\"\\\"%1\\\"\"", $$_PRO_FILE_PWD_)
-#выыод отладочной информации в лог
-DEFINES += DEBUGLOG
+#вывод дополнительной отладочной информации в лог (о состоянии обмена, например)
+#DEFINES += DEBUGLOG
+#отключение вывода отладочной информации в релизных сборках
+CONFIG(release, debug|release){
+    DEFINES += QT_NO_DEBUG_OUTPUT
+}
 
 #Вариант стратегий: FORWARD (напрямую insert'ом), NATIVE (родной метод через csv)
 DEFINES += NATIVE
@@ -55,3 +59,4 @@ contains(DEFINES,FORWARD){
 }
 
 RESOURCES += res.qrc
+RC_ICONS += send.ico

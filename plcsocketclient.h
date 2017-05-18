@@ -1,3 +1,4 @@
+//класс сокета для одного соединения
 #ifndef PLCSOCKETCLIENT_H
 #define PLCSOCKETCLIENT_H
 
@@ -11,6 +12,7 @@
 
 class QByteArray;
 
+//структура хранения параметров по серверу
 class PLCServer {
 public:
     QString address;
@@ -40,7 +42,7 @@ public:
             && address == other.address;
     }
 };
-
+//структура разбора и хранения пакета данных
 class Packet{
     friend class PLCSocketClient;
     struct contain{
@@ -107,6 +109,7 @@ struct _tcp_keepalive{
     u_long keepaliveinterval;
 };
 */
+//непосредственно сам класс сокета
 class PLCSocketClient : public QTcpSocket
 {
     Q_OBJECT

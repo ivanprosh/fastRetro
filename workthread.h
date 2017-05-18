@@ -1,3 +1,5 @@
+//Класс потока используется для асинхронной работы механизма записи файлов на сервер
+//как по стратегии Forward (SQL запрос), так и по Native (обычное копирование)
 #ifndef WORKTHREAD_H
 #define WORKTHREAD_H
 
@@ -7,7 +9,6 @@
 #include "globalerror.h"
 #include "strategies.h"
 
-//template<class Strategy>
 class WorkThread: public QThread
 {
     Q_OBJECT

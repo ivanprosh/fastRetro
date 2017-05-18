@@ -1,3 +1,4 @@
+//Класс для фиксации ошибок в системе и трансляции их в файл.
 #ifndef LOGGER_H
 #define LOGGER_H
 
@@ -14,10 +15,8 @@ class Logger : public QObject
     Q_PROPERTY(QStringList entries READ getEntries NOTIFY entriesChanged)
     Q_PROPERTY(bool visible READ getVisible WRITE setVisible NOTIFY visibleChanged)
 private:
-    //static Qml::Register::Controller<Logger> Register;
     QFile logfile;
     QTextStream logFileStream;
-    //QStringList m_entries;
     CQueue<QString> m_entries;
     bool m_visible = false;
     bool fileCorrupted = true;

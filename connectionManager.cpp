@@ -3,8 +3,8 @@
 
 #include "connectionManager.h"
 
-//static const int MaxConnections = 10;
 
+// паттерн Singleton
 Q_GLOBAL_STATIC(ConnectionManager, connectionManager)
 
 ConnectionManager *ConnectionManager::instance()
@@ -57,6 +57,7 @@ QByteArray ConnectionManager::clientId() const
 
 void ConnectionManager::errorHandler(PLCSocketClient* curClient,QAbstractSocket::SocketError errCode)
 {
+    //попытка переподключения при ошибках
     qDebug() << "ConnectionManager:: Start Reconnect";
     curClient->close();
     curClient->startReconnectTimer();
@@ -92,7 +93,7 @@ void ConnectionManager::activateConnection(PLCSocketClient *curClient)
     plc->lastVisited = plc->connectStart;
     curClient->connectToHost(plc->address, plc->port);
 }
-
+// принудительный реконнект пользователем
 void ConnectionManager::forceReconnect(PLCSocketClient *curClient)
 {
     curClient->reconnect();
@@ -106,11 +107,21 @@ PLCSocketClient *ConnectionManager::findClient(int id)
     }
     return nullptr;
 }
-
+/*
 bool ConnectionManager::isConnectActive(QSharedPointer<PLCSocketClient> curClient)
 {
     if(connections.contains(curClient)) {
         return curClient->isActive();
+    }
+    return false;
+}
+*/
+bool ConnectionManager::isConnectActive(PLCSocketClient *curClient)
+{
+    foreach (QSharedPointer<PLCSocketClient> client, connections) {
+        if(client.data() == curClient) {
+            return curClient->isActive();
+        }
     }
     return false;
 }

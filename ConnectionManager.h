@@ -1,7 +1,7 @@
+//класс для управления существующими соединениями (фабрика)
 #ifndef TRIPPLANNER_H
 #define TRIPPLANNER_H
 
-//#include <QDialog>
 #include <QSharedPointer>
 #include "plcsocketclient.h"
 #include "global.h"
@@ -23,7 +23,7 @@ public:
     void activateConnection(PLCSocketClient *curClient);
     void forceReconnect(PLCSocketClient *curClient);
     PLCSocketClient *findClient(int id);
-    bool isConnectActive(QSharedPointer<PLCSocketClient> curClient);
+    bool isConnectActive(PLCSocketClient* curClient);
     //void forceStopConnect(PLCSocketClient *curClient);
 
     //ConnectionManager(QAbstractTableModel* model,QObject *parent = 0);

@@ -1,3 +1,4 @@
+//класс для обработки кольцевого буфера сообщений, полученных от классов сокетов - Singleton
 #ifndef DATAANALIZATOR_H
 #define DATAANALIZATOR_H
 
@@ -16,7 +17,6 @@ class DataAnalizator: public QObject//, private Ui::TripPlanner
 
 public:
     static DataAnalizator* instance();
-    //void startWorkerThread() {currentThread->start();}
     DataAnalizator();
     QString rfile(const QString &name);
     QHash<int,bool> ignorePLClist;

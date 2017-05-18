@@ -14,11 +14,8 @@ namespace GLOBAL {
 
     extern QMutex globalMutex;
     extern QString ThreadCheck;
-//enum ErrorRoles;
-
-//    void warning(QWidget *parent, const QString &title,
-//             const QString &text, const QString &detailedText);
-   int Fib(int i);
+    //вычисление числа Фибонначи - используем для постепенного увеличения интервала попыток подключения к неактивному серверу
+    int Fib(int i);
 }
 
 

@@ -11,17 +11,14 @@
 
 #pragma	 comment (lib,"ws2_32.lib")
 
-//static struct tcp_keepalive vals;
-
+//константы для настройки таймаутов, ограничения размеров
 namespace {
     static const int ConnectTimeout = 60 * 1000;
     static const int SizeRecieveBuf = 1000;
     static const int SizeCyclicQue = 300;
-    static const int MaxPacketSize = 1000;
+    static const int MaxPacketSize = 10000;
     //const int reconnectDelay = 5000;
 }
-
-//int Packet::count = 0;
 
 PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
     QTcpSocket(parent),
@@ -31,17 +28,14 @@ PLCSocketClient::PLCSocketClient(const QByteArray &Id, QObject *parent):
 {
     //timeoutTimer = startTimer(ConnectTimeout);
     sockIdString = Id;
-
+    //включаем опцию KeepAlive для контроля обрыва соединения в случае молчания в линии
+    //по дефолту, если линия оборвется, то мы об этом не узнаем, KeepAlive пакет - диагностический пакет, который отсылается по линии для контроля обрыва
     setSocketOption(QAbstractSocket::KeepAliveOption, 1);
-/*
-    int descriptor = socketDescriptor();
-
-    dwRet = WSAIoctl(descriptor, SIO_KEEPALIVE_VALS, &vals, sizeof(vals), NULL, 0, &dwBytesRet, NULL, NULL);
-*/
+    //таймер переподключения
     reconnectTimer = QSharedPointer<QTimer>(new QTimer());
     reconnectTimer->setInterval(reconnectDelay);
     reconnectTimer->setSingleShot(true);
-
+    //используется для вывода отладочной информации в лог о состоянии соединения
     keepAliveTimer = QSharedPointer<QTimer>(new QTimer());
     keepAliveTimer->setInterval(5000);
     keepAliveTimer->setSingleShot(true);
@@ -94,42 +88,51 @@ QSharedPointer<PLCServer> PLCSocketClient::server() const
 {
     return _plcServer;
 }
-
+//есть новая порция данных
 void PLCSocketClient::newDataAvailable()
 {
     QDataStream in(this);
     invalidateTimeout = true;
-
+    //если обнулем nextBlockSize - значит, ожидаем новый пакет
     if (nextBlockSize == 0) {
         if (this->bytesAvailable() < sizeof(quint32))
             return;
         quint32 size;
         in >> size;
+        //здесь странный момент - Hex Generator говорит, что данные передаются в формате LittleEndian (перехват через Wireshark),
+        //однако на уровне Qt они корректно выводятся при конвертации через qFromBigEndian
         nextBlockSize = qFromBigEndian(size);
-        //nextBlockSize = size;
-        //if(nextBlockSize != 440 && nextBlockSize != 72)
+        if(nextBlockSize != 424)
             qDebug() << "Size is " << nextBlockSize;
     }
 
+    if (nextBlockSize < 0 || nextBlockSize > MaxPacketSize) {
+        setErrorString("Проверьте формат протокола обмена. Некорректный размер пакета");
+        emit error(QAbstractSocket::SslInvalidUserDataError);
+        return;
+    }
+    //ждем пока накопится достаточное количество данных (полноценный пакет)
     if (this->bytesAvailable() < (nextBlockSize - sizeof(quint32))){
         qDebug() << "low bytes available: " << this->bytesAvailable();
         return;
     }
-
-    if(nextBlockSize < MaxPacketSize && nextBlockSize > 0) {
+    //не проверено, встроено для ликвидации последствий некорретного протокола сос стороны сервера, для исключения вылета всего приложения
+    try{
 
         //создаем структуру для хранения одного пакета данных
         QSharedPointer<Packet> curPacket(new Packet(nextBlockSize));
-
+        //инфраструктура транзакций позволяет откатить полностью операцию с восстановлением потока, если что-то пойдет не так
+        //пока не выполнится commitTransaction()
         in.startTransaction();
 
         this->_plcServer->lastVisited = QDateTime::currentDateTime().toTime_t();
-        //резервный инт для выравнивания до четного числа INT'ов.
+        //резервный инт для выравнивания до четного числа INT'ов. Проблема AllenBradley, так как у них если после структуры INT'ов идет массив DINT,
+        //кол-во int'ов выравнивается до четного числа
         quint16 reserv;
         //считываем заголовочные параметры
         in >> curPacket->Year >> curPacket->Month >> curPacket->Day >>
-              curPacket->Hour >> curPacket->Minute >> curPacket->Second >> curPacket->MSecond >>
-              curPacket->ParCount >> curPacket->CyclesCount >> reserv;
+                curPacket->Hour >> curPacket->Minute >> curPacket->Second >> curPacket->MSecond >>
+                curPacket->ParCount >> curPacket->CyclesCount >> reserv;
         //конвертация из BigEndian (применяется, так как AB передает данные в этом формате, а переворачивать проще здесь)
         curPacket->Year = qFromBigEndian(curPacket->Year);
         curPacket->Month = qFromBigEndian(curPacket->Month);
@@ -141,46 +144,49 @@ void PLCSocketClient::newDataAvailable()
         curPacket->ParCount = qFromBigEndian(curPacket->ParCount);
         curPacket->CyclesCount = qFromBigEndian(curPacket->CyclesCount);
 
-        qDebug() << "Packet:: parCount, Cycles " << curPacket->ParCount << " " << curPacket->CyclesCount;
+        //qDebug() << QDateTime::currentDateTime().time();
+        //qDebug() << "Packet:: parCount, Cycles " << curPacket->ParCount << " " << curPacket->CyclesCount;
         //считывание потока в контейнер
         for(int it=0;it<curPacket->getDataSize();it++){
             in >> curPacket->data[it].u;
             curPacket->data[it].u = qFromBigEndian(curPacket->data[it].u);
         }
-
         if(!in.commitTransaction()) {
-            //qDebug() << "Transaction fault! Status:" << in.status();
             return;
         }
+
+
 #ifdef DEBUGLOG
         if(!keepAliveTimer.data()->isActive())
              keepAliveTimer.data()->start();
 #endif
         curPacket->setTime();
         curPacket->setDate();
-
-        qDebug() << curPacket->getDateTime().toString();
-
+        //qDebug() << curPacket->getDateTime().toString();
         qDebug() << this->bytesAvailable();
-
         nextBlockSize = 0;
-
-
         queReceivePackets.enqueue(curPacket);
         emit newDataReceived();
-    } else {
-        qDebug() << "PLCSocketClient:: Wrong Packet Size!";
-        readAll();
+        //повторяем обработку, если в буфере есть еще данные
+        if(this->bytesAvailable()>0)
+            newDataAvailable();
+    }
+    catch(...) {
+        setErrorString("Проверьте формат протокола обмена. Неизвестная ошибка");
+        emit error(QAbstractSocket::SslInvalidUserDataError);
+        return;
     }
 }
 
 void PLCSocketClient::connectEstablished()
 {
-    //активируем keep-alive
+    //активируем keep-alive. Используем структуру из WinSock, так как необходимо откорректировать
+    //стандартный интервал отправки пакетов KeepAlive. По умолчанию в Windows отправка диагностических
+    //пакетов контроля состояния линии начнется лишь через два часа после простоя обмена
     tcp_keepalive vals;
     vals.onoff             = 1;    // non-zero means "enable"
-    vals.keepalivetime     = 5000;   // milliseconds
-    vals.keepaliveinterval = 1000;  // milliseconds
+    vals.keepalivetime     = 5000;   // через какое время простоя начать слать пакеты
+    vals.keepaliveinterval = 1000;  // интервал отправки
 
     DWORD dwBytesRet = 0;
     DWORD dwErr = 0;
@@ -219,6 +225,7 @@ void PLCSocketClient::reconnect()
 {
     qDebug() << "PLCSocketClient:: Try to reconnect number " << reconnectCount;
     this->connectToHost(_plcServer->address, _plcServer->port);
+    //новая задержка высчитывается по ряду Фибоначчи
     reconnectDelay = GLOBAL::Fib(++reconnectCount)*1000;
 }
 void PLCSocketClient::isAlive()

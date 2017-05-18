@@ -24,12 +24,14 @@ DataAnalizator* DataAnalizator::instance()
 
 DataAnalizator::DataAnalizator():_segmentInterval(1){}
 
+//получены новые данные от класса сокета
 void DataAnalizator::newDataReceived()
 {
     PLCSocketClient* client = static_cast<PLCSocketClient*>(sender());
 
     if(client == Q_NULLPTR) return;
 
+    //на данном этапе не используется, если проблемы конфигурации, то генерится ошибка со статусом Configuration и опрос останавливается
     if(ignorePLClist.value(client->getServer()->id)) return;
 
     int it=client->queReceivePackets.size();
@@ -61,12 +63,12 @@ void DataAnalizator::newDataReceived()
 
         //qDebug() << "New data available in DataAnalizator";
         QString stream;
-
+        //если включено резервирование и в целевом файле "0", то данные не обрабатываем, выходим
         if(_isRedundant){
             if(!redundancyHandler())
                 return;
         }
-        //query.append(createTablePref);
+
         QString Filename = generateFileName(client->queReceivePackets.head()->getDateTime(),
                                             PLCtoParNames.value(client->getServer()->id).first());
 
@@ -129,7 +131,7 @@ bool DataAnalizator::redundancyHandler()
     }
     return true;
 }
-
+//вставка данных в текстовый выходной поток в формате GPA5.Tg_inN1_fast,0,2017/05/16,10:28:51.610,0,35[значение],192[качество]
 void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QSharedPointer<Packet> curPacket, QString& stream)
 {
     int cycleIndex = 0;
@@ -140,17 +142,15 @@ void DataAnalizator::insertDataInStream(QSharedPointer<PLCServer> server, QShare
         correctDTime(_prepareDTime,cycleIndex,server->cycleStep,curPacket->getDateTime());
         while (curPar < curPacket->getParCount()) {
             QString TagName = PLCtoParNames.value(server->id).first() + "." + PLCtoParNames.value(server->id).at(curPar+1);
-            //float Value = curPacket->getValue(Packet::startData + curPar + cycleIndex*curPacket->getParCount());
             float Value = curPacket->getValue(curPar + cycleIndex*curPacket->getParCount());
             stream.append(QString("%1,%2,%3,%4,%5,192\n").arg(TagName).arg(QString::number(0)).arg(_prepareDTime).arg(QString::number(0)).arg(Value));
-
             curPar++;
         }
         cycleIndex++;
     }
 
 }
-
+//задел на будущее (при использовании стратегии Forward - см. strategies.h)
 void DataAnalizator::initialize()
 {
 /*
@@ -201,7 +201,7 @@ QString DataAnalizator::rfile(const QString& name)
 
     return QString("");
 }
-
+//генерируем имя файла в формате GPA5_20170516_102851.csv
 QString DataAnalizator::generateFileName(const QDateTime &dt, const QString& abonent)
 {
     QString pattern = "%1_%2_%3%4";
@@ -219,7 +219,8 @@ void DataAnalizator::streamtoFile(const QString &fileName,const QString& stream,
                      "Каталог хранения временных файлов не задан");
         return;
     }
-
+    //запираем глобальный мьютекс, который используется также классом стратегии копирования файлов на сервер.
+    //Если этого не делать, то в момент, когда файл открыт, но не закончена запись, класс копирования будет пытаться его удалить - Crash!
     GLOBAL::globalMutex.lock();
 
     QScopedPointer<QFile> outputFile(new QFile(filepath.append("\\"+fileName +".csv")));

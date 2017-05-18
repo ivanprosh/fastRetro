@@ -16,6 +16,7 @@ Logger* Logger::instance()
 
 void Logger::setFile(const QString &_logFileName)
 {
+    //задание шапки с форматированием
     if(!_logFileName.isEmpty()){
         logfile.setFileName(_logFileName);
         fileCorrupted = false;
@@ -42,9 +43,9 @@ void Logger::clear() {
 }
 
 auto Logger::addEntry(GlobalError* entry) -> void {
-    //if(!fileCorrupted){
+    //добавление в выходной файл
     addEntryInFile(entry);
-    //}
+    //добавление в очередь сообщений
     this->m_entries.enqueue(entry->getDateTime().time().toString("hh:mm:ss")
                             + " "
                             + entry->ErrorCodes.at(entry->firstItem())

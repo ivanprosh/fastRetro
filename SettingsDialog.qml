@@ -79,7 +79,7 @@ AppDialogs.Dialog {
                         Image {
                             source: Qt.resolvedUrl("qrc:/images/add.svg")
                             anchors.fill: parent
-                            anchors.margins: 4
+                            anchors.margins: 7
                         }
                         onClicked: {
                             loader.setSource("Filedialog.qml",{"context": backupFolderPath, "selectFolder":true})
@@ -97,10 +97,12 @@ AppDialogs.Dialog {
                     MyTextField {
                         id: timeZone
 
-                        placeholderText: "+3"
+                        placeholderText: "3"
+                        ToolTip.text: "Смещение относительно метки времени, присвоенной пакету на уровне ПЛК (часы)"
+
                         Layout.fillWidth: true
                         validator: RegExpValidator {
-                            regExp: /[+-]\d{0,2}/
+                            regExp: /[+-]?\d{0,2}/
                         }
                         Component.onCompleted: {
                             text = MainClass.timeZone
@@ -162,7 +164,7 @@ AppDialogs.Dialog {
                         Image {
                             source: Qt.resolvedUrl("qrc:/images/add.svg")
                             anchors.fill: parent
-                            anchors.margins: 4
+                            anchors.margins: 7
                         }
                         onClicked: {
                             //filedialog.selectFolder = false;
@@ -228,7 +230,7 @@ AppDialogs.Dialog {
 
                         ToolTip.text: "Параметр помогает учесть нагрузку сети и сервера historian.\n
 Параметр определяет размеры .csv файлов импорта и частоту их копирования на сервер.\n
-Интервал отправки данных на сервер можно рассчитать: период отпр. на сервер = коэф.* период обмена с ПЛК"
+Интервал отправки данных на сервер можно рассчитать: период отпр. на сервер = коэф.* 10 * период обмена с ПЛК"
 
                         validator: RegExpValidator {
                             regExp: /([1]\d)|[1-9]/

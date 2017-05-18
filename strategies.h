@@ -1,3 +1,4 @@
+//Паттерн Стратегия. В данной реализации используется стратегия Native, на будущее оставлена Forward
 #ifndef STRATEGIES_H
 #define STRATEGIES_H
 
@@ -31,7 +32,7 @@ public slots:
 signals:
    void errorChange(GlobalError*);
 };
-
+//Стратегия отправки csv файлов в каталог исмпорта на сервер Historian
 class Native : public AbstractStrategy
 {
    Q_OBJECT
@@ -48,7 +49,7 @@ protected:
 private:
     QFileSystemWatcher watcher;
 };
-
+//Стратегия прямой записи SQL-запросом (BULK) на сервер Historian
 #ifdef FORWARD
 class Forward : public AbstractStrategy
 {
